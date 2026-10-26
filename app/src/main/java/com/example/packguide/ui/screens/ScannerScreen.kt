@@ -1,4 +1,6 @@
-package com.example.packguide.ui.screens
+package com.example.packguide.ui.screens
+
+import com.example.packguide.ui.theme.PackGuideColors
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -48,12 +50,6 @@ import com.example.packguide.ui.components.TechBadge
 import com.example.packguide.ui.components.TechCard
 import com.example.packguide.ui.theme.AccentGreenLed
 import com.example.packguide.ui.theme.AccentRedLed
-import com.example.packguide.ui.theme.BackgroundLight
-import com.example.packguide.ui.theme.BorderSlate
-import com.example.packguide.ui.theme.CardSurfaceLight
-import com.example.packguide.ui.theme.PrimaryBlack
-import com.example.packguide.ui.theme.SecondarySlate
-import com.example.packguide.ui.theme.SurfaceVariantLight
 import com.example.packguide.ui.theme.TechMonospaceFontFamily
 import com.example.packguide.ui.theme.Typography
 
@@ -73,13 +69,13 @@ fun ScannerScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(BackgroundLight)
+            .background(PackGuideColors.background)
     ) {
         // --- 1. HEADER ---
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(BackgroundLight)
+                .background(PackGuideColors.background)
                 .padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -90,7 +86,7 @@ fun ScannerScreen(
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                     contentDescription = "Volver",
-                    tint = PrimaryBlack
+                    tint = PackGuideColors.primaryText
                 )
             }
 
@@ -101,7 +97,7 @@ fun ScannerScreen(
                 style = Typography.titleMedium,
                 fontFamily = TechMonospaceFontFamily,
                 fontWeight = FontWeight.Bold,
-                color = PrimaryBlack,
+                color = PackGuideColors.primaryText,
                 modifier = Modifier.weight(1f)
             )
 
@@ -112,7 +108,7 @@ fun ScannerScreen(
                 Icon(
                     imageVector = Icons.Outlined.Settings,
                     contentDescription = "Configuración",
-                    tint = PrimaryBlack
+                    tint = PackGuideColors.primaryText
                 )
             }
         }
@@ -126,8 +122,8 @@ fun ScannerScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .background(SurfaceVariantLight, shape = RoundedCornerShape(2.dp))
-                .border(1.dp, BorderSlate, shape = RoundedCornerShape(2.dp))
+                .background(PackGuideColors.surfaceVariant, shape = RoundedCornerShape(2.dp))
+                .border(1.dp, PackGuideColors.border, shape = RoundedCornerShape(2.dp))
                 .padding(horizontal = 12.dp, vertical = 6.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -137,7 +133,7 @@ fun ScannerScreen(
                     text = "ESPACIO MAPEO: 100% // LIDAR ACTIVE | FPS: 60",
                     style = Typography.labelSmall.copy(fontSize = 11.sp),
                     fontFamily = TechMonospaceFontFamily,
-                    color = PrimaryBlack
+                    color = PackGuideColors.primaryText
                 )
             }
         }
@@ -156,8 +152,7 @@ fun ScannerScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(260.dp)
-                        .background(PrimaryBlack, shape = RoundedCornerShape(4.dp))
-                        .border(1.dp, BorderSlate, shape = RoundedCornerShape(4.dp))
+                        .background(Color(0xFF0F0F11), shape = RoundedCornerShape(4.dp))                        .border(1.dp, PackGuideColors.border, shape = RoundedCornerShape(4.dp))
                 ) {
                     // Compose Canvas drawing simulated open suitcase & red bounding box overlays & AR crosshairs
                     Canvas(modifier = Modifier.fillMaxSize()) {
@@ -271,14 +266,14 @@ fun ScannerScreen(
                     ) {
                         TechBadge(
                             text = "TARGET_LOCK: CARRY_ON",
-                            containerColor = PrimaryBlack.copy(alpha = 0.85f),
+                            containerColor = PackGuideColors.primaryText.copy(alpha = 0.85f),
                             contentColor = AccentRedLed,
                             borderColor = AccentRedLed
                         )
 
                         TechBadge(
                             text = "IATA VALID",
-                            containerColor = PrimaryBlack.copy(alpha = 0.85f),
+                            containerColor = PackGuideColors.primaryText.copy(alpha = 0.85f),
                             contentColor = Color.White,
                             ledColor = AccentGreenLed,
                             borderColor = AccentGreenLed
@@ -290,7 +285,7 @@ fun ScannerScreen(
                         modifier = Modifier
                             .align(Alignment.TopCenter)
                             .padding(top = 36.dp)
-                            .background(CardSurfaceLight, shape = RoundedCornerShape(2.dp))
+                            .background(PackGuideColors.surface, shape = RoundedCornerShape(2.dp))
                             .border(1.dp, AccentRedLed, shape = RoundedCornerShape(2.dp))
                             .padding(horizontal = 6.dp, vertical = 2.dp)
                     ) {
@@ -299,7 +294,7 @@ fun ScannerScreen(
                             style = Typography.labelSmall.copy(fontSize = 10.sp),
                             fontFamily = TechMonospaceFontFamily,
                             fontWeight = FontWeight.Bold,
-                            color = PrimaryBlack
+                            color = PackGuideColors.primaryText
                         )
                     }
 
@@ -308,7 +303,7 @@ fun ScannerScreen(
                         modifier = Modifier
                             .align(Alignment.CenterStart)
                             .padding(start = 10.dp)
-                            .background(CardSurfaceLight, shape = RoundedCornerShape(2.dp))
+                            .background(PackGuideColors.surface, shape = RoundedCornerShape(2.dp))
                             .border(1.dp, AccentRedLed, shape = RoundedCornerShape(2.dp))
                             .padding(horizontal = 6.dp, vertical = 2.dp)
                     ) {
@@ -317,7 +312,7 @@ fun ScannerScreen(
                             style = Typography.labelSmall.copy(fontSize = 10.sp),
                             fontFamily = TechMonospaceFontFamily,
                             fontWeight = FontWeight.Bold,
-                            color = PrimaryBlack
+                            color = PackGuideColors.primaryText
                         )
                     }
 
@@ -326,7 +321,7 @@ fun ScannerScreen(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .padding(end = 10.dp)
-                            .background(CardSurfaceLight, shape = RoundedCornerShape(2.dp))
+                            .background(PackGuideColors.surface, shape = RoundedCornerShape(2.dp))
                             .border(1.dp, AccentRedLed, shape = RoundedCornerShape(2.dp))
                             .padding(horizontal = 6.dp, vertical = 2.dp)
                     ) {
@@ -335,7 +330,7 @@ fun ScannerScreen(
                             style = Typography.labelSmall.copy(fontSize = 10.sp),
                             fontFamily = TechMonospaceFontFamily,
                             fontWeight = FontWeight.Bold,
-                            color = PrimaryBlack
+                            color = PackGuideColors.primaryText
                         )
                     }
 
@@ -345,8 +340,8 @@ fun ScannerScreen(
                             .align(Alignment.BottomCenter)
                             .padding(bottom = 12.dp)
                             .shadow(4.dp, shape = RoundedCornerShape(4.dp))
-                            .background(CardSurfaceLight, shape = RoundedCornerShape(4.dp))
-                            .border(1.5.dp, PrimaryBlack, shape = RoundedCornerShape(4.dp))
+                            .background(PackGuideColors.surface, shape = RoundedCornerShape(4.dp))
+                            .border(1.5.dp, PackGuideColors.primaryText, shape = RoundedCornerShape(4.dp))
                             .padding(horizontal = 14.dp, vertical = 6.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -357,7 +352,7 @@ fun ScannerScreen(
                                 style = Typography.titleMedium,
                                 fontFamily = TechMonospaceFontFamily,
                                 fontWeight = FontWeight.Bold,
-                                color = PrimaryBlack
+                                color = PackGuideColors.primaryText
                             )
                         }
                     }
@@ -369,15 +364,15 @@ fun ScannerScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(SurfaceVariantLight, shape = RoundedCornerShape(4.dp))
-                        .border(1.dp, BorderSlate, shape = RoundedCornerShape(4.dp))
+                        .background(PackGuideColors.surfaceVariant, shape = RoundedCornerShape(4.dp))
+                        .border(1.dp, PackGuideColors.border, shape = RoundedCornerShape(4.dp))
                         .padding(4.dp)
                 ) {
                     Box(
                         modifier = Modifier
                             .weight(1f)
                             .background(
-                                if (selectedMode == "AUTO") PrimaryBlack else Color.Transparent,
+                                if (selectedMode == "AUTO") PackGuideColors.primaryText else Color.Transparent,
                                 shape = RoundedCornerShape(2.dp)
                             )
                             .clickable { selectedMode = "AUTO" }
@@ -388,7 +383,7 @@ fun ScannerScreen(
                             text = "[AUTO]",
                             style = Typography.labelLarge,
                             fontFamily = TechMonospaceFontFamily,
-                            color = if (selectedMode == "AUTO") CardSurfaceLight else PrimaryBlack
+                            color = if (selectedMode == "AUTO") PackGuideColors.surface else PackGuideColors.primaryText
                         )
                     }
 
@@ -396,7 +391,7 @@ fun ScannerScreen(
                         modifier = Modifier
                             .weight(1f)
                             .background(
-                                if (selectedMode == "MANUAL") PrimaryBlack else Color.Transparent,
+                                if (selectedMode == "MANUAL") PackGuideColors.primaryText else Color.Transparent,
                                 shape = RoundedCornerShape(2.dp)
                             )
                             .clickable { selectedMode = "MANUAL" }
@@ -412,7 +407,7 @@ fun ScannerScreen(
                                 text = "[MANUAL]",
                                 style = Typography.labelLarge,
                                 fontFamily = TechMonospaceFontFamily,
-                                color = if (selectedMode == "MANUAL") CardSurfaceLight else PrimaryBlack
+                                color = if (selectedMode == "MANUAL") PackGuideColors.surface else PackGuideColors.primaryText
                             )
                         }
                     }
@@ -425,7 +420,7 @@ fun ScannerScreen(
                     TechCard(
                         headerTag = "AJUSTE MANUAL DE MEDIDAS",
                         subTag = "[ CARRY-ON SPEC ]",
-                        borderColor = PrimaryBlack
+                        borderColor = PackGuideColors.primaryText
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             // Dimension Stepper for ALTO
@@ -449,7 +444,7 @@ fun ScannerScreen(
                                 onValueChange = { profCm = it }
                             )
 
-                            DashedDivider(color = BorderSlate)
+                            DashedDivider(color = PackGuideColors.border)
 
                             // Calculated Volume Display: "VOLUMEN CALCULADO: 44.0L / 44.000 CM³"
                             val volCm3 = altoCm * anchoCm * profCm
@@ -461,8 +456,8 @@ fun ScannerScreen(
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(SurfaceVariantLight, shape = RoundedCornerShape(2.dp))
-                                    .border(1.dp, BorderSlate, shape = RoundedCornerShape(2.dp))
+                                    .background(PackGuideColors.surfaceVariant, shape = RoundedCornerShape(2.dp))
+                                    .border(1.dp, PackGuideColors.border, shape = RoundedCornerShape(2.dp))
                                     .padding(12.dp)
                             ) {
                                 Column {
@@ -475,12 +470,12 @@ fun ScannerScreen(
                                             text = "VOLUMEN CALCULADO:",
                                             style = Typography.labelMedium,
                                             fontFamily = TechMonospaceFontFamily,
-                                            color = SecondarySlate
+                                            color = PackGuideColors.secondaryText
                                         )
                                         TechBadge(
                                             text = if (isIataOk) "CABINA IATA OK" else "EXCEDE CABINA",
-                                            containerColor = if (isIataOk) PrimaryBlack else AccentRedLed,
-                                            contentColor = CardSurfaceLight,
+                                            containerColor = if (isIataOk) PackGuideColors.primaryText else AccentRedLed,
+                                            contentColor = PackGuideColors.surface,
                                             ledColor = if (isIataOk) AccentGreenLed else AccentRedLed
                                         )
                                     }
@@ -491,7 +486,7 @@ fun ScannerScreen(
                                         text = "${volLFormatted}L / $volCm3Formatted CM³",
                                         style = Typography.headlineMedium,
                                         fontFamily = TechMonospaceFontFamily,
-                                        color = PrimaryBlack
+                                        color = PackGuideColors.primaryText
                                     )
                                 }
                             }
@@ -507,8 +502,8 @@ fun ScannerScreen(
                                 Box(
                                     modifier = Modifier
                                         .weight(1f)
-                                        .background(CardSurfaceLight, shape = RoundedCornerShape(20.dp))
-                                        .border(1.dp, PrimaryBlack, shape = RoundedCornerShape(20.dp))
+                                        .background(PackGuideColors.surface, shape = RoundedCornerShape(20.dp))
+                                        .border(1.dp, PackGuideColors.primaryText, shape = RoundedCornerShape(20.dp))
                                         .clickable {
                                             altoCm = 55
                                             anchoCm = 40
@@ -521,7 +516,7 @@ fun ScannerScreen(
                                         text = "[ CANCELAR ]",
                                         style = Typography.titleMedium,
                                         fontFamily = TechMonospaceFontFamily,
-                                        color = PrimaryBlack
+                                        color = PackGuideColors.primaryText
                                     )
                                 }
 
@@ -529,8 +524,8 @@ fun ScannerScreen(
                                 Box(
                                     modifier = Modifier
                                         .weight(1.3f)
-                                        .background(PrimaryBlack, shape = RoundedCornerShape(20.dp))
-                                        .border(1.dp, PrimaryBlack, shape = RoundedCornerShape(20.dp))
+                                        .background(PackGuideColors.primaryText, shape = RoundedCornerShape(20.dp))
+                                        .border(1.dp, PackGuideColors.primaryText, shape = RoundedCornerShape(20.dp))
                                         .clickable { /* Apply measures */ }
                                         .padding(vertical = 12.dp),
                                     contentAlignment = Alignment.Center
@@ -539,7 +534,7 @@ fun ScannerScreen(
                                         text = "[ APLICAR MEDIDAS ]",
                                         style = Typography.titleMedium,
                                         fontFamily = TechMonospaceFontFamily,
-                                        color = CardSurfaceLight
+                                        color = PackGuideColors.surface
                                     )
                                 }
                             }
@@ -554,7 +549,7 @@ fun ScannerScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .shadow(4.dp, shape = RoundedCornerShape(28.dp))
-                        .background(PrimaryBlack, shape = RoundedCornerShape(28.dp))
+                        .background(PackGuideColors.primaryText, shape = RoundedCornerShape(28.dp))
                         .border(1.dp, AccentRedLed, shape = RoundedCornerShape(28.dp))
                         .clickable { /* Optimize action */ }
                         .padding(horizontal = 16.dp, vertical = 16.dp),
@@ -572,7 +567,7 @@ fun ScannerScreen(
                             text = "OPTIMIZAR - PULSA PARA GENERAR DISTRIBUCIÓN",
                             style = Typography.labelLarge.copy(fontSize = 11.sp),
                             fontFamily = TechMonospaceFontFamily,
-                            color = CardSurfaceLight
+                            color = PackGuideColors.surface
                         )
                     }
                 }
@@ -597,7 +592,7 @@ fun DimensionStepperRow(
             text = "$label:",
             style = Typography.titleMedium,
             fontFamily = TechMonospaceFontFamily,
-            color = PrimaryBlack,
+            color = PackGuideColors.primaryText,
             modifier = Modifier.width(80.dp)
         )
 
@@ -609,8 +604,8 @@ fun DimensionStepperRow(
             Box(
                 modifier = Modifier
                     .size(36.dp)
-                    .background(SurfaceVariantLight, shape = RoundedCornerShape(4.dp))
-                    .border(1.dp, BorderSlate, shape = RoundedCornerShape(4.dp))
+                    .background(PackGuideColors.surfaceVariant, shape = RoundedCornerShape(4.dp))
+                    .border(1.dp, PackGuideColors.border, shape = RoundedCornerShape(4.dp))
                     .clickable { if (valueCm > 1) onValueChange(valueCm - 1) },
                 contentAlignment = Alignment.Center
             ) {
@@ -618,7 +613,7 @@ fun DimensionStepperRow(
                     text = "-",
                     style = Typography.titleLarge,
                     fontFamily = TechMonospaceFontFamily,
-                    color = PrimaryBlack
+                    color = PackGuideColors.primaryText
                 )
             }
 
@@ -627,15 +622,15 @@ fun DimensionStepperRow(
                 modifier = Modifier
                     .width(90.dp)
                     .height(36.dp)
-                    .background(CardSurfaceLight, shape = RoundedCornerShape(4.dp))
-                    .border(1.dp, PrimaryBlack, shape = RoundedCornerShape(4.dp)),
+                    .background(PackGuideColors.surface, shape = RoundedCornerShape(4.dp))
+                    .border(1.dp, PackGuideColors.primaryText, shape = RoundedCornerShape(4.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "$valueCm CM",
                     style = Typography.titleMedium,
                     fontFamily = TechMonospaceFontFamily,
-                    color = PrimaryBlack
+                    color = PackGuideColors.primaryText
                 )
             }
 
@@ -643,8 +638,8 @@ fun DimensionStepperRow(
             Box(
                 modifier = Modifier
                     .size(36.dp)
-                    .background(PrimaryBlack, shape = RoundedCornerShape(4.dp))
-                    .border(1.dp, PrimaryBlack, shape = RoundedCornerShape(4.dp))
+                    .background(PackGuideColors.primaryText, shape = RoundedCornerShape(4.dp))
+                    .border(1.dp, PackGuideColors.primaryText, shape = RoundedCornerShape(4.dp))
                     .clickable { onValueChange(valueCm + 1) },
                 contentAlignment = Alignment.Center
             ) {
@@ -652,7 +647,7 @@ fun DimensionStepperRow(
                     text = "+",
                     style = Typography.titleLarge,
                     fontFamily = TechMonospaceFontFamily,
-                    color = CardSurfaceLight
+                    color = PackGuideColors.surface
                 )
             }
         }
