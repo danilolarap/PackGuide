@@ -1,4 +1,6 @@
-package com.example.packguide.ui.components
+package com.example.packguide.ui.components
+
+import com.example.packguide.ui.theme.PackGuideColors
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,8 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.packguide.ui.theme.AccentRedLed
-import com.example.packguide.ui.theme.PrimaryBlack
-import com.example.packguide.ui.theme.SecondarySlate
 import com.example.packguide.ui.theme.TechMonospaceFontFamily
 import com.example.packguide.ui.theme.Typography
 
@@ -25,15 +25,18 @@ import com.example.packguide.ui.theme.Typography
 fun TechBadge(
     text: String,
     modifier: Modifier = Modifier,
-    containerColor: Color = PrimaryBlack,
-    contentColor: Color = Color.White,
-    borderColor: Color = SecondarySlate.copy(alpha = 0.4f),
+    containerColor: Color = Color.Unspecified,
+    contentColor: Color = Color.Unspecified,
+    borderColor: Color = Color.Unspecified,
     ledColor: Color? = null
 ) {
+    val resolvedContainerColor = if (containerColor == Color.Unspecified) PackGuideColors.primaryText else containerColor
+    val resolvedContentColor = if (contentColor == Color.Unspecified) PackGuideColors.surface else contentColor
+    val resolvedBorderColor = if (borderColor == Color.Unspecified) PackGuideColors.secondaryText.copy(alpha = 0.4f) else borderColor
     Box(
         modifier = modifier
-            .background(containerColor, shape = RoundedCornerShape(2.dp))
-            .border(1.dp, borderColor, shape = RoundedCornerShape(2.dp))
+            .background(resolvedContainerColor, shape = RoundedCornerShape(2.dp))
+            .border(1.dp, resolvedBorderColor, shape = RoundedCornerShape(2.dp))
             .padding(horizontal = 8.dp, vertical = 3.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -45,7 +48,7 @@ fun TechBadge(
                 text = text,
                 style = Typography.labelSmall.copy(fontSize = 11.sp),
                 fontFamily = TechMonospaceFontFamily,
-                color = contentColor
+                color = resolvedContentColor
             )
         }
     }
