@@ -1,5 +1,7 @@
 package com.example.packguide.ui.components
 
+import com.example.packguide.ui.theme.PackGuideColors
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -29,11 +31,6 @@ import androidx.compose.ui.unit.dp
 import com.example.packguide.settings.AppLanguage
 import com.example.packguide.ui.localization.Text as LocalizedText
 import com.example.packguide.ui.theme.AccentRedLed
-import com.example.packguide.ui.theme.BackgroundLight
-import com.example.packguide.ui.theme.BorderSlate
-import com.example.packguide.ui.theme.CardSurfaceLight
-import com.example.packguide.ui.theme.PrimaryBlack
-import com.example.packguide.ui.theme.SecondarySlate
 import com.example.packguide.ui.theme.Typography
 
 @Composable
@@ -48,12 +45,12 @@ fun SettingsDialog(
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Column(
-            modifier = Modifier.fillMaxWidth().background(CardSurfaceLight, RoundedCornerShape(3.dp))
-                .border(1.dp, BorderSlate, RoundedCornerShape(3.dp)).padding(20.dp),
+            modifier = Modifier.fillMaxWidth().background(PackGuideColors.surface, RoundedCornerShape(3.dp))
+                .border(1.dp, PackGuideColors.border, RoundedCornerShape(3.dp)).padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            LocalizedText("[ AJUSTES DE SISTEMA ]", style = Typography.titleMedium, color = PrimaryBlack)
-            LocalizedText("PERSONALIZA PACKGUIDE", style = Typography.labelSmall, color = SecondarySlate)
+            LocalizedText("[ AJUSTES DE SISTEMA ]", style = Typography.titleMedium, color = PackGuideColors.primaryText)
+            LocalizedText("PERSONALIZA PACKGUIDE", style = Typography.labelSmall, color = PackGuideColors.secondaryText)
             Spacer(Modifier.height(4.dp))
             SettingsRow(
                 icon = if (isDarkTheme) Icons.Outlined.DarkMode else Icons.Outlined.LightMode,
@@ -77,7 +74,7 @@ fun SettingsDialog(
                 )
             }
             TextButton(onClick = onDismiss, modifier = Modifier.align(Alignment.End)) {
-                LocalizedText("[ CERRAR ]", color = PrimaryBlack, style = Typography.labelMedium)
+                LocalizedText("[ CERRAR ]", color = PackGuideColors.primaryText, style = Typography.labelMedium)
             }
         }
     }
@@ -88,22 +85,23 @@ private fun SettingsRow(
     icon: ImageVector,
     title: String,
     value: String,
-    accent: Color = PrimaryBlack,
+    accent: Color = Color.Unspecified,
     onClick: () -> Unit
 ) {
+    val resolvedAccent = if (accent == Color.Unspecified) PackGuideColors.primaryText else accent
     Row(
-        modifier = Modifier.fillMaxWidth().background(BackgroundLight, RoundedCornerShape(2.dp))
-            .border(1.dp, BorderSlate, RoundedCornerShape(2.dp)).clickable(onClick = onClick)
+        modifier = Modifier.fillMaxWidth().background(PackGuideColors.background, RoundedCornerShape(2.dp))
+            .border(1.dp, PackGuideColors.border, RoundedCornerShape(2.dp)).clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = icon, contentDescription = null, tint = accent)
+        Icon(imageVector = icon, contentDescription = null, tint = resolvedAccent)
         Spacer(Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
-            LocalizedText(title, style = Typography.labelMedium, color = accent)
+            LocalizedText(title, style = Typography.labelMedium, color = resolvedAccent)
             Spacer(Modifier.height(3.dp))
-            LocalizedText(value, style = Typography.labelSmall, color = SecondarySlate)
+            LocalizedText(value, style = Typography.labelSmall, color = PackGuideColors.secondaryText)
         }
-        LocalizedText("›", style = Typography.titleMedium, color = accent)
+        LocalizedText("›", style = Typography.titleMedium, color = resolvedAccent)
     }
 }
