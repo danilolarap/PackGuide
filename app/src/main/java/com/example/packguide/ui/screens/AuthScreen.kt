@@ -16,8 +16,9 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -35,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardActions
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -85,7 +85,11 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
                     AuthResult.Success -> onAuthenticated()
                     AuthResult.InvalidInput -> error = "Revisa el usuario y la contraseña e intenta de nuevo."
                     AuthResult.InvalidCredentials -> error = "Usuario o contraseña incorrectos."
-                    AuthResult.UsernameTaken -> error = "Ese usuario ya está registrado."
+                    AuthResult.UsernameTaken -> {
+                        isRegistering = false
+                        confirmPassword = ""
+                        error = "Ese usuario ya existe. Inicia sesión con esa cuenta."
+                    }
                     AuthResult.StorageError -> error = "No se pudo acceder a la base local. Intenta de nuevo."
                 }
             }
