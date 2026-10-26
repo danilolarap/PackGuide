@@ -15,8 +15,8 @@ Al implementar una función, primero revisa cómo funciona hoy y amplía el fluj
 - `compileSdk` y `targetSdk`: 37; `minSdk`: 24.
 - Interfaz con Jetpack Compose y Material 3; punto de entrada en `MainActivity.kt`, que activa edge-to-edge y aplica `PackGuideTheme`.
 - Pantallas principales: `ScannerScreen`, `CatalogScreen`, `GuideScreen` y `SummaryScreen`, coordinadas por `MainScreen` y `NavTab`.
-- La app solicita autenticación al abrirse mediante `AuthScreen`; el registro y la validación consultan cuentas en la base local Room (`PackGuideDatabase`). El estado autenticado solo vive en memoria, por lo que se vuelve a solicitar el acceso al reiniciar la app.
-- Las contraseñas no se almacenan en texto plano: `AuthRepository` deriva hashes PBKDF2-HMAC-SHA256 con salt aleatorio por cuenta. Esta autenticación es local al dispositivo y no crea cuentas web ni sincroniza credenciales.
+- La app solicita autenticación al abrirse mediante `AuthScreen`; `PackGuideRoot` conserva el estado de autenticación con Compose `remember`, evitando reinicios de estado durante recomposiciones. El estado solo vive en memoria, por lo que se vuelve a solicitar el acceso al iniciar una nueva actividad.
+- Las contraseñas no se almacenan en texto plano: `AuthRepository` deriva hashes PBKDF2-HMAC-SHA256 con salt aleatorio por cuenta fuera del hilo de interfaz. Usa Android Base64 para mantener compatibilidad con `minSdk 24`. Esta autenticación es local al dispositivo y no crea cuentas web ni sincroniza credenciales.
 - Navegación actual mediante `Scaffold`, `TechBottomNavBar` y `AnimatedContent` en `MainScreen.kt`. Las pestañas de `NavTab` tienen rutas no nulas; conserva esa garantía y no agregues lógica de rutas nullable sin necesidad.
 - Dependencias declaradas incluyen CameraX, Room, DataStore, Retrofit, Moshi, OkHttp, Coroutines, Coil, Navigation3, Play Services Location y Accompanist Permissions. La presencia de una dependencia no prueba que una función esté integrada o completa.
 - El manifiesto declara permiso de Internet. Antes de añadir flujos de cámara o ubicación, comprueba y declara los permisos y el manejo de permisos necesarios.
