@@ -1,4 +1,6 @@
-package com.example.packguide.ui.components
+package com.example.packguide.ui.components
+
+import com.example.packguide.ui.theme.PackGuideColors
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,9 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.example.packguide.ui.theme.AccentRedLed
-import com.example.packguide.ui.theme.CardSurfaceLight
-import com.example.packguide.ui.theme.PrimaryBlack
-import com.example.packguide.ui.theme.SecondarySlate
 import com.example.packguide.ui.theme.TechMonospaceFontFamily
 import com.example.packguide.ui.theme.Typography
 
@@ -37,24 +36,24 @@ fun AsciiButton(
     enabled: Boolean = true
 ) {
     val containerColor = when {
-        !enabled -> SecondarySlate.copy(alpha = 0.2f)
+        !enabled -> PackGuideColors.secondaryText.copy(alpha = 0.2f)
         isAccentRed -> AccentRedLed
-        isPrimary -> PrimaryBlack
-        else -> CardSurfaceLight
+        isPrimary -> PackGuideColors.primaryText
+        else -> PackGuideColors.surface
     }
 
     val contentColor = when {
-        !enabled -> SecondarySlate
-        isAccentRed -> CardSurfaceLight
-        isPrimary -> CardSurfaceLight
-        else -> PrimaryBlack
+        !enabled -> PackGuideColors.secondaryText
+        isAccentRed -> PackGuideColors.surface
+        isPrimary -> PackGuideColors.surface
+        else -> PackGuideColors.primaryText
     }
 
     val borderColor = when {
-        !enabled -> SecondarySlate.copy(alpha = 0.3f)
+        !enabled -> PackGuideColors.secondaryText.copy(alpha = 0.3f)
         isAccentRed -> AccentRedLed
-        isPrimary -> PrimaryBlack
-        else -> PrimaryBlack
+        isPrimary -> PackGuideColors.primaryText
+        else -> PackGuideColors.primaryText
     }
 
     val shape = RoundedCornerShape(2.dp)
