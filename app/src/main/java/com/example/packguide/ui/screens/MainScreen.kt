@@ -1,4 +1,6 @@
-package com.example.packguide.ui.screens
+package com.example.packguide.ui.screens
+
+import com.example.packguide.ui.theme.PackGuideColors
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
@@ -19,7 +21,6 @@ import com.example.packguide.ui.navigation.TechBottomNavBar
 import com.example.packguide.settings.AppLanguage
 import com.example.packguide.settings.AppSettings
 import com.example.packguide.ui.components.SettingsDialog
-import com.example.packguide.ui.theme.BackgroundLight
 
 @Composable
 fun MainScreen(
@@ -40,7 +41,7 @@ fun MainScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = BackgroundLight,
+        containerColor = PackGuideColors.background,
         bottomBar = {
             TechBottomNavBar(
                 selectedTab = currentTab,

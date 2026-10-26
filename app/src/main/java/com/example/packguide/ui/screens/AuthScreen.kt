@@ -1,5 +1,7 @@
 package com.example.packguide.ui.screens
 
+import com.example.packguide.ui.theme.PackGuideColors
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -59,11 +61,6 @@ import com.example.packguide.ui.components.SettingsDialog
 import com.example.packguide.ui.localization.Text as LocalizedText
 import com.example.packguide.ui.theme.AccentGreenLed
 import com.example.packguide.ui.theme.AccentRedLed
-import com.example.packguide.ui.theme.BackgroundLight
-import com.example.packguide.ui.theme.BorderSlate
-import com.example.packguide.ui.theme.CardSurfaceLight
-import com.example.packguide.ui.theme.PrimaryBlack
-import com.example.packguide.ui.theme.SecondarySlate
 import com.example.packguide.ui.theme.TechMonospaceFontFamily
 import com.example.packguide.ui.theme.Typography
 import kotlinx.coroutines.launch
@@ -115,17 +112,17 @@ fun AuthScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().background(BackgroundLight).safeDrawingPadding().imePadding()
+        modifier = Modifier.fillMaxSize().background(PackGuideColors.background).safeDrawingPadding().imePadding()
             .verticalScroll(rememberScrollState()).padding(horizontal = 24.dp, vertical = 28.dp),
         verticalArrangement = Arrangement.Center
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             LedIndicator(color = AccentRedLed, isPulsing = true)
             Spacer(Modifier.width(10.dp))
-            LocalizedText("PACKGUIDE // ACCESS", style = Typography.labelMedium, color = SecondarySlate)
+            LocalizedText("PACKGUIDE // ACCESS", style = Typography.labelMedium, color = PackGuideColors.secondaryText)
             Spacer(Modifier.weight(1f))
             IconButton(onClick = { showSettings = true }) {
-                Icon(Icons.Outlined.Settings, contentDescription = "Settings", tint = PrimaryBlack)
+                Icon(Icons.Outlined.Settings, contentDescription = "Settings", tint = PackGuideColors.primaryText)
             }
         }
         Spacer(Modifier.height(24.dp))
@@ -140,10 +137,10 @@ fun AuthScreen(
         Spacer(Modifier.height(22.dp))
 
         Column(
-            modifier = Modifier.fillMaxWidth().background(CardSurfaceLight, RoundedCornerShape(2.dp))
-                .border(1.dp, BorderSlate, RoundedCornerShape(2.dp)).padding(20.dp)
+            modifier = Modifier.fillMaxWidth().background(PackGuideColors.surface, RoundedCornerShape(2.dp))
+                .border(1.dp, PackGuideColors.border, RoundedCornerShape(2.dp)).padding(20.dp)
         ) {
-            Text("[ CREDENCIALES ]", style = Typography.labelMedium, color = PrimaryBlack)
+            Text("[ CREDENCIALES ]", style = Typography.labelMedium, color = PackGuideColors.primaryText)
             Spacer(Modifier.height(18.dp))
             AuthField(
                 value = username,
@@ -201,7 +198,7 @@ fun AuthScreen(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     CircularProgressIndicator(Modifier.size(16.dp), color = AccentRedLed, strokeWidth = 2.dp)
                     Spacer(Modifier.width(10.dp))
-                    Text("VERIFICANDO CREDENCIALES...", style = Typography.labelSmall, color = SecondarySlate)
+                    Text("VERIFICANDO CREDENCIALES...", style = Typography.labelSmall, color = PackGuideColors.secondaryText)
                 }
             }
             Spacer(Modifier.height(10.dp))
@@ -222,7 +219,7 @@ fun AuthScreen(
         Row(verticalAlignment = Alignment.CenterVertically) {
             LedIndicator(color = AccentGreenLed, isPulsing = false)
             Spacer(Modifier.width(8.dp))
-            Text("CUENTA ALMACENADA EN ESTE DISPOSITIVO", style = Typography.labelSmall, color = SecondarySlate)
+            Text("CUENTA ALMACENADA EN ESTE DISPOSITIVO", style = Typography.labelSmall, color = PackGuideColors.secondaryText)
         }
         if (showSettings) {
             SettingsDialog(
@@ -276,9 +273,9 @@ private fun AuthField(
         } else null,
         shape = RoundedCornerShape(2.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = PrimaryBlack,
-            unfocusedBorderColor = BorderSlate,
-            focusedLabelColor = PrimaryBlack,
+            focusedBorderColor = PackGuideColors.primaryText,
+            unfocusedBorderColor = PackGuideColors.border,
+            focusedLabelColor = PackGuideColors.primaryText,
             cursorColor = AccentRedLed
         )
     )
