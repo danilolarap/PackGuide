@@ -21,6 +21,16 @@ import com.example.packguide.settings.AppLanguage
 val LocalAppLanguage = compositionLocalOf { AppLanguage.Spanish }
 
 private val englishTranslations = mapOf(
+    "[ AJUSTES DE SISTEMA ]" to "[ SYSTEM SETTINGS ]",
+    "PERSONALIZA PACKGUIDE" to "CUSTOMIZE PACKGUIDE",
+    "TEMA" to "THEME",
+    "CLARO" to "LIGHT",
+    "OSCURO" to "DARK",
+    "IDIOMA" to "LANGUAGE",
+    "ESPAÑOL" to "SPANISH",
+    "CERRAR SESIÓN" to "SIGN OUT",
+    "SALIR DE LA CUENTA" to "LOG OUT OF THIS ACCOUNT",
+    "[ CERRAR ]" to "[ CLOSE ]",
     "[ ENTRAR ]" to "[ SIGN IN ]",
     "[ CREAR CUENTA ]" to "[ CREATE ACCOUNT ]",
     "[ REGISTRAR ]" to "[ REGISTER ]",

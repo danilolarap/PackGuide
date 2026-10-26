@@ -20,9 +20,13 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
+import com.example.packguide.ui.localization.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,10 +49,14 @@ import androidx.compose.ui.unit.dp
 import com.example.packguide.data.auth.AuthRepository
 import com.example.packguide.data.auth.AuthResult
 import com.example.packguide.data.auth.AuthValidation
+import com.example.packguide.settings.AppLanguage
+import com.example.packguide.settings.AppSettings
 import com.example.packguide.ui.components.AsciiButton
 import com.example.packguide.ui.components.DashedDivider
 import com.example.packguide.ui.components.HudHeader
 import com.example.packguide.ui.components.LedIndicator
+import com.example.packguide.ui.components.SettingsDialog
+import com.example.packguide.ui.localization.Text as LocalizedText
 import com.example.packguide.ui.theme.AccentGreenLed
 import com.example.packguide.ui.theme.AccentRedLed
 import com.example.packguide.ui.theme.BackgroundLight
@@ -61,7 +69,13 @@ import com.example.packguide.ui.theme.Typography
 import kotlinx.coroutines.launch
 
 @Composable
-fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
+fun AuthScreen(
+    repository: AuthRepository,
+    settings: AppSettings,
+    onThemeChange: (Boolean) -> Unit,
+    onLanguageChange: (AppLanguage) -> Unit,
+    onAuthenticated: () -> Unit
+) {
     var isRegistering by rememberSaveable { mutableStateOf(false) }
     var username by rememberSaveable { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -70,6 +84,7 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
     var confirmPasswordVisible by remember { mutableStateOf(false) }
     var error by rememberSaveable { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(false) }
+    var showSettings by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val submit = {
         val cleanUser = username.trim()
@@ -107,7 +122,11 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             LedIndicator(color = AccentRedLed, isPulsing = true)
             Spacer(Modifier.width(10.dp))
-            Text("PACKGUIDE // ACCESS", style = Typography.labelMedium, color = SecondarySlate)
+            LocalizedText("PACKGUIDE // ACCESS", style = Typography.labelMedium, color = SecondarySlate)
+            Spacer(Modifier.weight(1f))
+            IconButton(onClick = { showSettings = true }) {
+                Icon(Icons.Outlined.Settings, contentDescription = "Settings", tint = PrimaryBlack)
+            }
         }
         Spacer(Modifier.height(24.dp))
         HudHeader(
@@ -204,6 +223,19 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
             LedIndicator(color = AccentGreenLed, isPulsing = false)
             Spacer(Modifier.width(8.dp))
             Text("CUENTA ALMACENADA EN ESTE DISPOSITIVO", style = Typography.labelSmall, color = SecondarySlate)
+        }
+        if (showSettings) {
+            SettingsDialog(
+                language = settings.language,
+                isDarkTheme = settings.isDarkTheme,
+                showLogout = false,
+                onToggleTheme = { onThemeChange(!settings.isDarkTheme) },
+                onToggleLanguage = {
+                    onLanguageChange(if (settings.language == AppLanguage.Spanish) AppLanguage.English else AppLanguage.Spanish)
+                },
+                onLogout = {},
+                onDismiss = { showSettings = false }
+            )
         }
     }
 }

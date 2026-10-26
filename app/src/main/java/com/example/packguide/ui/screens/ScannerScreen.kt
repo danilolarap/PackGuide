@@ -20,12 +20,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.CenterFocusWeak
-import androidx.compose.material.icons.outlined.DarkMode
-import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
+import com.example.packguide.ui.localization.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -61,9 +59,10 @@ import com.example.packguide.ui.theme.Typography
 
 @Composable
 fun ScannerScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBack: () -> Unit,
+    onOpenSettings: () -> Unit
 ) {
-    var isDarkMode by remember { mutableStateOf(false) }
     var selectedMode by remember { mutableStateOf("MANUAL") } // [AUTO] vs [MANUAL]
 
     // Manual measures state
@@ -85,7 +84,7 @@ fun ScannerScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
-                onClick = { /* Back action */ },
+                onClick = onBack,
                 modifier = Modifier.size(36.dp)
             ) {
                 Icon(
@@ -107,18 +106,7 @@ fun ScannerScreen(
             )
 
             IconButton(
-                onClick = { isDarkMode = !isDarkMode },
-                modifier = Modifier.size(36.dp)
-            ) {
-                Icon(
-                    imageVector = if (isDarkMode) Icons.Outlined.DarkMode else Icons.Outlined.LightMode,
-                    contentDescription = "Modo de luz/oscuridad",
-                    tint = PrimaryBlack
-                )
-            }
-
-            IconButton(
-                onClick = { /* Settings action */ },
+                onClick = onOpenSettings,
                 modifier = Modifier.size(36.dp)
             ) {
                 Icon(

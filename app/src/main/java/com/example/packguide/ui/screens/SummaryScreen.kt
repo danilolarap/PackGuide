@@ -25,17 +25,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BookmarkAdded
-import androidx.compose.material.icons.outlined.DarkMode
-import androidx.compose.material.icons.outlined.LightMode
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
+import com.example.packguide.ui.localization.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -68,10 +64,10 @@ import com.example.packguide.ui.theme.Typography
 @Composable
 fun SummaryScreen(
     modifier: Modifier = Modifier,
-    onNavigateToTab: ((NavTab) -> Unit)? = null
+    onNavigateToTab: ((NavTab) -> Unit)? = null,
+    onOpenSettings: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    var isDarkMode by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -103,17 +99,16 @@ fun SummaryScreen(
                 )
             }
 
-            // Tech Theme Switch Icons
             IconButton(
-                onClick = { isDarkMode = !isDarkMode },
+                onClick = onOpenSettings,
                 modifier = Modifier
                     .size(36.dp)
                     .background(CardSurfaceLight, shape = RoundedCornerShape(4.dp))
                     .border(1.dp, PrimaryBlack, shape = RoundedCornerShape(4.dp))
             ) {
                 Icon(
-                    imageVector = if (isDarkMode) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
-                    contentDescription = "Cambiar Tema",
+                    imageVector = Icons.Outlined.Settings,
+                    contentDescription = "Configuración",
                     tint = PrimaryBlack,
                     modifier = Modifier.size(20.dp)
                 )

@@ -16,22 +16,37 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.packguide.ui.navigation.NavTab
 import com.example.packguide.ui.navigation.TechBottomNavBar
+import com.example.packguide.settings.AppLanguage
+import com.example.packguide.settings.AppSettings
+import com.example.packguide.ui.components.SettingsDialog
 import com.example.packguide.ui.theme.BackgroundLight
 
 @Composable
-fun MainScreen() {
-    var currentTab by remember { mutableStateOf<NavTab?>(NavTab.Scanner) }
-    val safeCurrentTab = currentTab ?: NavTab.Scanner
+fun MainScreen(
+    settings: AppSettings,
+    onThemeChange: (Boolean) -> Unit,
+    onLanguageChange: (AppLanguage) -> Unit,
+    onLogout: () -> Unit,
+    onExit: () -> Unit
+) {
+    var currentTab by remember { mutableStateOf<NavTab>(NavTab.Scanner) }
+    var previousTab by remember { mutableStateOf<NavTab?>(null) }
+    var showSettings by remember { mutableStateOf(false) }
+
+    fun navigateTo(tab: NavTab) {
+        if (tab != currentTab) previousTab = currentTab
+        currentTab = tab
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = BackgroundLight,
         bottomBar = {
             TechBottomNavBar(
-                selectedTab = safeCurrentTab,
-                onTabSelected = { currentTab = it },
+                selectedTab = currentTab,
+                onTabSelected = ::navigateTo,
                 tabs = listOf(NavTab.Scanner, NavTab.Catalog, NavTab.Guide, NavTab.Summary),
-                currentDestination = safeCurrentTab
+                currentDestination = currentTab
             )
         }
     ) { innerPadding ->
@@ -41,16 +56,44 @@ fun MainScreen() {
                 .padding(innerPadding)
         ) {
             AnimatedContent(
-                targetState = safeCurrentTab,
+                targetState = currentTab,
                 transitionSpec = { fadeIn() togetherWith fadeOut() },
                 label = "ScreenTransition"
             ) { tab ->
                 when (tab) {
-                    is NavTab.Scanner -> ScannerScreen()
+                    is NavTab.Scanner -> ScannerScreen(
+                        onBack = {
+                            val destination = previousTab
+                            if (destination != null) {
+                                currentTab = destination
+                                previousTab = null
+                            } else onExit()
+                        },
+                        onOpenSettings = { showSettings = true }
+                    )
                     is NavTab.Catalog -> CatalogScreen()
-                    is NavTab.Guide -> GuideScreen(onNavigateToTab = { currentTab = it })
-                    is NavTab.Summary -> SummaryScreen(onNavigateToTab = { currentTab = it })
+                    is NavTab.Guide -> GuideScreen(onNavigateToTab = ::navigateTo)
+                    is NavTab.Summary -> SummaryScreen(
+                        onNavigateToTab = ::navigateTo,
+                        onOpenSettings = { showSettings = true }
+                    )
                 }
+            }
+            if (showSettings) {
+                SettingsDialog(
+                    language = settings.language,
+                    isDarkTheme = settings.isDarkTheme,
+                    showLogout = true,
+                    onToggleTheme = { onThemeChange(!settings.isDarkTheme) },
+                    onToggleLanguage = {
+                        onLanguageChange(if (settings.language == AppLanguage.Spanish) AppLanguage.English else AppLanguage.Spanish)
+                    },
+                    onLogout = {
+                        showSettings = false
+                        onLogout()
+                    },
+                    onDismiss = { showSettings = false }
+                )
             }
         }
     }
