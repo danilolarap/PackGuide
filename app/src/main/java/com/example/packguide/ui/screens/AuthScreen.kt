@@ -38,6 +38,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.packguide.data.auth.AuthRepository
 import com.example.packguide.data.auth.AuthResult
+import com.example.packguide.data.auth.AuthValidation
 import com.example.packguide.ui.components.AsciiButton
 import com.example.packguide.ui.components.DashedDivider
 import com.example.packguide.ui.components.HudHeader
@@ -107,12 +108,11 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
                     text = if (isRegistering) "[ REGISTRAR ]" else "[ ENTRAR ]",
                     onClick = {
                         val cleanUser = username.trim()
-                        error = when {
-                            cleanUser.length < 3 -> "El usuario debe tener al menos 3 caracteres."
-                            password.length < 8 -> "La contraseña debe tener al menos 8 caracteres."
-                            isRegistering && password != confirmPassword -> "Las contraseñas no coinciden."
-                            else -> null
-                        }
+                        error = AuthValidation.usernameError(cleanUser)
+                            ?: AuthValidation.passwordError(password)
+                            ?: if (isRegistering && password != confirmPassword) {
+                                "Las contraseñas no coinciden."
+                            } else null
                         if (error == null) {
                             isLoading = true
                             scope.launch {
