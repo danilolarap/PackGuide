@@ -173,7 +173,12 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
             Spacer(Modifier.height(10.dp))
             AsciiButton(
                 text = if (isRegistering) "[ YA TENGO CUENTA ]" else "[ CREAR CUENTA ]",
-                onClick = { isRegistering = !isRegistering; error = null },
+                onClick = {
+                    isRegistering = !isRegistering
+                    confirmPassword = ""
+                    confirmPasswordVisible = false
+                    error = null
+                },
                 modifier = Modifier.fillMaxWidth(),
                 isPrimary = false,
                 enabled = !isLoading
