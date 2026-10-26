@@ -1,4 +1,6 @@
-package com.example.packguide.ui.screens
+package com.example.packguide.ui.screens
+
+import com.example.packguide.ui.theme.PackGuideColors
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -48,12 +50,6 @@ import com.example.packguide.ui.components.TechBadge
 import com.example.packguide.ui.components.TechCard
 import com.example.packguide.ui.theme.AccentGreenLed
 import com.example.packguide.ui.theme.AccentRedLed
-import com.example.packguide.ui.theme.BackgroundLight
-import com.example.packguide.ui.theme.BorderSlate
-import com.example.packguide.ui.theme.CardSurfaceLight
-import com.example.packguide.ui.theme.PrimaryBlack
-import com.example.packguide.ui.theme.SecondarySlate
-import com.example.packguide.ui.theme.SurfaceVariantLight
 import com.example.packguide.ui.theme.TechMonospaceFontFamily
 import com.example.packguide.ui.theme.Typography
 import java.util.Locale
@@ -151,7 +147,7 @@ fun CatalogScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(BackgroundLight)
+            .background(PackGuideColors.background)
     ) {
         // --- 1. TOP BAR: NOTHING (R) // SYS CATÁLOGO DE ÍTEMS ---
         HudHeader(
@@ -170,15 +166,15 @@ fun CatalogScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(CardSurfaceLight, shape = RoundedCornerShape(2.dp))
-                    .border(1.dp, PrimaryBlack, shape = RoundedCornerShape(2.dp))
+                    .background(PackGuideColors.surface, shape = RoundedCornerShape(2.dp))
+                    .border(1.dp, PackGuideColors.primaryText, shape = RoundedCornerShape(2.dp))
                     .padding(horizontal = 12.dp, vertical = 10.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Outlined.Search,
                         contentDescription = "Buscar",
-                        tint = PrimaryBlack,
+                        tint = PackGuideColors.primaryText,
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -188,14 +184,14 @@ fun CatalogScreen(
                                 text = "BUSCAR ÍTEM... [ _ ]",
                                 style = Typography.bodyMedium,
                                 fontFamily = TechMonospaceFontFamily,
-                                color = SecondarySlate
+                                color = PackGuideColors.secondaryText
                             )
                         }
                         BasicTextField(
                             value = searchQuery,
                             onValueChange = { searchQuery = it },
                             textStyle = Typography.bodyMedium.copy(
-                                color = PrimaryBlack,
+                                color = PackGuideColors.primaryText,
                                 fontFamily = TechMonospaceFontFamily
                             ),
                             singleLine = true,
@@ -204,8 +200,8 @@ fun CatalogScreen(
                     }
                     TechBadge(
                         text = "ASCII",
-                        containerColor = SurfaceVariantLight,
-                        contentColor = PrimaryBlack
+                        containerColor = PackGuideColors.surfaceVariant,
+                        contentColor = PackGuideColors.primaryText
                     )
                 }
             }
@@ -223,12 +219,12 @@ fun CatalogScreen(
                     Box(
                         modifier = Modifier
                             .background(
-                                if (isActive) PrimaryBlack else CardSurfaceLight,
+                                if (isActive) PackGuideColors.primaryText else PackGuideColors.surface,
                                 shape = RoundedCornerShape(2.dp)
                             )
                             .border(
                                 1.dp,
-                                if (isActive) AccentRedLed else BorderSlate,
+                                if (isActive) AccentRedLed else PackGuideColors.border,
                                 shape = RoundedCornerShape(2.dp)
                             )
                             .clickable { selectedCategory = category }
@@ -244,7 +240,7 @@ fun CatalogScreen(
                                 style = Typography.labelSmall.copy(fontSize = 11.sp),
                                 fontFamily = TechMonospaceFontFamily,
                                 fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal,
-                                color = if (isActive) CardSurfaceLight else PrimaryBlack
+                                color = if (isActive) PackGuideColors.surface else PackGuideColors.primaryText
                             )
                         }
                     }
@@ -263,7 +259,7 @@ fun CatalogScreen(
                     val itemSubtotalL = item.quantity * item.unitVolumeL
 
                     TechCard(
-                        borderColor = BorderSlate
+                        borderColor = PackGuideColors.border
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -277,14 +273,14 @@ fun CatalogScreen(
                                 Box(
                                     modifier = Modifier
                                         .size(38.dp)
-                                        .background(SurfaceVariantLight, shape = RoundedCornerShape(4.dp))
-                                        .border(1.dp, BorderSlate, shape = RoundedCornerShape(4.dp)),
+                                        .background(PackGuideColors.surfaceVariant, shape = RoundedCornerShape(4.dp))
+                                        .border(1.dp, PackGuideColors.border, shape = RoundedCornerShape(4.dp)),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Icon(
                                         imageVector = item.icon,
                                         contentDescription = item.name,
-                                        tint = PrimaryBlack,
+                                        tint = PackGuideColors.primaryText,
                                         modifier = Modifier.size(20.dp)
                                     )
                                 }
@@ -298,13 +294,13 @@ fun CatalogScreen(
                                             style = Typography.titleMedium,
                                             fontFamily = TechMonospaceFontFamily,
                                             fontWeight = FontWeight.Bold,
-                                            color = PrimaryBlack
+                                            color = PackGuideColors.primaryText
                                         )
                                         Spacer(modifier = Modifier.width(6.dp))
                                         TechBadge(
                                             text = item.category,
-                                            containerColor = SurfaceVariantLight,
-                                            contentColor = PrimaryBlack
+                                            containerColor = PackGuideColors.surfaceVariant,
+                                            contentColor = PackGuideColors.primaryText
                                         )
                                     }
 
@@ -314,7 +310,7 @@ fun CatalogScreen(
                                         text = "${item.dimensions}  |  ${item.unitVolumeL}L",
                                         style = Typography.labelSmall,
                                         fontFamily = TechMonospaceFontFamily,
-                                        color = SecondarySlate
+                                        color = PackGuideColors.secondaryText
                                     )
 
                                     Spacer(modifier = Modifier.height(4.dp))
@@ -339,8 +335,8 @@ fun CatalogScreen(
                                 Box(
                                     modifier = Modifier
                                         .size(32.dp)
-                                        .background(CardSurfaceLight, shape = RoundedCornerShape(2.dp))
-                                        .border(1.dp, PrimaryBlack, shape = RoundedCornerShape(2.dp))
+                                        .background(PackGuideColors.surface, shape = RoundedCornerShape(2.dp))
+                                        .border(1.dp, PackGuideColors.primaryText, shape = RoundedCornerShape(2.dp))
                                         .clickable {
                                             if ((itemIndex != -1) && (itemsList[itemIndex].quantity > 0)) {
                                                 itemsList[itemIndex] = itemsList[itemIndex].copy(
@@ -354,7 +350,7 @@ fun CatalogScreen(
                                         text = "-",
                                         style = Typography.titleMedium,
                                         fontFamily = TechMonospaceFontFamily,
-                                        color = PrimaryBlack
+                                        color = PackGuideColors.primaryText
                                     )
                                 }
 
@@ -363,8 +359,8 @@ fun CatalogScreen(
                                     modifier = Modifier
                                         .width(36.dp)
                                         .height(32.dp)
-                                        .background(SurfaceVariantLight, shape = RoundedCornerShape(2.dp))
-                                        .border(1.dp, BorderSlate, shape = RoundedCornerShape(2.dp)),
+                                        .background(PackGuideColors.surfaceVariant, shape = RoundedCornerShape(2.dp))
+                                        .border(1.dp, PackGuideColors.border, shape = RoundedCornerShape(2.dp)),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
@@ -372,7 +368,7 @@ fun CatalogScreen(
                                         style = Typography.titleMedium,
                                         fontFamily = TechMonospaceFontFamily,
                                         fontWeight = FontWeight.Bold,
-                                        color = PrimaryBlack
+                                        color = PackGuideColors.primaryText
                                     )
                                 }
 
@@ -380,8 +376,8 @@ fun CatalogScreen(
                                 Box(
                                     modifier = Modifier
                                         .size(32.dp)
-                                        .background(PrimaryBlack, shape = RoundedCornerShape(2.dp))
-                                        .border(1.dp, PrimaryBlack, shape = RoundedCornerShape(2.dp))
+                                        .background(PackGuideColors.primaryText, shape = RoundedCornerShape(2.dp))
+                                        .border(1.dp, PackGuideColors.primaryText, shape = RoundedCornerShape(2.dp))
                                         .clickable {
                                             if (itemIndex != -1) {
                                                 itemsList[itemIndex] = itemsList[itemIndex].copy(
@@ -395,7 +391,7 @@ fun CatalogScreen(
                                         text = "+",
                                         style = Typography.titleMedium,
                                         fontFamily = TechMonospaceFontFamily,
-                                        color = CardSurfaceLight
+                                        color = PackGuideColors.surface
                                     )
                                 }
                             }
@@ -414,8 +410,8 @@ fun CatalogScreen(
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
                     .shadow(4.dp, shape = RoundedCornerShape(4.dp))
-                    .background(CardSurfaceLight, shape = RoundedCornerShape(4.dp))
-                    .border(1.dp, PrimaryBlack, shape = RoundedCornerShape(4.dp))
+                    .background(PackGuideColors.surface, shape = RoundedCornerShape(4.dp))
+                    .border(1.dp, PackGuideColors.primaryText, shape = RoundedCornerShape(4.dp))
                     .padding(14.dp)
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -430,13 +426,13 @@ fun CatalogScreen(
                             style = Typography.titleMedium,
                             fontFamily = TechMonospaceFontFamily,
                             fontWeight = FontWeight.Bold,
-                            color = PrimaryBlack
+                            color = PackGuideColors.primaryText
                         )
 
                         TechBadge(
                             text = "CAPACIDAD DISPONIBLE: ${String.format(Locale.US, "%.1f", availableVolumeL)}L",
-                            containerColor = PrimaryBlack,
-                            contentColor = CardSurfaceLight,
+                            containerColor = PackGuideColors.primaryText,
+                            contentColor = PackGuideColors.surface,
                             ledColor = AccentGreenLed
                         )
                     }
@@ -455,12 +451,12 @@ fun CatalogScreen(
                                     .weight(1f)
                                     .height(14.dp)
                                     .background(
-                                        if (isFilled) AccentRedLed else SurfaceVariantLight,
+                                        if (isFilled) AccentRedLed else PackGuideColors.surfaceVariant,
                                         shape = RoundedCornerShape(1.dp)
                                     )
                                     .border(
                                         1.dp,
-                                        if (isFilled) AccentRedLed else BorderSlate,
+                                        if (isFilled) AccentRedLed else PackGuideColors.border,
                                         shape = RoundedCornerShape(1.dp)
                                     )
                             )
@@ -471,7 +467,7 @@ fun CatalogScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(PrimaryBlack, shape = RoundedCornerShape(20.dp))
+                            .background(PackGuideColors.primaryText, shape = RoundedCornerShape(20.dp))
                             .border(1.dp, AccentRedLed, shape = RoundedCornerShape(20.dp))
                             .clickable { /* Create packing plan action */ }
                             .padding(vertical = 12.dp),
@@ -483,7 +479,7 @@ fun CatalogScreen(
                                 style = Typography.titleMedium,
                                 fontFamily = TechMonospaceFontFamily,
                                 fontWeight = FontWeight.Bold,
-                                color = CardSurfaceLight
+                                color = PackGuideColors.surface
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Icon(
