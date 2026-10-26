@@ -8,11 +8,15 @@ object AuthValidation {
         else -> null
     }
 
-    fun passwordError(password: String): String? =
-        if (password.length < MIN_PASSWORD_LENGTH) "La contraseña debe tener al menos 8 caracteres." else null
+    fun passwordError(password: String): String? = when {
+        password.isEmpty() -> "La contraseña no puede estar vacía."
+        password.length > MAX_PASSWORD_LENGTH -> "La contraseña no puede superar 45 caracteres."
+        !password.all(Char::isLetterOrDigit) -> "Usa solo letras y números en la contraseña."
+        else -> null
+    }
 
     private const val MIN_USERNAME_LENGTH = 3
     private const val MAX_USERNAME_LENGTH = 24
-    private const val MIN_PASSWORD_LENGTH = 8
+    private const val MAX_PASSWORD_LENGTH = 45
     private val USERNAME_PATTERN = Regex("[A-Za-z0-9._-]+")
 }
