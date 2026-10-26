@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -92,7 +93,7 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().background(BackgroundLight).imePadding()
+        modifier = Modifier.fillMaxSize().background(BackgroundLight).safeDrawingPadding().imePadding()
             .verticalScroll(rememberScrollState()).padding(horizontal = 24.dp, vertical = 28.dp),
         verticalArrangement = Arrangement.Center
     ) {
