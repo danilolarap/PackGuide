@@ -1,4 +1,6 @@
-package com.example.packguide.ui.screens
+package com.example.packguide.ui.screens
+
+import com.example.packguide.ui.theme.PackGuideColors
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -53,12 +55,6 @@ import com.example.packguide.ui.components.TechCard
 import com.example.packguide.ui.navigation.NavTab
 import com.example.packguide.ui.theme.AccentGreenLed
 import com.example.packguide.ui.theme.AccentRedLed
-import com.example.packguide.ui.theme.BackgroundLight
-import com.example.packguide.ui.theme.BorderSlate
-import com.example.packguide.ui.theme.CardSurfaceLight
-import com.example.packguide.ui.theme.PrimaryBlack
-import com.example.packguide.ui.theme.SecondarySlate
-import com.example.packguide.ui.theme.SurfaceVariantLight
 import com.example.packguide.ui.theme.TechMonospaceFontFamily
 import com.example.packguide.ui.theme.Typography
 
@@ -73,13 +69,13 @@ fun GuideScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(BackgroundLight)
+            .background(PackGuideColors.background)
     ) {
         // --- 1. HEADER WITH STEP TRACKING & PROGRESS BAR ---
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(BackgroundLight)
+                .background(PackGuideColors.background)
                 .padding(horizontal = 16.dp, vertical = 10.dp)
         ) {
             Row(
@@ -91,7 +87,7 @@ fun GuideScreen(
                     style = Typography.labelSmall.copy(fontSize = 11.sp),
                     fontFamily = TechMonospaceFontFamily,
                     fontWeight = FontWeight.Bold,
-                    color = PrimaryBlack,
+                    color = PackGuideColors.primaryText,
                     modifier = Modifier.weight(1f)
                 )
 
@@ -115,7 +111,7 @@ fun GuideScreen(
                     text = "Paso 03 / 05",
                     style = Typography.labelSmall,
                     fontFamily = TechMonospaceFontFamily,
-                    color = SecondarySlate
+                    color = PackGuideColors.secondaryText
                 )
 
                 Spacer(modifier = Modifier.width(12.dp))
@@ -125,8 +121,8 @@ fun GuideScreen(
                     modifier = Modifier
                         .weight(1f)
                         .height(10.dp)
-                        .background(SurfaceVariantLight, shape = RoundedCornerShape(2.dp))
-                        .border(1.dp, BorderSlate, shape = RoundedCornerShape(2.dp))
+                        .background(PackGuideColors.surfaceVariant, shape = RoundedCornerShape(2.dp))
+                        .border(1.dp, PackGuideColors.border, shape = RoundedCornerShape(2.dp))
                         .padding(1.dp)
                 ) {
                     Box(
@@ -163,7 +159,7 @@ fun GuideScreen(
 
                 // --- 2. TOP INSTRUCTION CARD: MÉTODO: RANGER ROLL ---
                 TechCard(
-                    borderColor = PrimaryBlack
+                    borderColor = PackGuideColors.primaryText
                 ) {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         // Title + Efficiency Badge Header Row
@@ -176,7 +172,7 @@ fun GuideScreen(
                                 style = Typography.headlineMedium,
                                 fontFamily = TechMonospaceFontFamily,
                                 fontWeight = FontWeight.Bold,
-                                color = PrimaryBlack
+                                color = PackGuideColors.primaryText
                             )
 
                             Spacer(modifier = Modifier.weight(1f))
@@ -185,14 +181,14 @@ fun GuideScreen(
                             TechBadge(
                                 text = "-35% VOL",
                                 containerColor = AccentGreenLed,
-                                contentColor = PrimaryBlack,
-                                borderColor = PrimaryBlack,
-                                ledColor = PrimaryBlack
+                                contentColor = PackGuideColors.primaryText,
+                                borderColor = PackGuideColors.primaryText,
+                                ledColor = PackGuideColors.primaryText
                             )
                         }
 
                         Spacer(modifier = Modifier.height(12.dp))
-                        DashedDivider(color = BorderSlate)
+                        DashedDivider(color = PackGuideColors.border)
                         Spacer(modifier = Modifier.height(12.dp))
 
                         // Illustrated 3-Step Diagram Card
@@ -241,7 +237,7 @@ fun GuideScreen(
                 TechCard(
                     headerTag = "ASIGNACIÓN EN VALIJA - GRID 2D // CARGA",
                     subTag = "[ VISTA SUPERIOR // CAPA B ]",
-                    borderColor = PrimaryBlack
+                    borderColor = PackGuideColors.primaryText
                 ) {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         // Grid View Blueprint Canvas
@@ -252,7 +248,7 @@ fun GuideScreen(
                         )
 
                         Spacer(modifier = Modifier.height(14.dp))
-                        DashedDivider(color = BorderSlate)
+                        DashedDivider(color = PackGuideColors.border)
                         Spacer(modifier = Modifier.height(12.dp))
 
                         // Metrics row below grid
@@ -266,14 +262,14 @@ fun GuideScreen(
                                 Text(
                                     text = "CAPACIDAD",
                                     style = Typography.labelSmall,
-                                    color = SecondarySlate
+                                    color = PackGuideColors.secondaryText
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
                                     text = "4.2 L",
                                     style = Typography.titleLarge,
                                     fontFamily = TechMonospaceFontFamily,
-                                    color = PrimaryBlack
+                                    color = PackGuideColors.primaryText
                                 )
                             }
 
@@ -282,7 +278,7 @@ fun GuideScreen(
                                 Text(
                                     text = "ESTABILIDAD",
                                     style = Typography.labelSmall,
-                                    color = SecondarySlate
+                                    color = PackGuideColors.secondaryText
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
@@ -299,14 +295,14 @@ fun GuideScreen(
                                 Text(
                                     text = "DISTRIBUCIÓN",
                                     style = Typography.labelSmall,
-                                    color = SecondarySlate
+                                    color = PackGuideColors.secondaryText
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
                                     text = "BASE INF",
                                     style = Typography.titleLarge,
                                     fontFamily = TechMonospaceFontFamily,
-                                    color = PrimaryBlack
+                                    color = PackGuideColors.primaryText
                                 )
                             }
                         }
@@ -379,12 +375,12 @@ private fun PhaseStepItem(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                if (isActive) SurfaceVariantLight else CardSurfaceLight,
+                if (isActive) PackGuideColors.surfaceVariant else PackGuideColors.surface,
                 shape = RoundedCornerShape(4.dp)
             )
             .border(
                 width = if (isActive) 1.5.dp else 1.dp,
-                color = if (isActive) AccentRedLed else BorderSlate,
+                color = if (isActive) AccentRedLed else PackGuideColors.border,
                 shape = RoundedCornerShape(4.dp)
             )
             .clickable { onClick() }
@@ -398,8 +394,8 @@ private fun PhaseStepItem(
             Box(
                 modifier = Modifier
                     .size(64.dp)
-                    .background(PrimaryBlack, shape = RoundedCornerShape(4.dp))
-                    .border(1.dp, if (isActive) AccentRedLed else BorderSlate, shape = RoundedCornerShape(4.dp)),
+                    .background(PackGuideColors.primaryText, shape = RoundedCornerShape(4.dp))
+                    .border(1.dp, if (isActive) AccentRedLed else PackGuideColors.border, shape = RoundedCornerShape(4.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 diagramContent()
@@ -417,7 +413,7 @@ private fun PhaseStepItem(
                         style = Typography.labelSmall.copy(fontSize = 8.sp),
                         fontFamily = TechMonospaceFontFamily,
                         fontWeight = FontWeight.Bold,
-                        color = CardSurfaceLight
+                        color = PackGuideColors.surface
                     )
                 }
             }
@@ -441,7 +437,7 @@ private fun PhaseStepItem(
                         style = Typography.titleMedium,
                         fontFamily = TechMonospaceFontFamily,
                         fontWeight = FontWeight.Bold,
-                        color = PrimaryBlack
+                        color = PackGuideColors.primaryText
                     )
                 }
 
@@ -450,7 +446,7 @@ private fun PhaseStepItem(
                 Text(
                     text = description,
                     style = Typography.bodyMedium,
-                    color = SecondarySlate
+                    color = PackGuideColors.secondaryText
                 )
             }
         }
@@ -526,7 +522,7 @@ private fun Phase2DiagramCanvas() {
 
         drawPath(
             path = pathGhost,
-            color = SecondarySlate.copy(alpha = 0.4f),
+            color = PackGuideColors.secondaryText.copy(alpha = 0.4f),
             style = Stroke(width = 1f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(3f, 3f), 0f))
         )
 
@@ -636,8 +632,8 @@ private fun Suitcase2DGridCanvas(
 
     Box(
         modifier = modifier
-            .background(PrimaryBlack, shape = RoundedCornerShape(4.dp))
-            .border(1.dp, BorderSlate, shape = RoundedCornerShape(4.dp))
+            .background(PackGuideColors.primaryText, shape = RoundedCornerShape(4.dp))
+            .border(1.dp, PackGuideColors.border, shape = RoundedCornerShape(4.dp))
             .padding(8.dp)
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
@@ -650,7 +646,7 @@ private fun Suitcase2DGridCanvas(
             var x = 0f
             while (x < w) {
                 drawLine(
-                    color = SecondarySlate.copy(alpha = 0.15f),
+                    color = PackGuideColors.secondaryText.copy(alpha = 0.15f),
                     start = Offset(x, 0f),
                     end = Offset(x, h),
                     strokeWidth = 1f,
@@ -661,7 +657,7 @@ private fun Suitcase2DGridCanvas(
             var y = 0f
             while (y < h) {
                 drawLine(
-                    color = SecondarySlate.copy(alpha = 0.15f),
+                    color = PackGuideColors.secondaryText.copy(alpha = 0.15f),
                     start = Offset(0f, y),
                     end = Offset(w, y),
                     strokeWidth = 1f,
@@ -687,7 +683,7 @@ private fun Suitcase2DGridCanvas(
 
             // Vertical divider
             drawLine(
-                color = SecondarySlate.copy(alpha = 0.4f),
+                color = PackGuideColors.secondaryText.copy(alpha = 0.4f),
                 start = Offset(midX, 10f),
                 end = Offset(midX, h - 10f),
                 strokeWidth = 1f,
@@ -696,7 +692,7 @@ private fun Suitcase2DGridCanvas(
 
             // Horizontal divider
             drawLine(
-                color = SecondarySlate.copy(alpha = 0.4f),
+                color = PackGuideColors.secondaryText.copy(alpha = 0.4f),
                 start = Offset(10f, midY),
                 end = Offset(w - 10f, midY),
                 strokeWidth = 1f,
@@ -705,7 +701,7 @@ private fun Suitcase2DGridCanvas(
 
             // --- SLOT 1: TOP LEFT - [TECH PACK] ---
             drawRoundRect(
-                color = SecondarySlate.copy(alpha = 0.2f),
+                color = PackGuideColors.secondaryText.copy(alpha = 0.2f),
                 topLeft = Offset(12f, 12f),
                 size = Size(midX - 18f, midY - 18f),
                 cornerRadius = CornerRadius(4f, 4f)
@@ -713,7 +709,7 @@ private fun Suitcase2DGridCanvas(
 
             // --- SLOT 2: TOP RIGHT - [NECESER] ---
             drawRoundRect(
-                color = SecondarySlate.copy(alpha = 0.2f),
+                color = PackGuideColors.secondaryText.copy(alpha = 0.2f),
                 topLeft = Offset(midX + 6f, 12f),
                 size = Size(midX - 18f, midY - 18f),
                 cornerRadius = CornerRadius(4f, 4f)
@@ -721,7 +717,7 @@ private fun Suitcase2DGridCanvas(
 
             // --- SLOT 3: BOTTOM RIGHT - [CALZADO] ---
             drawRoundRect(
-                color = SecondarySlate.copy(alpha = 0.2f),
+                color = PackGuideColors.secondaryText.copy(alpha = 0.2f),
                 topLeft = Offset(midX + 6f, midY + 6f),
                 size = Size(midX - 18f, midY - 18f),
                 cornerRadius = CornerRadius(4f, 4f)
@@ -773,7 +769,7 @@ private fun Suitcase2DGridCanvas(
                         text = "[TECH PACK]",
                         style = Typography.labelSmall,
                         fontFamily = TechMonospaceFontFamily,
-                        color = CardSurfaceLight
+                        color = PackGuideColors.surface
                     )
                 }
 
@@ -788,7 +784,7 @@ private fun Suitcase2DGridCanvas(
                         text = "[NECESER]",
                         style = Typography.labelSmall,
                         fontFamily = TechMonospaceFontFamily,
-                        color = CardSurfaceLight
+                        color = PackGuideColors.surface
                     )
                 }
             }
@@ -834,7 +830,7 @@ private fun Suitcase2DGridCanvas(
                         text = "[CALZADO]",
                         style = Typography.labelSmall,
                         fontFamily = TechMonospaceFontFamily,
-                        color = CardSurfaceLight
+                        color = PackGuideColors.surface
                     )
                 }
             }
