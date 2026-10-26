@@ -22,6 +22,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -60,6 +61,8 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var confirmPassword by rememberSaveable { mutableStateOf("") }
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    var confirmPasswordVisible by rememberSaveable { mutableStateOf(false) }
     var error by rememberSaveable { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -93,10 +96,24 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
             Spacer(Modifier.height(18.dp))
             AuthField(value = username, onValueChange = { username = it; error = null }, label = "USUARIO")
             Spacer(Modifier.height(12.dp))
-            AuthField(value = password, onValueChange = { password = it; error = null }, label = "CONTRASEÑA", secret = true)
+            AuthField(
+                value = password,
+                onValueChange = { password = it; error = null },
+                label = "CONTRASEÑA",
+                secret = true,
+                isPasswordVisible = passwordVisible,
+                onPasswordVisibilityChange = { passwordVisible = it }
+            )
             if (isRegistering) {
                 Spacer(Modifier.height(12.dp))
-                AuthField(value = confirmPassword, onValueChange = { confirmPassword = it; error = null }, label = "CONFIRMAR CONTRASEÑA", secret = true)
+                AuthField(
+                    value = confirmPassword,
+                    onValueChange = { confirmPassword = it; error = null },
+                    label = "CONFIRMAR CONTRASEÑA",
+                    secret = true,
+                    isPasswordVisible = confirmPasswordVisible,
+                    onPasswordVisibilityChange = { confirmPasswordVisible = it }
+                )
             }
             if (error != null) {
                 Spacer(Modifier.height(12.dp))
@@ -157,7 +174,9 @@ private fun AuthField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    secret: Boolean = false
+    secret: Boolean = false,
+    isPasswordVisible: Boolean = false,
+    onPasswordVisibilityChange: (Boolean) -> Unit = {}
 ) {
     OutlinedTextField(
         value = value,
@@ -165,11 +184,18 @@ private fun AuthField(
         modifier = Modifier.fillMaxWidth(),
         label = { Text(label, fontFamily = TechMonospaceFontFamily) },
         singleLine = true,
-        visualTransformation = if (secret) PasswordVisualTransformation() else VisualTransformation.None,
+        visualTransformation = if (secret && !isPasswordVisible) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = KeyboardOptions(
             keyboardType = if (secret) KeyboardType.Password else KeyboardType.Text,
             imeAction = ImeAction.Next
         ),
+        trailingIcon = if (secret) {
+            {
+                TextButton(onClick = { onPasswordVisibilityChange(!isPasswordVisible) }) {
+                    Text(if (isPasswordVisible) "OCULTAR" else "VER", style = Typography.labelSmall)
+                }
+            }
+        } else null,
         shape = RoundedCornerShape(2.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = PrimaryBlack,
