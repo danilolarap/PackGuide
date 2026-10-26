@@ -1,5 +1,6 @@
 package com.example.packguide.data.auth
 
+import android.database.sqlite.SQLiteConstraintException
 import java.security.MessageDigest
 import java.security.SecureRandom
 import android.util.Base64
@@ -33,7 +34,7 @@ class AuthRepository(private val userAccountDao: UserAccountDao) {
             )
             AuthResult.Success
         }.getOrElse { error ->
-            if (error.javaClass.simpleName.contains("SQLiteConstraintException")) AuthResult.UsernameTaken
+            if (error is SQLiteConstraintException) AuthResult.UsernameTaken
             else AuthResult.StorageError
         }
     }
