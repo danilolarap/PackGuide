@@ -25,7 +25,9 @@ class AuthRepository(private val userAccountDao: UserAccountDao) {
             userAccountDao.insert(
                 UserAccount(
                     username = normalizedUsername,
-                    passwordHash = derivePasswordHash(password, salt),
+                    passwordHash = withContext(Dispatchers.Default) {
+                        derivePasswordHash(password, salt)
+                    },
                     passwordSalt = Base64.encodeToString(salt, Base64.NO_WRAP)
                 )
             )
@@ -44,7 +46,9 @@ class AuthRepository(private val userAccountDao: UserAccountDao) {
 
         val salt = runCatching { Base64.decode(account.passwordSalt, Base64.NO_WRAP) }
             .getOrElse { return AuthResult.StorageError }
-        val actual = runCatching { derivePasswordHash(password, salt) }
+        val actual = runCatching {
+            withContext(Dispatchers.Default) { derivePasswordHash(password, salt) }
+        }
             .getOrElse { return AuthResult.StorageError }
         return if (MessageDigest.isEqual(actual.toByteArray(), account.passwordHash.toByteArray())) {
             AuthResult.Success
