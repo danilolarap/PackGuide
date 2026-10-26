@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -94,7 +95,12 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
         ) {
             Text("[ CREDENCIALES ]", style = Typography.labelMedium, color = PrimaryBlack)
             Spacer(Modifier.height(18.dp))
-            AuthField(value = username, onValueChange = { username = it; error = null }, label = "USUARIO")
+            AuthField(
+                value = username,
+                onValueChange = { username = it; error = null },
+                label = "USUARIO",
+                isUsername = true
+            )
             Spacer(Modifier.height(12.dp))
             AuthField(
                 value = password,
@@ -175,6 +181,7 @@ private fun AuthField(
     onValueChange: (String) -> Unit,
     label: String,
     secret: Boolean = false,
+    isUsername: Boolean = false,
     isPasswordVisible: Boolean = false,
     onPasswordVisibilityChange: (Boolean) -> Unit = {}
 ) {
@@ -187,7 +194,9 @@ private fun AuthField(
         visualTransformation = if (secret && !isPasswordVisible) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = KeyboardOptions(
             keyboardType = if (secret) KeyboardType.Password else KeyboardType.Text,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
+            capitalization = if (isUsername) KeyboardCapitalization.None else KeyboardCapitalization.Sentences,
+            autoCorrectEnabled = false
         ),
         trailingIcon = if (secret) {
             {
