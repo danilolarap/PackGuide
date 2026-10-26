@@ -1,4 +1,6 @@
-package com.example.packguide.ui.components
+package com.example.packguide.ui.components
+
+import com.example.packguide.ui.theme.PackGuideColors
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -20,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.packguide.ui.theme.AccentGreenLed
-import com.example.packguide.ui.theme.SecondarySlate
 import com.example.packguide.ui.theme.TechMonospaceFontFamily
 import com.example.packguide.ui.theme.Typography
 
@@ -75,7 +76,7 @@ fun LedIndicator(
                 text = label,
                 style = Typography.labelSmall,
                 fontFamily = TechMonospaceFontFamily,
-                color = SecondarySlate
+                color = PackGuideColors.secondaryText
             )
         }
     }

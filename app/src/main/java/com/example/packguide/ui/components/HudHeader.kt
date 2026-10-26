@@ -1,4 +1,6 @@
-package com.example.packguide.ui.components
+package com.example.packguide.ui.components
+
+import com.example.packguide.ui.theme.PackGuideColors
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -15,9 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.packguide.ui.theme.AccentGreenLed
-import com.example.packguide.ui.theme.BackgroundLight
-import com.example.packguide.ui.theme.PrimaryBlack
-import com.example.packguide.ui.theme.SecondarySlate
 import com.example.packguide.ui.theme.TechMonospaceFontFamily
 import com.example.packguide.ui.theme.Typography
 
@@ -32,7 +31,7 @@ fun HudHeader(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(BackgroundLight)
+            .background(PackGuideColors.background)
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
         Row(
@@ -43,7 +42,7 @@ fun HudHeader(
                 text = sysCode,
                 style = Typography.labelSmall,
                 fontFamily = TechMonospaceFontFamily,
-                color = SecondarySlate
+                color = PackGuideColors.secondaryText
             )
             Spacer(modifier = Modifier.weight(1f))
             LedIndicator(
@@ -60,7 +59,7 @@ fun HudHeader(
             style = Typography.headlineMedium,
             fontFamily = TechMonospaceFontFamily,
             fontWeight = FontWeight.Bold,
-            color = PrimaryBlack
+            color = PackGuideColors.primaryText
         )
 
         Spacer(modifier = Modifier.height(8.dp))
