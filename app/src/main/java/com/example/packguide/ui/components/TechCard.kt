@@ -1,4 +1,6 @@
-package com.example.packguide.ui.components
+package com.example.packguide.ui.components
+
+import com.example.packguide.ui.theme.PackGuideColors
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,10 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.packguide.ui.theme.BorderSlate
-import com.example.packguide.ui.theme.CardSurfaceLight
-import com.example.packguide.ui.theme.PrimaryBlack
-import com.example.packguide.ui.theme.SecondarySlate
 import com.example.packguide.ui.theme.TechMonospaceFontFamily
 import com.example.packguide.ui.theme.Typography
 
@@ -33,17 +31,20 @@ fun TechCard(
     modifier: Modifier = Modifier,
     headerTag: String? = null,
     subTag: String? = null,
-    borderColor: Color = PrimaryBlack.copy(alpha = 0.15f),
+    borderColor: Color = Color.Unspecified,
     onClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val shape = RoundedCornerShape(4.dp)
+    val resolvedBorderColor = if (borderColor == Color.Unspecified) {
+        PackGuideColors.primaryText.copy(alpha = 0.15f)
+    } else borderColor
 
     val cardModifier = modifier
         .fillMaxWidth()
-        .shadow(elevation = 2.dp, shape = shape, spotColor = PrimaryBlack.copy(alpha = 0.1f))
-        .background(CardSurfaceLight, shape = shape)
-        .border(1.dp, borderColor, shape = shape)
+        .shadow(elevation = 2.dp, shape = shape, spotColor = PackGuideColors.primaryText.copy(alpha = 0.1f))
+        .background(PackGuideColors.surface, shape = shape)
+        .border(1.dp, resolvedBorderColor, shape = shape)
         .let {
             if (onClick != null) it.clickable { onClick() } else it
         }
@@ -64,7 +65,7 @@ fun TechCard(
                             text = headerTag,
                             style = Typography.labelSmall,
                             fontFamily = TechMonospaceFontFamily,
-                            color = PrimaryBlack
+                            color = PackGuideColors.primaryText
                         )
                     }
                     Spacer(modifier = Modifier.weight(1f))
@@ -73,12 +74,12 @@ fun TechCard(
                             text = subTag,
                             style = Typography.labelSmall,
                             fontFamily = TechMonospaceFontFamily,
-                            color = SecondarySlate
+                            color = PackGuideColors.secondaryText
                         )
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                DashedDivider(color = BorderSlate)
+                DashedDivider(color = PackGuideColors.border)
                 Spacer(modifier = Modifier.height(10.dp))
             }
 
