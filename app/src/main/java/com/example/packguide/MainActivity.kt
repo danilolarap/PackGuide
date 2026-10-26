@@ -7,6 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import com.example.packguide.data.auth.AuthRepository
 import com.example.packguide.data.auth.PackGuideDatabase
 import com.example.packguide.ui.screens.AuthScreen
@@ -23,13 +25,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PackGuideTheme {
-                var isAuthenticated by mutableStateOf(false)
-                if (isAuthenticated) {
-                    MainScreen()
-                } else {
-                    AuthScreen(authRepository) { isAuthenticated = true }
-                }
+                PackGuideRoot(authRepository)
             }
         }
     }
+}
+
+@Composable
+private fun PackGuideRoot(authRepository: AuthRepository) {
+    var isAuthenticated by remember { mutableStateOf(false) }
+    if (isAuthenticated) MainScreen()
+    else AuthScreen(authRepository) { isAuthenticated = true }
 }
