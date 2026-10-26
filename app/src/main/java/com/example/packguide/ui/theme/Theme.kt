@@ -10,6 +10,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
@@ -47,10 +48,10 @@ private val TechDarkColorScheme = darkColorScheme(
     onBackground = CardSurfaceLight,
     surface = PrimaryBlack,
     onSurface = CardSurfaceLight,
-    surfaceVariant = SurfaceVariantLight,
-    onSurfaceVariant = PrimaryBlack,
+    surfaceVariant = Color(0xFF25272B),
+    onSurfaceVariant = CardSurfaceLight,
     outline = SecondarySlate,
-    outlineVariant = BorderSlate,
+    outlineVariant = Color(0xFF41444A),
     error = AccentRedLed,
     onError = CardSurfaceLight
 )
