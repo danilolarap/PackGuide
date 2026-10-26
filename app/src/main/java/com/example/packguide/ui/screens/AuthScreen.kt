@@ -3,7 +3,6 @@ package com.example.packguide.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -151,15 +150,25 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
                 Text(error.orEmpty(), style = Typography.bodyMedium, color = AccentRedLed)
             }
             Spacer(Modifier.height(20.dp))
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-                AsciiButton(
-                    text = if (isRegistering) "[ REGISTRAR ]" else "[ ENTRAR ]",
-                    onClick = submit,
-                    modifier = Modifier.fillMaxWidth(),
-                    isAccentRed = true,
-                    enabled = !isLoading
-                )
-                if (isLoading) CircularProgressIndicator(Modifier.size(20.dp), color = CardSurfaceLight, strokeWidth = 2.dp)
+            AsciiButton(
+                text = when {
+                    isLoading && isRegistering -> "[ CREANDO CUENTA... ]"
+                    isLoading -> "[ VALIDANDO... ]"
+                    isRegistering -> "[ REGISTRAR ]"
+                    else -> "[ ENTRAR ]"
+                },
+                onClick = submit,
+                modifier = Modifier.fillMaxWidth(),
+                isAccentRed = true,
+                enabled = !isLoading
+            )
+            if (isLoading) {
+                Spacer(Modifier.height(12.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    CircularProgressIndicator(Modifier.size(16.dp), color = AccentRedLed, strokeWidth = 2.dp)
+                    Spacer(Modifier.width(10.dp))
+                    Text("VERIFICANDO CREDENCIALES...", style = Typography.labelSmall, color = SecondarySlate)
+                }
             }
             Spacer(Modifier.height(10.dp))
             AsciiButton(
