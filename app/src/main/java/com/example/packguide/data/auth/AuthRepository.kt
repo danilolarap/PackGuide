@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 sealed interface AuthResult {
     data object Success : AuthResult
     data object InvalidCredentials : AuthResult
+    data object InvalidInput : AuthResult
     data object UsernameTaken : AuthResult
     data object StorageError : AuthResult
 }
@@ -18,6 +19,9 @@ sealed interface AuthResult {
 class AuthRepository(private val userAccountDao: UserAccountDao) {
     suspend fun register(username: String, password: String): AuthResult {
         val normalizedUsername = normalizeUsername(username)
+        if (AuthValidation.usernameError(normalizedUsername) != null ||
+            AuthValidation.passwordError(password) != null
+        ) return AuthResult.InvalidInput
         return runCatching {
             if (userAccountDao.findByUsername(normalizedUsername) != null) {
                 return@runCatching AuthResult.UsernameTaken

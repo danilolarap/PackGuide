@@ -83,6 +83,7 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
                 isLoading = false
                 when (result) {
                     AuthResult.Success -> onAuthenticated()
+                    AuthResult.InvalidInput -> error = "Revisa el usuario y la contraseña e intenta de nuevo."
                     AuthResult.InvalidCredentials -> error = "Usuario o contraseña incorrectos."
                     AuthResult.UsernameTaken -> error = "Ese usuario ya está registrado."
                     AuthResult.StorageError -> error = "No se pudo acceder a la base local. Intenta de nuevo."
