@@ -88,7 +88,9 @@ fun AuthScreen(
     val submit = {
         val cleanUser = username.trim()
         error = AuthValidation.usernameError(cleanUser)
-            ?: AuthValidation.passwordError(password)
+            ?: if (isRegistering) AuthValidation.passwordError(password)
+            else if (password.isEmpty()) "Ingresa tu contraseña."
+            else null
             ?: if (isRegistering && password != confirmPassword) {
                 "Las contraseñas no coinciden."
             } else null
@@ -156,7 +158,10 @@ fun AuthScreen(
             Spacer(Modifier.height(12.dp))
             AuthField(
                 value = password,
-                onValueChange = { password = it; error = null },
+                onValueChange = {
+                    password = if (isRegistering) it.take(45) else it
+                    error = null
+                },
                 label = "CONTRASEÑA",
                 secret = true,
                 isPasswordVisible = passwordVisible,
@@ -168,7 +173,10 @@ fun AuthScreen(
                 Spacer(Modifier.height(12.dp))
                 AuthField(
                     value = confirmPassword,
-                    onValueChange = { confirmPassword = it; error = null },
+                    onValueChange = {
+                        confirmPassword = it.take(45)
+                        error = null
+                    },
                     label = "CONFIRMAR CONTRASEÑA",
                     secret = true,
                     isPasswordVisible = confirmPasswordVisible,
