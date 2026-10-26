@@ -164,6 +164,7 @@ fun AuthScreen(
                 },
                 label = "CONTRASEÑA",
                 secret = true,
+                supportingText = if (isRegistering) "1 a 45 caracteres: solo letras y números." else null,
                 isPasswordVisible = passwordVisible,
                 onPasswordVisibilityChange = { passwordVisible = it },
                 onImeAction = { if (!isRegistering) submit() },
@@ -258,6 +259,7 @@ private fun AuthField(
     label: String,
     secret: Boolean = false,
     isUsername: Boolean = false,
+    supportingText: String? = null,
     isPasswordVisible: Boolean = false,
     onPasswordVisibilityChange: (Boolean) -> Unit = {},
     onImeAction: () -> Unit = {},
@@ -269,6 +271,9 @@ private fun AuthField(
         modifier = Modifier.fillMaxWidth(),
         enabled = enabled,
         label = { Text(label, fontFamily = TechMonospaceFontFamily) },
+        supportingText = supportingText?.let { help ->
+            { Text(help, style = Typography.labelSmall, color = PackGuideColors.secondaryText) }
+        },
         singleLine = true,
         visualTransformation = if (secret && !isPasswordVisible) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = KeyboardOptions(
