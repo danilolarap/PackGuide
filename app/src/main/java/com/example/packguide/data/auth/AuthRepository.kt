@@ -2,7 +2,10 @@ package com.example.packguide.data.auth
 
 import java.security.MessageDigest
 import java.security.SecureRandom
-import java.util.Base64
+import android.util.Base64
+import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 sealed interface AuthResult {
     data object Success : AuthResult
@@ -13,7 +16,7 @@ sealed interface AuthResult {
 
 class AuthRepository(private val userAccountDao: UserAccountDao) {
     suspend fun register(username: String, password: String): AuthResult {
-        val normalizedUsername = username.trim()
+        val normalizedUsername = normalizeUsername(username)
         return runCatching {
             if (userAccountDao.findByUsername(normalizedUsername) != null) {
                 return@runCatching AuthResult.UsernameTaken
@@ -23,7 +26,7 @@ class AuthRepository(private val userAccountDao: UserAccountDao) {
                 UserAccount(
                     username = normalizedUsername,
                     passwordHash = derivePasswordHash(password, salt),
-                    passwordSalt = Base64.getEncoder().encodeToString(salt)
+                    passwordSalt = Base64.encodeToString(salt, Base64.NO_WRAP)
                 )
             )
             AuthResult.Success
@@ -34,11 +37,12 @@ class AuthRepository(private val userAccountDao: UserAccountDao) {
     }
 
     suspend fun login(username: String, password: String): AuthResult {
-        val account = runCatching { userAccountDao.findByUsername(username.trim()) }
+        val normalizedUsername = normalizeUsername(username)
+        val account = runCatching { userAccountDao.findByUsername(normalizedUsername) }
             .getOrElse { return AuthResult.StorageError }
             ?: return AuthResult.InvalidCredentials
 
-        val salt = runCatching { Base64.getDecoder().decode(account.passwordSalt) }
+        val salt = runCatching { Base64.decode(account.passwordSalt, Base64.NO_WRAP) }
             .getOrElse { return AuthResult.StorageError }
         val actual = runCatching { derivePasswordHash(password, salt) }
             .getOrElse { return AuthResult.StorageError }
@@ -50,16 +54,22 @@ class AuthRepository(private val userAccountDao: UserAccountDao) {
     }
 
     private fun derivePasswordHash(password: String, salt: ByteArray): String {
-        val spec = javax.crypto.spec.PBEKeySpec(password.toCharArray(), salt, ITERATIONS, HASH_BITS)
+        val passwordChars = password.toCharArray()
+        val spec = javax.crypto.spec.PBEKeySpec(passwordChars, salt, ITERATIONS, HASH_BITS)
         return try {
-            Base64.getEncoder().encodeToString(
+            Base64.encodeToString(
                 javax.crypto.SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")
-                    .generateSecret(spec).encoded
+                    .generateSecret(spec).encoded,
+                Base64.NO_WRAP
             )
         } finally {
             spec.clearPassword()
+            passwordChars.fill('\u0000')
         }
     }
+
+    private fun normalizeUsername(username: String): String =
+        username.trim().lowercase(Locale.ROOT)
 
     private companion object {
         const val SALT_SIZE = 16
