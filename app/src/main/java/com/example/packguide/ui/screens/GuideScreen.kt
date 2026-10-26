@@ -505,7 +505,7 @@ private fun Phase1DiagramCanvas() {
 // Minimalist vector diagram for Phase 2: Sides folded into center
 @Composable
 private fun Phase2DiagramCanvas() {
-    Canvas(modifier = Modifier.fillMaxSize()) {
+    val secondaryText = PackGuideColors.secondaryText    Canvas(modifier = Modifier.fillMaxSize()) {
         val w = size.width
         val h = size.height
 
@@ -522,8 +522,7 @@ private fun Phase2DiagramCanvas() {
 
         drawPath(
             path = pathGhost,
-            color = PackGuideColors.secondaryText.copy(alpha = 0.4f),
-            style = Stroke(width = 1f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(3f, 3f), 0f))
+            color = secondaryText.copy(alpha = 0.4f),            style = Stroke(width = 1f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(3f, 3f), 0f))
         )
 
         // Folded central column
@@ -619,7 +618,7 @@ private fun Phase3DiagramCanvas() {
 private fun Suitcase2DGridCanvas(
     modifier: Modifier = Modifier
 ) {
-    val infiniteTransition = rememberInfiniteTransition(label = "TargetPulse")
+    val secondaryText = PackGuideColors.secondaryText    val infiniteTransition = rememberInfiniteTransition(label = "TargetPulse")
     val borderGlowAlpha by infiniteTransition.animateFloat(
         initialValue = 0.4f,
         targetValue = 1.0f,
@@ -646,8 +645,7 @@ private fun Suitcase2DGridCanvas(
             var x = 0f
             while (x < w) {
                 drawLine(
-                    color = PackGuideColors.secondaryText.copy(alpha = 0.15f),
-                    start = Offset(x, 0f),
+                    color = secondaryText.copy(alpha = 0.15f),                    start = Offset(x, 0f),
                     end = Offset(x, h),
                     strokeWidth = 1f,
                     pathEffect = gridPathEffect
@@ -657,8 +655,7 @@ private fun Suitcase2DGridCanvas(
             var y = 0f
             while (y < h) {
                 drawLine(
-                    color = PackGuideColors.secondaryText.copy(alpha = 0.15f),
-                    start = Offset(0f, y),
+                    color = secondaryText.copy(alpha = 0.15f),                    start = Offset(0f, y),
                     end = Offset(w, y),
                     strokeWidth = 1f,
                     pathEffect = gridPathEffect
@@ -683,8 +680,7 @@ private fun Suitcase2DGridCanvas(
 
             // Vertical divider
             drawLine(
-                color = PackGuideColors.secondaryText.copy(alpha = 0.4f),
-                start = Offset(midX, 10f),
+                color = secondaryText.copy(alpha = 0.4f),                start = Offset(midX, 10f),
                 end = Offset(midX, h - 10f),
                 strokeWidth = 1f,
                 pathEffect = slotDash
@@ -692,8 +688,7 @@ private fun Suitcase2DGridCanvas(
 
             // Horizontal divider
             drawLine(
-                color = PackGuideColors.secondaryText.copy(alpha = 0.4f),
-                start = Offset(10f, midY),
+                color = secondaryText.copy(alpha = 0.4f),                start = Offset(10f, midY),
                 end = Offset(w - 10f, midY),
                 strokeWidth = 1f,
                 pathEffect = slotDash
@@ -701,24 +696,21 @@ private fun Suitcase2DGridCanvas(
 
             // --- SLOT 1: TOP LEFT - [TECH PACK] ---
             drawRoundRect(
-                color = PackGuideColors.secondaryText.copy(alpha = 0.2f),
-                topLeft = Offset(12f, 12f),
+                color = secondaryText.copy(alpha = 0.2f),                topLeft = Offset(12f, 12f),
                 size = Size(midX - 18f, midY - 18f),
                 cornerRadius = CornerRadius(4f, 4f)
             )
 
             // --- SLOT 2: TOP RIGHT - [NECESER] ---
             drawRoundRect(
-                color = PackGuideColors.secondaryText.copy(alpha = 0.2f),
-                topLeft = Offset(midX + 6f, 12f),
+                color = secondaryText.copy(alpha = 0.2f),                topLeft = Offset(midX + 6f, 12f),
                 size = Size(midX - 18f, midY - 18f),
                 cornerRadius = CornerRadius(4f, 4f)
             )
 
             // --- SLOT 3: BOTTOM RIGHT - [CALZADO] ---
             drawRoundRect(
-                color = PackGuideColors.secondaryText.copy(alpha = 0.2f),
-                topLeft = Offset(midX + 6f, midY + 6f),
+                color = secondaryText.copy(alpha = 0.2f),                topLeft = Offset(midX + 6f, midY + 6f),
                 size = Size(midX - 18f, midY - 18f),
                 cornerRadius = CornerRadius(4f, 4f)
             )

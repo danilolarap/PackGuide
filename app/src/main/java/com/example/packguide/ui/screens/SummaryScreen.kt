@@ -406,14 +406,13 @@ fun SummaryScreen(
 private fun LuggageLayeredSchematicCanvas(
     modifier: Modifier = Modifier
 ) {
-    Canvas(modifier = modifier) {
+    val primaryText = PackGuideColors.primaryText    val secondaryText = PackGuideColors.secondaryText    Canvas(modifier = modifier) {
         val w = size.width
         val h = size.height
 
         // Background dark technical container
         drawRoundRect(
-            color = PackGuideColors.primaryText,
-            topLeft = Offset(0f, 0f),
+            color = Color(0xFF0F0F11),            topLeft = Offset(0f, 0f),
             size = Size(w, h),
             cornerRadius = CornerRadius(4f, 4f)
         )
@@ -431,8 +430,7 @@ private fun LuggageLayeredSchematicCanvas(
         // Dimensions technical gauge line
         val gaugeY = pad + 10f
         drawLine(
-            color = PackGuideColors.secondaryText,
-            start = Offset(pad + 10f, gaugeY),
+            color = secondaryText,            start = Offset(pad + 10f, gaugeY),
             end = Offset(w - pad - 10f, gaugeY),
             strokeWidth = 1f,
             pathEffect = PathEffect.dashPathEffect(floatArrayOf(4f, 4f), 0f)
@@ -445,14 +443,12 @@ private fun LuggageLayeredSchematicCanvas(
 
         // --- LAYER 1: TECH & CÁMARA (2.1 KG // 4.5L) ---
         drawRoundRect(
-            color = PackGuideColors.secondaryText.copy(alpha = 0.35f),
-            topLeft = Offset(startX, startY),
+            color = secondaryText.copy(alpha = 0.35f),            topLeft = Offset(startX, startY),
             size = Size(layerW, layerHeight - 4f),
             cornerRadius = CornerRadius(3f, 3f)
         )
         drawRoundRect(
-            color = PackGuideColors.border,
-            topLeft = Offset(startX, startY),
+            color = primaryText.copy(alpha = 0.75f),            topLeft = Offset(startX, startY),
             size = Size(layerW, layerHeight - 4f),
             cornerRadius = CornerRadius(3f, 3f),
             style = Stroke(width = 1f)
