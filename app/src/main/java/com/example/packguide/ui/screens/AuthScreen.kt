@@ -153,7 +153,12 @@ fun AuthScreen(
             AuthField(
                 value = username,
                 onValueChange = { username = it; error = null },
-                label = "USUARIO", isUsername = true, enabled = !isLoading
+                label = "USUARIO",
+                isUsername = true,
+                supportingText = if (isRegistering) {
+                    "Recomendado: letras, números, punto, guion o guion bajo."
+                } else null,
+                enabled = !isLoading
             )
             Spacer(Modifier.height(12.dp))
             AuthField(

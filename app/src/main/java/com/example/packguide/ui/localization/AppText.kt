@@ -60,6 +60,7 @@ private val englishTranslations = mapOf(
     "El usuario debe tener al menos 3 caracteres." to "Username must have at least 3 characters.",
     "El usuario no puede superar 24 caracteres." to "Username cannot exceed 24 characters.",
     "Usa letras, números, punto, guion o guion bajo." to "Use letters, numbers, periods, hyphens, or underscores.",
+    "Recomendado: letras, números, punto, guion o guion bajo." to "Recommended: letters, numbers, periods, hyphens, or underscores.",
     "La contraseña debe tener al menos 8 caracteres." to "Password must have at least 8 characters.",
     "La contraseña no puede estar vacía." to "Password cannot be empty.",
     "La contraseña no puede superar 45 caracteres." to "Password cannot exceed 45 characters.",
