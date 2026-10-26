@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
+import androidx.compose.material.icons.Iconsimport androidx.compose.material.icons.outlined.Settingsimport androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import com.example.packguide.ui.localization.Text
 import androidx.compose.runtime.Composable
@@ -42,8 +42,7 @@ fun TechBottomNavBar(
     onTabSelected: (NavTab) -> Unit,
     modifier: Modifier = Modifier,
     tabs: List<NavTab?> = NavTab.tabs,
-    currentDestination: NavTab? = selectedTab
-) {
+    currentDestination: NavTab? = selectedTab,    onSettingsClick: () -> Unit = {}) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -126,7 +125,7 @@ fun TechBottomNavBar(
                         }
                     }
                 }
-            }
+                Box(                    modifier = Modifier.weight(0.8f).clip(RoundedCornerShape(4.dp))                        .clickable(                            interactionSource = remember { MutableInteractionSource() },                            indication = null,                            onClick = onSettingsClick                        )                        .padding(vertical = 8.dp),                    contentAlignment = Alignment.Center                ) {                    Column(horizontalAlignment = Alignment.CenterHorizontally) {                        Icon(                            imageVector = Icons.Outlined.Settings,                            contentDescription = "Settings",                            tint = PackGuideColors.secondaryText,                            modifier = Modifier.size(20.dp)                        )                        Spacer(Modifier.height(4.dp))                        Text(                            text = "[AJUSTES]",                            style = Typography.labelSmall.copy(fontSize = 9.sp),                            color = PackGuideColors.secondaryText                        )                    }                }            }
         }
     }
 }

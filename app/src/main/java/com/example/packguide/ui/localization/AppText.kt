@@ -22,6 +22,7 @@ val LocalAppLanguage = compositionLocalOf { AppLanguage.Spanish }
 
 private val englishTranslations = mapOf(
     "[ AJUSTES DE SISTEMA ]" to "[ SYSTEM SETTINGS ]",
+    "[AJUSTES]" to "[SETTINGS]",
     "PERSONALIZA PACKGUIDE" to "CUSTOMIZE PACKGUIDE",
     "TEMA" to "THEME",
     "CLARO" to "LIGHT",

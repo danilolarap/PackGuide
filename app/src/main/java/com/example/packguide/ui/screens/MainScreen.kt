@@ -47,8 +47,7 @@ fun MainScreen(
                 selectedTab = currentTab,
                 onTabSelected = ::navigateTo,
                 tabs = listOf(NavTab.Scanner, NavTab.Catalog, NavTab.Guide, NavTab.Summary),
-                currentDestination = currentTab
-            )
+                currentDestination = currentTab,                onSettingsClick = { showSettings = true }            )
         }
     ) { innerPadding ->
         Box(
