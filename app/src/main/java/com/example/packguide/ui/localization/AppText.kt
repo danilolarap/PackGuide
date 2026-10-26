@@ -136,7 +136,7 @@ private val englishTranslations = mapOf(
     "CONFIGURACIÃ“N GUARDADA // TRIP-ID: #NT-38-04" to "SETTINGS SAVED // TRIP-ID: #NT-38-04",
     "CREAR PLAN DE EMPACADO" to "CREATE PACKING PLAN",
     "CREAR PLAN DE EMPACADO ->" to "CREATE PACKING PLAN ->",
-    "[ MARCAR EMPACADO ($packedCount/6) ]" to "[ MARK PACKED ($packedCount/6) ]",
+    "[ MARCAR EMPACADO (\$packedCount/6) ]" to "[ MARK PACKED (\$packedCount/6) ]",
     "Paso 03 / 05" to "Step 03 / 05",
     "FASE 01" to "PHASE 01",
     "FASE 02" to "PHASE 02",
@@ -155,9 +155,9 @@ private val englishTranslations = mapOf(
     "IATA VALID" to "IATA VALID",
     "TARGET_LOCK: CARRY_ON" to "TARGET_LOCK: CARRY_ON",
     "ESPACIO MAPEO: 100% // LIDAR ACTIVE | FPS: 60" to "MAPPING SPACE: 100% // LIDAR ACTIVE | FPS: 60",
-    "ANCHO: $anchoCm CM" to "WIDTH: $anchoCm CM",
-    "ALTO: $altoCm CM" to "HEIGHT: $altoCm CM",
-    "PROF: $profCm CM" to "DEPTH: $profCm CM",
+    "ANCHO: \$anchoCm CM" to "WIDTH: \$anchoCm CM",
+    "ALTO: \$altoCm CM" to "HEIGHT: \$altoCm CM",
+    "PROF: \$profCm CM" to "DEPTH: \$profCm CM",
     "Volver" to "Back",
     "Cambiar Tema" to "Change theme"
 )
