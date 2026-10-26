@@ -1,4 +1,6 @@
-package com.example.packguide.ui.navigation
+package com.example.packguide.ui.navigation
+
+import com.example.packguide.ui.theme.PackGuideColors
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -31,10 +33,6 @@ import androidx.compose.ui.unit.sp
 import com.example.packguide.ui.components.DashedDivider
 import com.example.packguide.ui.components.LedIndicator
 import com.example.packguide.ui.theme.AccentRedLed
-import com.example.packguide.ui.theme.BorderSlate
-import com.example.packguide.ui.theme.CardSurfaceLight
-import com.example.packguide.ui.theme.PrimaryBlack
-import com.example.packguide.ui.theme.SecondarySlate
 import com.example.packguide.ui.theme.TechMonospaceFontFamily
 import com.example.packguide.ui.theme.Typography
 
@@ -49,9 +47,7 @@ fun TechBottomNavBar(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .border(width = 1.dp, color = PrimaryBlack, shape = RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp)),
-        color = PrimaryBlack,
-        tonalElevation = 8.dp
+            .border(width = 1.dp, color = PackGuideColors.border, shape = RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp)),        color = PackGuideColors.surface,        tonalElevation = 8.dp
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             DashedDivider(color = AccentRedLed.copy(alpha = 0.6f))
@@ -69,14 +65,13 @@ fun TechBottomNavBar(
                     val isSelected = currentRoute == route
 
                     val iconTint by animateColorAsState(
-                        targetValue = if (isSelected) AccentRedLed else SecondarySlate,
+                        targetValue = if (isSelected) AccentRedLed else PackGuideColors.secondaryText,
                         animationSpec = tween(durationMillis = 200),
                         label = "TabIconTint"
                     )
 
                     val textColor by animateColorAsState(
-                        targetValue = if (isSelected) CardSurfaceLight else SecondarySlate,
-                        animationSpec = tween(durationMillis = 200),
+                        targetValue = if (isSelected) Color.White else PackGuideColors.secondaryText,                        animationSpec = tween(durationMillis = 200),
                         label = "TabTextColor"
                     )
 
@@ -85,8 +80,7 @@ fun TechBottomNavBar(
                             .weight(1f)
                             .clip(RoundedCornerShape(4.dp))
                             .background(
-                                if (isSelected) PrimaryBlack else Color.Transparent
-                            )
+                                if (isSelected) AccentRedLed else Color.Transparent                            )
                             .border(
                                 width = if (isSelected) 1.dp else 0.dp,
                                 color = if (isSelected) AccentRedLed else Color.Transparent,
