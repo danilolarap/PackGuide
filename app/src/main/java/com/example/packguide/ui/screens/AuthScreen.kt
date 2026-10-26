@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardActions
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -67,6 +68,28 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
     var error by rememberSaveable { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val submit = {
+        val cleanUser = username.trim()
+        error = AuthValidation.usernameError(cleanUser)
+            ?: AuthValidation.passwordError(password)
+            ?: if (isRegistering && password != confirmPassword) {
+                "Las contraseñas no coinciden."
+            } else null
+        if (error == null && !isLoading) {
+            isLoading = true
+            scope.launch {
+                val result = if (isRegistering) repository.register(cleanUser, password)
+                else repository.login(cleanUser, password)
+                isLoading = false
+                when (result) {
+                    AuthResult.Success -> onAuthenticated()
+                    AuthResult.InvalidCredentials -> error = "Usuario o contraseña incorrectos."
+                    AuthResult.UsernameTaken -> error = "Ese usuario ya está registrado."
+                    AuthResult.StorageError -> error = "No se pudo acceder a la base local. Intenta de nuevo."
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize().background(BackgroundLight).imePadding()
@@ -98,8 +121,7 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
             AuthField(
                 value = username,
                 onValueChange = { username = it; error = null },
-                label = "USUARIO",
-                isUsername = true
+                label = "USUARIO", isUsername = true
             )
             Spacer(Modifier.height(12.dp))
             AuthField(
@@ -108,7 +130,8 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
                 label = "CONTRASEÑA",
                 secret = true,
                 isPasswordVisible = passwordVisible,
-                onPasswordVisibilityChange = { passwordVisible = it }
+                onPasswordVisibilityChange = { passwordVisible = it },
+                onImeAction = { if (!isRegistering) submit() }
             )
             if (isRegistering) {
                 Spacer(Modifier.height(12.dp))
@@ -118,7 +141,8 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
                     label = "CONFIRMAR CONTRASEÑA",
                     secret = true,
                     isPasswordVisible = confirmPasswordVisible,
-                    onPasswordVisibilityChange = { confirmPasswordVisible = it }
+                    onPasswordVisibilityChange = { confirmPasswordVisible = it },
+                    onImeAction = submit
                 )
             }
             if (error != null) {
@@ -129,28 +153,7 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
                 AsciiButton(
                     text = if (isRegistering) "[ REGISTRAR ]" else "[ ENTRAR ]",
-                    onClick = {
-                        val cleanUser = username.trim()
-                        error = AuthValidation.usernameError(cleanUser)
-                            ?: AuthValidation.passwordError(password)
-                            ?: if (isRegistering && password != confirmPassword) {
-                                "Las contraseñas no coinciden."
-                            } else null
-                        if (error == null) {
-                            isLoading = true
-                            scope.launch {
-                                val result = if (isRegistering) repository.register(cleanUser, password)
-                                else repository.login(cleanUser, password)
-                                isLoading = false
-                                when (result) {
-                                    AuthResult.Success -> onAuthenticated()
-                                    AuthResult.InvalidCredentials -> error = "Usuario o contraseña incorrectos."
-                                    AuthResult.UsernameTaken -> error = "Ese usuario ya está registrado."
-                                    AuthResult.StorageError -> error = "No se pudo acceder a la base local. Intenta de nuevo."
-                                }
-                            }
-                        }
-                    },
+                    onClick = submit,
                     modifier = Modifier.fillMaxWidth(),
                     isAccentRed = true,
                     enabled = !isLoading
@@ -183,7 +186,8 @@ private fun AuthField(
     secret: Boolean = false,
     isUsername: Boolean = false,
     isPasswordVisible: Boolean = false,
-    onPasswordVisibilityChange: (Boolean) -> Unit = {}
+    onPasswordVisibilityChange: (Boolean) -> Unit = {},
+    onImeAction: () -> Unit = {}
 ) {
     OutlinedTextField(
         value = value,
@@ -194,10 +198,11 @@ private fun AuthField(
         visualTransformation = if (secret && !isPasswordVisible) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = KeyboardOptions(
             keyboardType = if (secret) KeyboardType.Password else KeyboardType.Text,
-            imeAction = ImeAction.Next,
+            imeAction = if (secret) ImeAction.Done else ImeAction.Next,
             capitalization = if (isUsername) KeyboardCapitalization.None else KeyboardCapitalization.Sentences,
             autoCorrectEnabled = false
         ),
+        keyboardActions = KeyboardActions(onDone = { onImeAction() }),
         trailingIcon = if (secret) {
             {
                 TextButton(onClick = { onPasswordVisibilityChange(!isPasswordVisible) }) {
