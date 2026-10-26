@@ -5,6 +5,7 @@ import java.security.MessageDigest
 import java.security.SecureRandom
 import android.util.Base64
 import java.util.Locale
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -38,6 +39,7 @@ class AuthRepository(private val userAccountDao: UserAccountDao) {
             )
             AuthResult.Success
         }.getOrElse { error ->
+            if (error is CancellationException) throw error
             if (error is SQLiteConstraintException) AuthResult.UsernameTaken
             else AuthResult.StorageError
         }
@@ -46,7 +48,10 @@ class AuthRepository(private val userAccountDao: UserAccountDao) {
     suspend fun login(username: String, password: String): AuthResult {
         val normalizedUsername = normalizeUsername(username)
         val account = runCatching { userAccountDao.findByUsername(normalizedUsername) }
-            .getOrElse { return AuthResult.StorageError }
+            .getOrElse {
+                if (it is CancellationException) throw it
+                return AuthResult.StorageError
+            }
             ?: return AuthResult.InvalidCredentials
 
         val salt = runCatching { Base64.decode(account.passwordSalt, Base64.NO_WRAP) }
@@ -54,7 +59,10 @@ class AuthRepository(private val userAccountDao: UserAccountDao) {
         val actual = runCatching {
             withContext(Dispatchers.Default) { derivePasswordHash(password, salt) }
         }
-            .getOrElse { return AuthResult.StorageError }
+            .getOrElse {
+                if (it is CancellationException) throw it
+                return AuthResult.StorageError
+            }
         return if (MessageDigest.isEqual(actual.toByteArray(), account.passwordHash.toByteArray())) {
             AuthResult.Success
         } else {
