@@ -122,7 +122,7 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
             AuthField(
                 value = username,
                 onValueChange = { username = it; error = null },
-                label = "USUARIO", isUsername = true
+                label = "USUARIO", isUsername = true, enabled = !isLoading
             )
             Spacer(Modifier.height(12.dp))
             AuthField(
@@ -132,7 +132,8 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
                 secret = true,
                 isPasswordVisible = passwordVisible,
                 onPasswordVisibilityChange = { passwordVisible = it },
-                onImeAction = { if (!isRegistering) submit() }
+                onImeAction = { if (!isRegistering) submit() },
+                enabled = !isLoading
             )
             if (isRegistering) {
                 Spacer(Modifier.height(12.dp))
@@ -143,7 +144,8 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
                     secret = true,
                     isPasswordVisible = confirmPasswordVisible,
                     onPasswordVisibilityChange = { confirmPasswordVisible = it },
-                    onImeAction = submit
+                    onImeAction = submit,
+                    enabled = !isLoading
                 )
             }
             if (error != null) {
@@ -203,12 +205,14 @@ private fun AuthField(
     isUsername: Boolean = false,
     isPasswordVisible: Boolean = false,
     onPasswordVisibilityChange: (Boolean) -> Unit = {},
-    onImeAction: () -> Unit = {}
+    onImeAction: () -> Unit = {},
+    enabled: Boolean = true
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = Modifier.fillMaxWidth(),
+        enabled = enabled,
         label = { Text(label, fontFamily = TechMonospaceFontFamily) },
         singleLine = true,
         visualTransformation = if (secret && !isPasswordVisible) PasswordVisualTransformation() else VisualTransformation.None,
