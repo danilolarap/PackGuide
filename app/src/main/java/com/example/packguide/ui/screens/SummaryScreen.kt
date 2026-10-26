@@ -1,4 +1,6 @@
-package com.example.packguide.ui.screens
+package com.example.packguide.ui.screens
+
+import com.example.packguide.ui.theme.PackGuideColors
 
 import android.widget.Toast
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -52,12 +54,6 @@ import com.example.packguide.ui.components.TechCard
 import com.example.packguide.ui.navigation.NavTab
 import com.example.packguide.ui.theme.AccentGreenLed
 import com.example.packguide.ui.theme.AccentRedLed
-import com.example.packguide.ui.theme.BackgroundLight
-import com.example.packguide.ui.theme.BorderSlate
-import com.example.packguide.ui.theme.CardSurfaceLight
-import com.example.packguide.ui.theme.PrimaryBlack
-import com.example.packguide.ui.theme.SecondarySlate
-import com.example.packguide.ui.theme.SurfaceVariantLight
 import com.example.packguide.ui.theme.TechMonospaceFontFamily
 import com.example.packguide.ui.theme.Typography
 
@@ -72,13 +68,13 @@ fun SummaryScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(BackgroundLight)
+            .background(PackGuideColors.background)
     ) {
         // --- 1. HEADER WITH THEME SWITCH & STATUS ---
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(BackgroundLight)
+                .background(PackGuideColors.background)
                 .padding(horizontal = 16.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -87,7 +83,7 @@ fun SummaryScreen(
                     text = "SYS // FINAL_DIAGNOSTIC",
                     style = Typography.labelSmall,
                     fontFamily = TechMonospaceFontFamily,
-                    color = SecondarySlate
+                    color = PackGuideColors.secondaryText
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
@@ -95,7 +91,7 @@ fun SummaryScreen(
                     style = Typography.headlineMedium,
                     fontFamily = TechMonospaceFontFamily,
                     fontWeight = FontWeight.Bold,
-                    color = PrimaryBlack
+                    color = PackGuideColors.primaryText
                 )
             }
 
@@ -103,13 +99,13 @@ fun SummaryScreen(
                 onClick = onOpenSettings,
                 modifier = Modifier
                     .size(36.dp)
-                    .background(CardSurfaceLight, shape = RoundedCornerShape(4.dp))
-                    .border(1.dp, PrimaryBlack, shape = RoundedCornerShape(4.dp))
+                    .background(PackGuideColors.surface, shape = RoundedCornerShape(4.dp))
+                    .border(1.dp, PackGuideColors.primaryText, shape = RoundedCornerShape(4.dp))
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Settings,
                     contentDescription = "Configuración",
-                    tint = PrimaryBlack,
+                    tint = PackGuideColors.primaryText,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -138,7 +134,7 @@ fun SummaryScreen(
                 TechCard(
                     headerTag = "MAPA DE DISTRIBUCIÓN // 38L - VOL: 38.0 L",
                     subTag = "[ VISTA LATERAL ]",
-                    borderColor = PrimaryBlack
+                    borderColor = PackGuideColors.primaryText
                 ) {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         // Visual Schematic of packed luggage showing layered compartments
@@ -149,7 +145,7 @@ fun SummaryScreen(
                         )
 
                         Spacer(modifier = Modifier.height(12.dp))
-                        DashedDivider(color = BorderSlate)
+                        DashedDivider(color = PackGuideColors.border)
                         Spacer(modifier = Modifier.height(10.dp))
 
                         // Legend at bottom of card
@@ -160,24 +156,24 @@ fun SummaryScreen(
                         ) {
                             TechBadge(
                                 text = "[• PESADOS]",
-                                containerColor = PrimaryBlack,
-                                contentColor = CardSurfaceLight,
+                                containerColor = PackGuideColors.primaryText,
+                                contentColor = PackGuideColors.surface,
                                 ledColor = AccentRedLed
                             )
 
                             TechBadge(
                                 text = "[• ENROLLADOS]",
-                                containerColor = PrimaryBlack,
-                                contentColor = CardSurfaceLight,
+                                containerColor = PackGuideColors.primaryText,
+                                contentColor = PackGuideColors.surface,
                                 ledColor = AccentGreenLed
                             )
 
                             TechBadge(
                                 text = "[• ACCESO RÁPIDO]",
-                                containerColor = SurfaceVariantLight,
-                                contentColor = PrimaryBlack,
-                                borderColor = PrimaryBlack,
-                                ledColor = SecondarySlate
+                                containerColor = PackGuideColors.surfaceVariant,
+                                contentColor = PackGuideColors.primaryText,
+                                borderColor = PackGuideColors.primaryText,
+                                ledColor = PackGuideColors.secondaryText
                             )
                         }
                     }
@@ -189,8 +185,8 @@ fun SummaryScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(PrimaryBlack, shape = RoundedCornerShape(4.dp))
-                        .border(1.dp, BorderSlate, shape = RoundedCornerShape(4.dp))
+                        .background(PackGuideColors.primaryText, shape = RoundedCornerShape(4.dp))
+                        .border(1.dp, PackGuideColors.border, shape = RoundedCornerShape(4.dp))
                         .padding(14.dp)
                 ) {
                     Column(modifier = Modifier.fillMaxWidth()) {
@@ -249,7 +245,7 @@ fun SummaryScreen(
                 // --- 4. EFFICIENCY METRICS CARD ---
                 TechCard(
                     headerTag = "EFICIENCIA & MÉTRICAS DE EQUIPAJE",
-                    borderColor = PrimaryBlack
+                    borderColor = PackGuideColors.primaryText
                 ) {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         // Large Title
@@ -258,7 +254,7 @@ fun SummaryScreen(
                             style = Typography.headlineMedium,
                             fontFamily = TechMonospaceFontFamily,
                             fontWeight = FontWeight.Bold,
-                            color = PrimaryBlack
+                            color = PackGuideColors.primaryText
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -268,8 +264,8 @@ fun SummaryScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(12.dp)
-                                .background(SurfaceVariantLight, shape = RoundedCornerShape(2.dp))
-                                .border(1.dp, PrimaryBlack, shape = RoundedCornerShape(2.dp))
+                                .background(PackGuideColors.surfaceVariant, shape = RoundedCornerShape(2.dp))
+                                .border(1.dp, PackGuideColors.primaryText, shape = RoundedCornerShape(2.dp))
                                 .padding(1.dp)
                         ) {
                             Box(
@@ -281,7 +277,7 @@ fun SummaryScreen(
                         }
 
                         Spacer(modifier = Modifier.height(14.dp))
-                        DashedDivider(color = BorderSlate)
+                        DashedDivider(color = PackGuideColors.border)
                         Spacer(modifier = Modifier.height(12.dp))
 
                         // Stat Box 1 & Stat Box 2 Row
@@ -293,8 +289,8 @@ fun SummaryScreen(
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .background(SurfaceVariantLight, shape = RoundedCornerShape(2.dp))
-                                    .border(1.dp, BorderSlate, shape = RoundedCornerShape(2.dp))
+                                    .background(PackGuideColors.surfaceVariant, shape = RoundedCornerShape(2.dp))
+                                    .border(1.dp, PackGuideColors.border, shape = RoundedCornerShape(2.dp))
                                     .padding(10.dp)
                             ) {
                                 Column {
@@ -303,7 +299,7 @@ fun SummaryScreen(
                                         style = Typography.labelMedium,
                                         fontFamily = TechMonospaceFontFamily,
                                         fontWeight = FontWeight.Bold,
-                                        color = PrimaryBlack
+                                        color = PackGuideColors.primaryText
                                     )
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(
@@ -320,8 +316,8 @@ fun SummaryScreen(
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .background(SurfaceVariantLight, shape = RoundedCornerShape(2.dp))
-                                    .border(1.dp, BorderSlate, shape = RoundedCornerShape(2.dp))
+                                    .background(PackGuideColors.surfaceVariant, shape = RoundedCornerShape(2.dp))
+                                    .border(1.dp, PackGuideColors.border, shape = RoundedCornerShape(2.dp))
                                     .padding(10.dp)
                             ) {
                                 Column {
@@ -330,7 +326,7 @@ fun SummaryScreen(
                                         style = Typography.labelMedium,
                                         fontFamily = TechMonospaceFontFamily,
                                         fontWeight = FontWeight.Bold,
-                                        color = PrimaryBlack
+                                        color = PackGuideColors.primaryText
                                     )
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(
@@ -393,7 +389,7 @@ fun SummaryScreen(
                         text = "••• NOTHING (R) OS // PACK-ID #NT-38-04",
                         style = Typography.labelSmall,
                         fontFamily = TechMonospaceFontFamily,
-                        color = SecondarySlate
+                        color = PackGuideColors.secondaryText
                     )
                 }
             }
@@ -416,7 +412,7 @@ private fun LuggageLayeredSchematicCanvas(
 
         // Background dark technical container
         drawRoundRect(
-            color = PrimaryBlack,
+            color = PackGuideColors.primaryText,
             topLeft = Offset(0f, 0f),
             size = Size(w, h),
             cornerRadius = CornerRadius(4f, 4f)
@@ -435,7 +431,7 @@ private fun LuggageLayeredSchematicCanvas(
         // Dimensions technical gauge line
         val gaugeY = pad + 10f
         drawLine(
-            color = SecondarySlate,
+            color = PackGuideColors.secondaryText,
             start = Offset(pad + 10f, gaugeY),
             end = Offset(w - pad - 10f, gaugeY),
             strokeWidth = 1f,
@@ -449,13 +445,13 @@ private fun LuggageLayeredSchematicCanvas(
 
         // --- LAYER 1: TECH & CÁMARA (2.1 KG // 4.5L) ---
         drawRoundRect(
-            color = SecondarySlate.copy(alpha = 0.35f),
+            color = PackGuideColors.secondaryText.copy(alpha = 0.35f),
             topLeft = Offset(startX, startY),
             size = Size(layerW, layerHeight - 4f),
             cornerRadius = CornerRadius(3f, 3f)
         )
         drawRoundRect(
-            color = BorderSlate,
+            color = PackGuideColors.border,
             topLeft = Offset(startX, startY),
             size = Size(layerW, layerHeight - 4f),
             cornerRadius = CornerRadius(3f, 3f),
@@ -529,14 +525,14 @@ private fun LuggageLayeredSchematicCanvas(
                 style = Typography.labelSmall.copy(fontSize = 10.sp),
                 fontFamily = TechMonospaceFontFamily,
                 fontWeight = FontWeight.Bold,
-                color = CardSurfaceLight
+                color = PackGuideColors.surface
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = "[ACCESO RÁPIDO]",
                 style = Typography.labelSmall.copy(fontSize = 8.sp),
                 fontFamily = TechMonospaceFontFamily,
-                color = SecondarySlate
+                color = PackGuideColors.secondaryText
             )
         }
 
