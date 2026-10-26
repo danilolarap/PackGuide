@@ -28,7 +28,7 @@ class AuthRepository(private val userAccountDao: UserAccountDao) {
             )
             AuthResult.Success
         }.getOrElse { error ->
-            if (error is androidx.room.sqlite.SQLiteConstraintException) AuthResult.UsernameTaken
+            if (error.javaClass.simpleName.contains("SQLiteConstraintException")) AuthResult.UsernameTaken
             else AuthResult.StorageError
         }
     }

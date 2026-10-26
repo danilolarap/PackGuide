@@ -68,12 +68,17 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
         verticalArrangement = Arrangement.Center
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            LedIndicator(isActive = true, color = AccentRedLed)
+            LedIndicator(color = AccentRedLed, isPulsing = true)
             Spacer(Modifier.width(10.dp))
             Text("PACKGUIDE // ACCESS", style = Typography.labelMedium, color = SecondarySlate)
         }
         Spacer(Modifier.height(24.dp))
-        HudHeader(title = if (isRegistering) "CREAR CUENTA" else "INICIAR SESIÓN", subtitle = "IDENTIDAD LOCAL // SINCRONIZACIÓN DESACTIVADA")
+        HudHeader(
+            title = if (isRegistering) "CREAR CUENTA" else "INICIAR SESIÓN",
+            sysCode = "SYS // IDENTIDAD LOCAL",
+            statusText = "[ SINCRONIZACIÓN OFF ]",
+            ledColor = AccentRedLed
+        )
         Spacer(Modifier.height(20.dp))
         DashedDivider()
         Spacer(Modifier.height(22.dp))
@@ -139,7 +144,7 @@ fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
         }
         Spacer(Modifier.height(18.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
-            LedIndicator(isActive = true, color = AccentGreenLed)
+            LedIndicator(color = AccentGreenLed, isPulsing = false)
             Spacer(Modifier.width(8.dp))
             Text("CUENTA ALMACENADA EN ESTE DISPOSITIVO", style = Typography.labelSmall, color = SecondarySlate)
         }
