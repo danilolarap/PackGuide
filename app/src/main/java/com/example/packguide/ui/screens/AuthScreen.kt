@@ -59,6 +59,8 @@ import com.example.packguide.ui.components.HudHeader
 import com.example.packguide.ui.components.LedIndicator
 import com.example.packguide.ui.components.SettingsDialog
 import com.example.packguide.ui.localization.Text as LocalizedText
+import com.example.packguide.ui.localization.LocalAppLanguage
+import com.example.packguide.ui.localization.localizedText
 import com.example.packguide.ui.theme.AccentGreenLed
 import com.example.packguide.ui.theme.AccentRedLed
 import com.example.packguide.ui.theme.TechMonospaceFontFamily
@@ -122,7 +124,11 @@ fun AuthScreen(
             LocalizedText("PACKGUIDE // ACCESS", style = Typography.labelMedium, color = PackGuideColors.secondaryText)
             Spacer(Modifier.weight(1f))
             IconButton(onClick = { showSettings = true }) {
-                Icon(Icons.Outlined.Settings, contentDescription = "Settings", tint = PackGuideColors.primaryText)
+                Icon(
+                    Icons.Outlined.Settings,
+                    contentDescription = localizedText("Configuración", LocalAppLanguage.current),
+                    tint = PackGuideColors.primaryText
+                )
             }
         }
         Spacer(Modifier.height(24.dp))

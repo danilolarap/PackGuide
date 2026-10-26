@@ -21,7 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Iconsimport androidx.compose.material.icons.outlined.Settingsimport androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import com.example.packguide.ui.localization.Text
-import androidx.compose.runtime.Composable
+import com.example.packguide.ui.localization.LocalAppLanguageimport com.example.packguide.ui.localization.localizedTextimport androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -109,8 +109,7 @@ fun TechBottomNavBar(
 
                             Icon(
                                 imageVector = tab.icon,
-                                contentDescription = tab.title,
-                                tint = iconTint,
+                                contentDescription = localizedText(tab.title, LocalAppLanguage.current),                                tint = iconTint,
                                 modifier = Modifier.size(20.dp)
                             )
 
@@ -125,7 +124,7 @@ fun TechBottomNavBar(
                         }
                     }
                 }
-                Box(                    modifier = Modifier.weight(0.8f).clip(RoundedCornerShape(4.dp))                        .clickable(                            interactionSource = remember { MutableInteractionSource() },                            indication = null,                            onClick = onSettingsClick                        )                        .padding(vertical = 8.dp),                    contentAlignment = Alignment.Center                ) {                    Column(horizontalAlignment = Alignment.CenterHorizontally) {                        Icon(                            imageVector = Icons.Outlined.Settings,                            contentDescription = "Settings",                            tint = PackGuideColors.secondaryText,                            modifier = Modifier.size(20.dp)                        )                        Spacer(Modifier.height(4.dp))                        Text(                            text = "[AJUSTES]",                            style = Typography.labelSmall.copy(fontSize = 9.sp),                            color = PackGuideColors.secondaryText                        )                    }                }            }
+                Box(                    modifier = Modifier.weight(0.8f).clip(RoundedCornerShape(4.dp))                        .clickable(                            interactionSource = remember { MutableInteractionSource() },                            indication = null,                            onClick = onSettingsClick                        )                        .padding(vertical = 8.dp),                    contentAlignment = Alignment.Center                ) {                    Column(horizontalAlignment = Alignment.CenterHorizontally) {                        Icon(                            imageVector = Icons.Outlined.Settings,                            contentDescription = localizedText("Configuración", LocalAppLanguage.current),                            tint = PackGuideColors.secondaryText,                            modifier = Modifier.size(20.dp)                        )                        Spacer(Modifier.height(4.dp))                        Text(                            text = "[AJUSTES]",                            style = Typography.labelSmall.copy(fontSize = 9.sp),                            color = PackGuideColors.secondaryText                        )                    }                }            }
         }
     }
 }

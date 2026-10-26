@@ -32,7 +32,7 @@ import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import com.example.packguide.ui.localization.Text
-import androidx.compose.runtime.Composable
+import com.example.packguide.ui.localization.LocalAppLanguageimport com.example.packguide.ui.localization.localizedTextimport androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,7 +64,7 @@ fun SummaryScreen(
     onOpenSettings: () -> Unit = {}
 ) {
     val context = LocalContext.current
-
+    val currentLanguage = LocalAppLanguage.current
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -104,8 +104,7 @@ fun SummaryScreen(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Settings,
-                    contentDescription = "Configuración",
-                    tint = PackGuideColors.primaryText,
+                    contentDescription = localizedText("Configuración", LocalAppLanguage.current),                    tint = PackGuideColors.primaryText,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -355,8 +354,7 @@ fun SummaryScreen(
                         onClick = {
                             Toast.makeText(
                                 context,
-                                "CONFIGURACIÓN GUARDADA // TRIP-ID: #NT-38-04",
-                                Toast.LENGTH_SHORT
+                                localizedText("CONFIGURACIÓN GUARDADA // TRIP-ID: #NT-38-04", currentLanguage),                                Toast.LENGTH_SHORT
                             ).show()
                         },
                         modifier = Modifier.fillMaxWidth(),

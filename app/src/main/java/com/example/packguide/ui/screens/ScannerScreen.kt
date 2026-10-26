@@ -26,7 +26,7 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import com.example.packguide.ui.localization.Text
-import androidx.compose.runtime.Composable
+import com.example.packguide.ui.localization.LocalAppLanguageimport com.example.packguide.ui.localization.localizedTextimport androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -85,8 +85,7 @@ fun ScannerScreen(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                    contentDescription = "Volver",
-                    tint = PackGuideColors.primaryText
+                    contentDescription = localizedText("Volver", LocalAppLanguage.current),                    tint = PackGuideColors.primaryText
                 )
             }
 
@@ -107,8 +106,7 @@ fun ScannerScreen(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Settings,
-                    contentDescription = "Configuración",
-                    tint = PackGuideColors.primaryText
+                    contentDescription = localizedText("Configuración", LocalAppLanguage.current),                    tint = PackGuideColors.primaryText
                 )
             }
         }
