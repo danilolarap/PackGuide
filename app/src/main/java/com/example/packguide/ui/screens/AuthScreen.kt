@@ -61,10 +61,10 @@ import kotlinx.coroutines.launch
 fun AuthScreen(repository: AuthRepository, onAuthenticated: () -> Unit) {
     var isRegistering by rememberSaveable { mutableStateOf(false) }
     var username by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var confirmPassword by rememberSaveable { mutableStateOf("") }
-    var passwordVisible by rememberSaveable { mutableStateOf(false) }
-    var confirmPasswordVisible by rememberSaveable { mutableStateOf(false) }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+    var confirmPasswordVisible by remember { mutableStateOf(false) }
     var error by rememberSaveable { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
