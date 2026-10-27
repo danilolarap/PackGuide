@@ -331,16 +331,14 @@ fun CatalogScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "VOLUMEN USADO: ${String.format(Locale.US, "%.1f", totalUsedVolumeL)}L / ${String.format(Locale.US, "%.1f", totalCapacityL)}L",
-                            style = Typography.titleMedium,
+                            text = "VOLUMEN EST.: ${String.format(Locale.US, "%.1f", totalUsedVolumeL)}L / ${String.format(Locale.US, "%.1f", totalCapacityL)}L",                            style = Typography.titleMedium,
                             fontFamily = TechMonospaceFontFamily,
                             fontWeight = FontWeight.Bold,
                             color = PackGuideColors.primaryText
                         )
 
                         TechBadge(
-                            text = "CAPACIDAD DISPONIBLE: ${String.format(Locale.US, "%.1f", availableVolumeL)}L",
-                            containerColor = PackGuideColors.primaryText,
+                            text = "ESPACIO EST.: ${String.format(Locale.US, "%.1f", availableVolumeL)}L",                            containerColor = PackGuideColors.primaryText,
                             contentColor = PackGuideColors.surface,
                             ledColor = AccentGreenLed
                         )
