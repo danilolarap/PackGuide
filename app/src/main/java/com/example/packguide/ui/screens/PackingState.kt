@@ -47,6 +47,7 @@ class PackingState {
         CatalogItemData("ITEM-08", "MEDIAS", "ROPA", "15x10x3 cm", 0.2, Icons.Outlined.Checkroom, 0),
         CatalogItemData("ITEM-09", "PIJAMA", "ROPA", "30x22x5 cm", 1.4, Icons.Outlined.Checkroom, 0),
         CatalogItemData("ITEM-10", "VESTIDO", "ROPA", "35x25x5 cm", 1.8, Icons.Outlined.Checkroom, 0),
+        CatalogItemData("ITEM-11", "FALDA", "ROPA", "28x20x4 cm", 1.0, Icons.Outlined.Checkroom, 0),
         // ADD_ITEMS_HERE
     )
 
