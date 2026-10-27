@@ -174,7 +174,7 @@ fun CatalogScreen(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                items(filteredItems, key = { it.id }) { item ->
+                if (filteredItems.isEmpty()) {                    item {                        Text("No hay artículos para esta búsqueda.",                            style = Typography.bodyMedium,                            color = PackGuideColors.secondaryText,                            modifier = Modifier.padding(vertical = 24.dp))                    }                }                items(filteredItems, key = { it.id }) { item ->
                     val itemSubtotalL = item.quantity * item.unitVolumeL
 
                     TechCard(
