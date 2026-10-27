@@ -68,6 +68,7 @@ class PackingState {
         CatalogItemData("ITEM-29", "PORTÁTIL", "TECH", "35x25x3 cm", 2.6, Icons.Outlined.Devices, 0),
         CatalogItemData("ITEM-30", "AURICULARES", "TECH", "18x15x8 cm", 1.0, Icons.Outlined.Devices, 0),
         CatalogItemData("ITEM-31", "BATERÍA EXTERNA", "TECH", "15x8x3 cm", 0.4, Icons.Outlined.Devices, 0),
+        CatalogItemData("ITEM-32", "ADAPTADOR DE ENCHUFE", "TECH", "8x7x5 cm", 0.3, Icons.Outlined.Devices, 0),
         // ADD_ITEMS_HERE
     )
 
