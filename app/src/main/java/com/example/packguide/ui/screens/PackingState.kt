@@ -53,6 +53,7 @@ class PackingState {
         CatalogItemData("ITEM-14", "CAMISA", "ROPA", "30x23x4 cm", 1.2, Icons.Outlined.Checkroom, 0),
         CatalogItemData("ITEM-15", "TRAJE DE BAÑO", "ROPA", "20x15x2 cm", 0.3, Icons.Outlined.Checkroom, 0),
         CatalogItemData("ITEM-16", "ZAPATOS FORMALES", "CALZADO", "34x23x12 cm", 5.0, Icons.AutoMirrored.Outlined.DirectionsWalk, 0),
+        CatalogItemData("ITEM-17", "SANDALIAS", "CALZADO", "28x20x6 cm", 2.0, Icons.AutoMirrored.Outlined.DirectionsWalk, 0),
         // ADD_ITEMS_HERE
     )
 
