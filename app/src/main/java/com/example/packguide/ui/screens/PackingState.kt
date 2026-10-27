@@ -62,6 +62,7 @@ class PackingState {
         CatalogItemData("ITEM-23", "JABÓN", "ASEO", "10x7x4 cm", 0.3, Icons.Outlined.MedicalServices, 0),
         CatalogItemData("ITEM-24", "PROTECTOR SOLAR", "ASEO", "15x6x5 cm", 0.5, Icons.Outlined.MedicalServices, 0),
         CatalogItemData("ITEM-25", "MEDICAMENTOS", "ASEO", "18x12x5 cm", 0.8, Icons.Outlined.MedicalServices, 0),
+        CatalogItemData("ITEM-26", "LENTES DE CONTACTO", "ASEO", "12x8x3 cm", 0.2, Icons.Outlined.MedicalServices, 0),
         // ADD_ITEMS_HERE
     )
 
