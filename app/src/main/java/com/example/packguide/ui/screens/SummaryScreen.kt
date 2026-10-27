@@ -90,6 +90,18 @@ fun SummaryScreen(
                 Text("DETALLE POR ARTÍCULO", style = Typography.titleLarge,
                     color = PackGuideColors.primaryText)
             }
+            item {
+                TechCard(headerTag = "DISTRIBUCIÓN POR ZONA", borderColor = PackGuideColors.border) {
+                    PackingZone.entries.forEach { zone ->
+                        val zoneItems = selected.filter { it.zone == zone }
+                        val units = zoneItems.sumOf { it.quantity }
+                        val volume = zoneItems.sumOf { it.quantity * it.unitVolumeL }
+                        Text("${zone.label}: $units unidades · ${format(volume)} L",
+                            color = PackGuideColors.primaryText, style = Typography.bodyMedium)
+                        Spacer(Modifier.height(4.dp))
+                    }
+                }
+            }
             if (selected.isEmpty()) {
                 item { Text("No hay artículos seleccionados.", color = PackGuideColors.secondaryText) }
             }
