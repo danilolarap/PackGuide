@@ -41,7 +41,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun PackGuideRoot(authRepository: AuthRepository, settingsRepository: SettingsRepository) {
     var isAuthenticated by remember { mutableStateOf(false) }
-    val activity = LocalContext.current as? ComponentActivity
     val settings by settingsRepository.settings.collectAsState(initial = AppSettings())
     val scope = rememberCoroutineScope()
 
@@ -52,8 +51,7 @@ private fun PackGuideRoot(authRepository: AuthRepository, settingsRepository: Se
                     settings = settings,
                     onThemeChange = { enabled -> scope.launch { settingsRepository.setDarkTheme(enabled) } },
                     onLanguageChange = { language -> scope.launch { settingsRepository.setLanguage(language) } },
-                    onLogout = { isAuthenticated = false },
-                    onExit = { activity?.finish() }
+                    onLogout = { isAuthenticated = false }
                 )
             } else {
                 AuthScreen(

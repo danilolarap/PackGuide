@@ -54,85 +54,15 @@ import com.example.packguide.ui.theme.TechMonospaceFontFamily
 import com.example.packguide.ui.theme.Typography
 import java.util.Locale
 
-data class CatalogItemData(
-    val id: String,
-    val name: String,
-    val category: String,
-    val dimensions: String,
-    val unitVolumeL: Double,
-    val icon: ImageVector,
-    var quantity: Int,
-)
-
 @Composable
 fun CatalogScreen(
-    modifier: Modifier = Modifier
-) {
+    modifier: Modifier = Modifier,    packing: PackingState,    onCreatePlan: () -> Unit) {
     var searchQuery by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf("ROPA") }
-
+    var selectedCategory by remember { mutableStateOf("TODOS") }
     val categories = listOf("ROPA", "CALZADO", "ASEO", "TECH", "TODOS")
 
     // Items list initialized with exact specification defaults
-    val itemsList = remember {
-        mutableStateListOf(
-            CatalogItemData(
-                id = "ITEM-01",
-                name = "CAMISETAS",
-                category = "ROPA",
-                dimensions = "28x20x4 cm",
-                unitVolumeL = 1.2,
-                icon = Icons.Outlined.Checkroom,
-                quantity = 3
-            ),
-            CatalogItemData(
-                id = "ITEM-02",
-                name = "PANTALONES",
-                category = "ROPA",
-                dimensions = "38x26x6 cm",
-                unitVolumeL = 2.8,
-                icon = Icons.Outlined.DryCleaning,
-                quantity = 2
-            ),
-            CatalogItemData(
-                id = "ITEM-03",
-                name = "CALZADO",
-                category = "CALZADO",
-                dimensions = "32x22x12 cm",
-                unitVolumeL = 4.5,
-                icon = Icons.AutoMirrored.Outlined.DirectionsWalk,
-                quantity = 1,
-            ),
-            CatalogItemData(
-                id = "ITEM-04",
-                name = "CHAQUETA",
-                category = "ROPA",
-                dimensions = "40x28x8 cm",
-                unitVolumeL = 3.2,
-                icon = Icons.Outlined.Checkroom,
-                quantity = 1
-            ),
-            CatalogItemData(
-                id = "ITEM-05",
-                name = "NECESER",
-                category = "ASEO",
-                dimensions = "22x14x8 cm",
-                unitVolumeL = 1.5,
-                icon = Icons.Outlined.MedicalServices,
-                quantity = 1
-            ),
-            CatalogItemData(
-                id = "ITEM-06",
-                name = "CARGADORES & TECH",
-                category = "TECH",
-                dimensions = "18x12x4 cm",
-                unitVolumeL = 0.8,
-                icon = Icons.Outlined.Devices,
-                quantity = 1
-            )
-        )
-    }
-
+    val itemsList = packing.items
     val filteredItems = itemsList.filter { item ->
         val matchesCategory = (selectedCategory == "TODOS") || (item.category == selectedCategory)
         val matchesQuery = searchQuery.isEmpty() || item.name.contains(searchQuery, ignoreCase = true) || item.category.contains(searchQuery, ignoreCase = true)
@@ -140,9 +70,7 @@ fun CatalogScreen(
     }
 
     // Dynamic Volume Calculations
-    val totalCapacityL = 38.0
-    val totalUsedVolumeL = itemsList.sumOf { item -> item.quantity * item.unitVolumeL }
-    val availableVolumeL = maxOf(0.0, totalCapacityL - totalUsedVolumeL)
+    val totalCapacityL = packing.capacityL    val totalUsedVolumeL = packing.usedL    val availableVolumeL = maxOf(0.0, totalCapacityL - totalUsedVolumeL)
 
     Column(
         modifier = modifier
@@ -152,9 +80,7 @@ fun CatalogScreen(
         // --- 1. TOP BAR: NOTHING (R) // SYS CATÁLOGO DE ÍTEMS ---
         HudHeader(
             title = "CATÁLOGO DE ÍTEMS",
-            sysCode = "NOTHING (R) // SYS",
-            statusText = "[ SYS ONLINE ]",
-            ledColor = AccentGreenLed
+            sysCode = "",            statusText = "",            ledColor = AccentGreenLed
         )
 
         Column(
@@ -198,11 +124,6 @@ fun CatalogScreen(
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
-                    TechBadge(
-                        text = "ASCII",
-                        containerColor = PackGuideColors.surfaceVariant,
-                        contentColor = PackGuideColors.primaryText
-                    )
                 }
             }
 
@@ -255,7 +176,6 @@ fun CatalogScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(filteredItems, key = { it.id }) { item ->
-                    val itemIndex = itemsList.indexOfFirst { it.id == item.id }
                     val itemSubtotalL = item.quantity * item.unitVolumeL
 
                     TechCard(
@@ -338,12 +258,7 @@ fun CatalogScreen(
                                         .background(PackGuideColors.surface, shape = RoundedCornerShape(2.dp))
                                         .border(1.dp, PackGuideColors.primaryText, shape = RoundedCornerShape(2.dp))
                                         .clickable {
-                                            if ((itemIndex != -1) && (itemsList[itemIndex].quantity > 0)) {
-                                                itemsList[itemIndex] = itemsList[itemIndex].copy(
-                                                    quantity = itemsList[itemIndex].quantity - 1
-                                                )
-                                            }
-                                        },
+                                            packing.updateItem(item.id) { current ->                                                current.copy(quantity = (current.quantity - 1).coerceAtLeast(0),                                                    packedQuantity = current.packedQuantity.coerceAtMost((current.quantity - 1).coerceAtLeast(0)))                                            }                                        },
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
@@ -379,12 +294,7 @@ fun CatalogScreen(
                                         .background(PackGuideColors.primaryText, shape = RoundedCornerShape(2.dp))
                                         .border(1.dp, PackGuideColors.primaryText, shape = RoundedCornerShape(2.dp))
                                         .clickable {
-                                            if (itemIndex != -1) {
-                                                itemsList[itemIndex] = itemsList[itemIndex].copy(
-                                                    quantity = itemsList[itemIndex].quantity + 1
-                                                )
-                                            }
-                                        },
+                                            packing.updateItem(item.id) { it.copy(quantity = it.quantity + 1) }                                        },
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
@@ -469,8 +379,7 @@ fun CatalogScreen(
                             .fillMaxWidth()
                             .background(PackGuideColors.primaryText, shape = RoundedCornerShape(20.dp))
                             .border(1.dp, AccentRedLed, shape = RoundedCornerShape(20.dp))
-                            .clickable { /* Create packing plan action */ }
-                            .padding(vertical = 12.dp),
+                            .clickable(onClick = onCreatePlan)                            .padding(vertical = 12.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {

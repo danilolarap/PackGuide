@@ -64,13 +64,12 @@ fun TechBottomNavBar(
                     val isSelected = currentRoute == route
 
                     val iconTint by animateColorAsState(
-                        targetValue = if (isSelected) AccentRedLed else PackGuideColors.secondaryText,
-                        animationSpec = tween(durationMillis = 200),
+                        targetValue = if (isSelected) Color.White else PackGuideColors.primaryText,                        animationSpec = tween(durationMillis = 200),
                         label = "TabIconTint"
                     )
 
                     val textColor by animateColorAsState(
-                        targetValue = if (isSelected) Color.White else PackGuideColors.secondaryText,                        animationSpec = tween(durationMillis = 200),
+                        targetValue = if (isSelected) Color.White else PackGuideColors.primaryText,                        animationSpec = tween(durationMillis = 200),
                         label = "TabTextColor"
                     )
 
@@ -124,7 +123,7 @@ fun TechBottomNavBar(
                         }
                     }
                 }
-                Box(                    modifier = Modifier.weight(0.8f).clip(RoundedCornerShape(4.dp))                        .clickable(                            interactionSource = remember { MutableInteractionSource() },                            indication = null,                            onClick = onSettingsClick                        )                        .padding(vertical = 8.dp),                    contentAlignment = Alignment.Center                ) {                    Column(horizontalAlignment = Alignment.CenterHorizontally) {                        Icon(                            imageVector = Icons.Outlined.Settings,                            contentDescription = localizedText("Configuración", LocalAppLanguage.current),                            tint = PackGuideColors.secondaryText,                            modifier = Modifier.size(20.dp)                        )                        Spacer(Modifier.height(4.dp))                        Text(                            text = "[AJUSTES]",                            style = Typography.labelSmall.copy(fontSize = 9.sp),                            color = PackGuideColors.secondaryText                        )                    }                }            }
+                Box(                    modifier = Modifier.weight(0.8f).clip(RoundedCornerShape(4.dp))                        .clickable(                            interactionSource = remember { MutableInteractionSource() },                            indication = null,                            onClick = onSettingsClick                        )                        .padding(vertical = 8.dp),                    contentAlignment = Alignment.Center                ) {                    Column(horizontalAlignment = Alignment.CenterHorizontally) {                        Icon(                            imageVector = Icons.Outlined.Settings,                            contentDescription = localizedText("Configuración", LocalAppLanguage.current),                            tint = PackGuideColors.primaryText,                            modifier = Modifier.size(20.dp)                        )                        Spacer(Modifier.height(4.dp))                        Text(                            text = "[AJUSTES]",                            style = Typography.labelSmall.copy(fontSize = 9.sp),                            color = PackGuideColors.primaryText                        )                    }                }            }
         }
     }
 }

@@ -27,15 +27,11 @@ fun MainScreen(
     settings: AppSettings,
     onThemeChange: (Boolean) -> Unit,
     onLanguageChange: (AppLanguage) -> Unit,
-    onLogout: () -> Unit,
-    onExit: () -> Unit
-) {
+    onLogout: () -> Unit) {
     var currentTab by remember { mutableStateOf<NavTab>(NavTab.Scanner) }
-    var previousTab by remember { mutableStateOf<NavTab?>(null) }
     var showSettings by remember { mutableStateOf(false) }
-
+    val packing = remember { PackingState() }
     fun navigateTo(tab: NavTab) {
-        if (tab != currentTab) previousTab = currentTab
         currentTab = tab
     }
 
@@ -61,22 +57,8 @@ fun MainScreen(
                 label = "ScreenTransition"
             ) { tab ->
                 when (tab) {
-                    is NavTab.Scanner -> ScannerScreen(
-                        onBack = {
-                            val destination = previousTab
-                            if (destination != null) {
-                                currentTab = destination
-                                previousTab = null
-                            } else onExit()
-                        },
-                        onOpenSettings = { showSettings = true }
-                    )
-                    is NavTab.Catalog -> CatalogScreen()
-                    is NavTab.Guide -> GuideScreen(onNavigateToTab = ::navigateTo)
-                    is NavTab.Summary -> SummaryScreen(
-                        onNavigateToTab = ::navigateTo,
-                        onOpenSettings = { showSettings = true }
-                    )
+                    is NavTab.Scanner -> ScannerScreen(packing = packing, onOpenGuide = { navigateTo(NavTab.Guide) })                    is NavTab.Catalog -> CatalogScreen(packing = packing, onCreatePlan = { navigateTo(NavTab.Guide) })                    is NavTab.Guide -> GuideScreen(packing = packing, onNavigateToTab = ::navigateTo)                    is NavTab.Summary -> SummaryScreen(
+                        packing = packing,                        onNavigateToTab = ::navigateTo                    )
                 }
             }
             if (showSettings) {

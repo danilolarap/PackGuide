@@ -56,16 +56,11 @@ import com.example.packguide.ui.theme.Typography
 @Composable
 fun ScannerScreen(
     modifier: Modifier = Modifier,
-    onBack: () -> Unit,
-    onOpenSettings: () -> Unit
-) {
+    packing: PackingState,    onOpenGuide: () -> Unit) {
     var selectedMode by remember { mutableStateOf("MANUAL") } // [AUTO] vs [MANUAL]
 
     // Manual measures state
-    var altoCm by remember { mutableIntStateOf(55) }
-    var anchoCm by remember { mutableIntStateOf(40) }
-    var profCm by remember { mutableIntStateOf(20) }
-
+    val altoCm = packing.heightCm.value    val anchoCm = packing.widthCm.value    val profCm = packing.depthCm.value
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -79,18 +74,6 @@ fun ScannerScreen(
                 .padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                onClick = onBack,
-                modifier = Modifier.size(36.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                    contentDescription = localizedText("Volver", LocalAppLanguage.current),                    tint = PackGuideColors.primaryText
-                )
-            }
-
-            Spacer(modifier = Modifier.width(4.dp))
-
             Text(
                 text = "SYS // PACKING_OS",
                 style = Typography.titleMedium,
@@ -100,15 +83,6 @@ fun ScannerScreen(
                 modifier = Modifier.weight(1f)
             )
 
-            IconButton(
-                onClick = onOpenSettings,
-                modifier = Modifier.size(36.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Settings,
-                    contentDescription = localizedText("Configuración", LocalAppLanguage.current),                    tint = PackGuideColors.primaryText
-                )
-            }
         }
 
         DashedDivider(modifier = Modifier.padding(horizontal = 16.dp))
@@ -128,8 +102,7 @@ fun ScannerScreen(
                 LedIndicator(color = AccentGreenLed, size = 6.dp, isPulsing = true)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "ESPACIO MAPEO: 100% // LIDAR ACTIVE | FPS: 60",
-                    style = Typography.labelSmall.copy(fontSize = 11.sp),
+                    text = "AJUSTA LAS MEDIDAS DE TU EQUIPAJE",                    style = Typography.labelSmall.copy(fontSize = 11.sp),
                     fontFamily = TechMonospaceFontFamily,
                     color = PackGuideColors.primaryText
                 )
@@ -263,15 +236,13 @@ fun ScannerScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         TechBadge(
-                            text = "TARGET_LOCK: CARRY_ON",
-                            containerColor = PackGuideColors.primaryText.copy(alpha = 0.85f),
+                            text = "VISTA ILUSTRATIVA",                            containerColor = PackGuideColors.primaryText.copy(alpha = 0.85f),
                             contentColor = AccentRedLed,
                             borderColor = AccentRedLed
                         )
 
                         TechBadge(
-                            text = "IATA VALID",
-                            containerColor = PackGuideColors.primaryText.copy(alpha = 0.85f),
+                            text = packing.preset.value.label,                            containerColor = PackGuideColors.primaryText.copy(alpha = 0.85f),
                             contentColor = Color.White,
                             ledColor = AccentGreenLed,
                             borderColor = AccentGreenLed
@@ -346,8 +317,7 @@ fun ScannerScreen(
                             LedIndicator(color = AccentGreenLed, size = 6.dp, isPulsing = true)
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "38L VOLUMEN INTERNO",
-                                style = Typography.titleMedium,
+                                text = "${String.format(Locale.US, "%.1f", packing.capacityL)}L VOLUMEN ESTIMADO",                                style = Typography.titleMedium,
                                 fontFamily = TechMonospaceFontFamily,
                                 fontWeight = FontWeight.Bold,
                                 color = PackGuideColors.primaryText
@@ -357,8 +327,7 @@ fun ScannerScreen(
                 }
             }
 
-            // --- 4. MODE SWITCHER: [AUTO] vs [MANUAL] ---
-            item {
+            item {                Text("TIPO DE EQUIPAJE", style = Typography.titleMedium, color = PackGuideColors.primaryText)                Spacer(Modifier.height(8.dp))                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {                    LuggagePreset.entries.forEach { preset ->                        val selected = packing.preset.value == preset                        Box(                            modifier = Modifier.weight(1f)                                .background(if (selected) PackGuideColors.primaryText else PackGuideColors.surface)                                .border(1.dp, if (selected) AccentRedLed else PackGuideColors.border)                                .clickable { packing.selectPreset(preset) }                                .padding(vertical = 10.dp),                            contentAlignment = Alignment.Center                        ) {                            Text(preset.label, style = Typography.labelSmall,                                color = if (selected) PackGuideColors.surface else PackGuideColors.primaryText)                        }                    }                }                Spacer(Modifier.height(6.dp))                Text("MANO 45×35×20 · CABINA 55×35×25 · BODEGA 75×50×30 cm (ejemplo; verifica tu aerolínea, bodega máx. 158 cm lineales)",                    style = Typography.labelSmall, color = PackGuideColors.secondaryText)            }            // --- 4. MODE SWITCHER: [AUTO] vs [MANUAL] ---            item {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -425,22 +394,19 @@ fun ScannerScreen(
                             DimensionStepperRow(
                                 label = "ALTO",
                                 valueCm = altoCm,
-                                onValueChange = { altoCm = it }
-                            )
+                                onValueChange = { packing.heightCm.value = it }                            )
 
                             // Dimension Stepper for ANCHO
                             DimensionStepperRow(
                                 label = "ANCHO",
                                 valueCm = anchoCm,
-                                onValueChange = { anchoCm = it }
-                            )
+                                onValueChange = { packing.widthCm.value = it }                            )
 
                             // Dimension Stepper for PROF.
                             DimensionStepperRow(
                                 label = "PROF.",
                                 valueCm = profCm,
-                                onValueChange = { profCm = it }
-                            )
+                                onValueChange = { packing.depthCm.value = it }                            )
 
                             DashedDivider(color = PackGuideColors.border)
 
@@ -449,8 +415,7 @@ fun ScannerScreen(
                             val volL = volCm3 / 1000.0
                             val volCm3Formatted = String.format(Locale.US, "%,d", volCm3).replace(',', '.')
                             val volLFormatted = String.format(Locale.US, "%.1f", volL)
-                            val isIataOk = altoCm <= 55 && anchoCm <= 40 && profCm <= 23
-
+                            val isIataOk = if (packing.preset.value == LuggagePreset.Checked)                                altoCm + anchoCm + profCm <= 158                            else altoCm <= packing.preset.value.heightCm &&                                anchoCm <= packing.preset.value.widthCm &&                                profCm <= packing.preset.value.depthCm
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -471,8 +436,7 @@ fun ScannerScreen(
                                             color = PackGuideColors.secondaryText
                                         )
                                         TechBadge(
-                                            text = if (isIataOk) "CABINA IATA OK" else "EXCEDE CABINA",
-                                            containerColor = if (isIataOk) PackGuideColors.primaryText else AccentRedLed,
+                                            text = if (isIataOk) "DENTRO DE REFERENCIA" else "REVISAR MEDIDAS",                                            containerColor = if (isIataOk) PackGuideColors.primaryText else AccentRedLed,
                                             contentColor = PackGuideColors.surface,
                                             ledColor = if (isIataOk) AccentGreenLed else AccentRedLed
                                         )
@@ -491,52 +455,7 @@ fun ScannerScreen(
 
                             Spacer(modifier = Modifier.height(4.dp))
 
-                            // Action Buttons
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(10.dp)
-                            ) {
-                                // Outline button [ CANCELAR ]
-                                Box(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .background(PackGuideColors.surface, shape = RoundedCornerShape(20.dp))
-                                        .border(1.dp, PackGuideColors.primaryText, shape = RoundedCornerShape(20.dp))
-                                        .clickable {
-                                            altoCm = 55
-                                            anchoCm = 40
-                                            profCm = 20
-                                        }
-                                        .padding(vertical = 12.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "[ CANCELAR ]",
-                                        style = Typography.titleMedium,
-                                        fontFamily = TechMonospaceFontFamily,
-                                        color = PackGuideColors.primaryText
-                                    )
-                                }
-
-                                // Dark pill button [ APLICAR MEDIDAS ]
-                                Box(
-                                    modifier = Modifier
-                                        .weight(1.3f)
-                                        .background(PackGuideColors.primaryText, shape = RoundedCornerShape(20.dp))
-                                        .border(1.dp, PackGuideColors.primaryText, shape = RoundedCornerShape(20.dp))
-                                        .clickable { /* Apply measures */ }
-                                        .padding(vertical = 12.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "[ APLICAR MEDIDAS ]",
-                                        style = Typography.titleMedium,
-                                        fontFamily = TechMonospaceFontFamily,
-                                        color = PackGuideColors.surface
-                                    )
-                                }
-                            }
-                        }
+                            Text(                                text = "Los cambios se reflejan al instante en catálogo y resumen.",                                style = Typography.labelSmall,                                color = PackGuideColors.secondaryText                            )                        }
                     }
                 }
             }
@@ -549,8 +468,7 @@ fun ScannerScreen(
                         .shadow(4.dp, shape = RoundedCornerShape(28.dp))
                         .background(PackGuideColors.primaryText, shape = RoundedCornerShape(28.dp))
                         .border(1.dp, AccentRedLed, shape = RoundedCornerShape(28.dp))
-                        .clickable { /* Optimize action */ }
-                        .padding(horizontal = 16.dp, vertical = 16.dp),
+                        .clickable(onClick = onOpenGuide)                        .padding(horizontal = 16.dp, vertical = 16.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -562,8 +480,7 @@ fun ScannerScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "OPTIMIZAR - PULSA PARA GENERAR DISTRIBUCIÓN",
-                            style = Typography.labelLarge.copy(fontSize = 11.sp),
+                            text = "CONTINUAR A GUÍA DE EMPACADO",                            style = Typography.labelLarge.copy(fontSize = 11.sp),
                             fontFamily = TechMonospaceFontFamily,
                             color = PackGuideColors.surface
                         )
