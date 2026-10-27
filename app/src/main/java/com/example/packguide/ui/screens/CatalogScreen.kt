@@ -324,7 +324,7 @@ fun CatalogScreen(
                     .padding(14.dp)
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    // Metric header & available badge
+                    Text("${packing.selectedUnits} unidades seleccionadas · ${packing.packedUnits} empacadas",                        style = Typography.labelMedium,                        color = PackGuideColors.primaryText)                    // Metric header & available badge
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
