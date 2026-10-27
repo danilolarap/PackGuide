@@ -57,7 +57,6 @@ import com.example.packguide.ui.theme.Typography
 fun ScannerScreen(
     modifier: Modifier = Modifier,
     packing: PackingState,    onOpenGuide: () -> Unit) {
-    var selectedMode by remember { mutableStateOf("MANUAL") } // [AUTO] vs [MANUAL]
 
     // Manual measures state
     val altoCm = packing.heightCm.value    val anchoCm = packing.widthCm.value    val profCm = packing.depthCm.value
@@ -327,63 +326,8 @@ fun ScannerScreen(
                 }
             }
 
-            item {                Text("TIPO DE EQUIPAJE", style = Typography.titleMedium, color = PackGuideColors.primaryText)                Spacer(Modifier.height(8.dp))                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {                    LuggagePreset.entries.forEach { preset ->                        val selected = packing.preset.value == preset                        Box(                            modifier = Modifier.weight(1f)                                .background(if (selected) PackGuideColors.primaryText else PackGuideColors.surface)                                .border(1.dp, if (selected) AccentRedLed else PackGuideColors.border)                                .clickable { packing.selectPreset(preset) }                                .padding(vertical = 10.dp),                            contentAlignment = Alignment.Center                        ) {                            Text(preset.label, style = Typography.labelSmall,                                color = if (selected) PackGuideColors.surface else PackGuideColors.primaryText)                        }                    }                }                Spacer(Modifier.height(6.dp))                Text("MANO 45×35×20 · CABINA 55×35×25 · BODEGA 75×50×30 cm (ejemplo; verifica tu aerolínea, bodega máx. 158 cm lineales)",                    style = Typography.labelSmall, color = PackGuideColors.secondaryText)            }            // --- 4. MODE SWITCHER: [AUTO] vs [MANUAL] ---            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(PackGuideColors.surfaceVariant, shape = RoundedCornerShape(4.dp))
-                        .border(1.dp, PackGuideColors.border, shape = RoundedCornerShape(4.dp))
-                        .padding(4.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .background(
-                                if (selectedMode == "AUTO") PackGuideColors.primaryText else Color.Transparent,
-                                shape = RoundedCornerShape(2.dp)
-                            )
-                            .clickable { selectedMode = "AUTO" }
-                            .padding(vertical = 10.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "[AUTO]",
-                            style = Typography.labelLarge,
-                            fontFamily = TechMonospaceFontFamily,
-                            color = if (selectedMode == "AUTO") PackGuideColors.surface else PackGuideColors.primaryText
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .background(
-                                if (selectedMode == "MANUAL") PackGuideColors.primaryText else Color.Transparent,
-                                shape = RoundedCornerShape(2.dp)
-                            )
-                            .clickable { selectedMode = "MANUAL" }
-                            .padding(vertical = 10.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            if (selectedMode == "MANUAL") {
-                                LedIndicator(color = AccentRedLed, size = 5.dp, isPulsing = true)
-                                Spacer(modifier = Modifier.width(6.dp))
-                            }
-                            Text(
-                                text = "[MANUAL]",
-                                style = Typography.labelLarge,
-                                fontFamily = TechMonospaceFontFamily,
-                                color = if (selectedMode == "MANUAL") PackGuideColors.surface else PackGuideColors.primaryText
-                            )
-                        }
-                    }
-                }
-            }
-
-            // --- 5. MANUAL ADJUSTMENT MODAL CARD ---
-            if (selectedMode == "MANUAL") {
-                item {
+            item {                Text("TIPO DE EQUIPAJE", style = Typography.titleMedium, color = PackGuideColors.primaryText)                Spacer(Modifier.height(8.dp))                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {                    LuggagePreset.entries.forEach { preset ->                        val selected = packing.preset.value == preset                        Box(                            modifier = Modifier.weight(1f)                                .background(if (selected) PackGuideColors.primaryText else PackGuideColors.surface)                                .border(1.dp, if (selected) AccentRedLed else PackGuideColors.border)                                .clickable { packing.selectPreset(preset) }                                .padding(vertical = 10.dp),                            contentAlignment = Alignment.Center                        ) {                            Text(preset.label, style = Typography.labelSmall,                                color = if (selected) PackGuideColors.surface else PackGuideColors.primaryText)                        }                    }                }                Spacer(Modifier.height(6.dp))                Text("MANO 45×35×20 · CABINA 55×35×25 · BODEGA 75×50×30 cm (ejemplo; verifica tu aerolínea, bodega máx. 158 cm lineales)",                    style = Typography.labelSmall, color = PackGuideColors.secondaryText)            }            // --- 5. MANUAL ADJUSTMENT MODAL CARD ---
+            item {
                     TechCard(
                         headerTag = "AJUSTE MANUAL DE MEDIDAS",
                         subTag = "[ CARRY-ON SPEC ]",
@@ -458,7 +402,6 @@ fun ScannerScreen(
                             Text(                                text = "Los cambios se reflejan al instante en catálogo y resumen.",                                style = Typography.labelSmall,                                color = PackGuideColors.secondaryText                            )                        }
                     }
                 }
-            }
 
             // --- 6. BOTTOM ACTION BUTTON ---
             item {
