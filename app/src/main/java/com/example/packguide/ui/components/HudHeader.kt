@@ -34,26 +34,17 @@ fun HudHeader(
             .background(PackGuideColors.background)
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
+        if (sysCode.isNotBlank() || statusText.isNotBlank()) Row(            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = sysCode,
-                style = Typography.labelSmall,
-                fontFamily = TechMonospaceFontFamily,
-                color = PackGuideColors.secondaryText
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            LedIndicator(
-                color = ledColor,
+            if (sysCode.isNotBlank()) Text(                text = sysCode,                style = Typography.labelSmall,                fontFamily = TechMonospaceFontFamily,                color = PackGuideColors.secondaryText            )            Spacer(modifier = Modifier.weight(1f))
+            if (statusText.isNotBlank()) LedIndicator(                color = ledColor,
                 size = 7.dp,
                 label = statusText
             )
         }
 
-        Spacer(modifier = Modifier.height(4.dp))
-
+        if (sysCode.isNotBlank() || statusText.isNotBlank()) Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = title,
             style = Typography.headlineMedium,

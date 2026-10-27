@@ -136,9 +136,8 @@ fun AuthScreen(
         Spacer(Modifier.height(24.dp))
         HudHeader(
             title = if (isRegistering) "CREAR CUENTA" else "INICIAR SESIÓN",
-            sysCode = "SYS // IDENTIDAD LOCAL",
-            statusText = "[ SINCRONIZACIÓN OFF ]",
-            ledColor = AccentRedLed
+            sysCode = "",
+            statusText = ""
         )
         Spacer(Modifier.height(20.dp))
         DashedDivider()
