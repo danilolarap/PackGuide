@@ -63,6 +63,7 @@ class PackingState {
         CatalogItemData("ITEM-24", "PROTECTOR SOLAR", "ASEO", "15x6x5 cm", 0.5, Icons.Outlined.MedicalServices, 0),
         CatalogItemData("ITEM-25", "MEDICAMENTOS", "ASEO", "18x12x5 cm", 0.8, Icons.Outlined.MedicalServices, 0),
         CatalogItemData("ITEM-26", "LENTES DE CONTACTO", "ASEO", "12x8x3 cm", 0.2, Icons.Outlined.MedicalServices, 0),
+        CatalogItemData("ITEM-27", "TELÉFONO", "TECH", "16x8x2 cm", 0.3, Icons.Outlined.Devices, 0),
         // ADD_ITEMS_HERE
     )
 
