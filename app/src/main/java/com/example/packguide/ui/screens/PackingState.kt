@@ -45,6 +45,7 @@ class PackingState {
         CatalogItemData("ITEM-06", "CARGADORES & TECH", "TECH", "18x12x4 cm", 0.8, Icons.Outlined.Devices, 1),
         CatalogItemData("ITEM-07", "ROPA INTERIOR", "ROPA", "18x12x3 cm", 0.3, Icons.Outlined.Checkroom, 0),
         CatalogItemData("ITEM-08", "MEDIAS", "ROPA", "15x10x3 cm", 0.2, Icons.Outlined.Checkroom, 0),
+        CatalogItemData("ITEM-09", "PIJAMA", "ROPA", "30x22x5 cm", 1.4, Icons.Outlined.Checkroom, 0),
         // ADD_ITEMS_HERE
     )
 
