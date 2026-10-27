@@ -72,6 +72,7 @@ class PackingState {
         CatalogItemData("ITEM-33", "CÁMARA", "TECH", "18x13x10 cm", 1.7, Icons.Outlined.Devices, 0),
         CatalogItemData("ITEM-34", "TARJETAS DE MEMORIA", "TECH", "8x6x2 cm", 0.1, Icons.Outlined.Devices, 0),
         CatalogItemData("ITEM-35", "CABLE USB", "TECH", "12x9x3 cm", 0.2, Icons.Outlined.Devices, 0),
+        CatalogItemData("ITEM-36", "RELOJ", "TECH", "10x8x5 cm", 0.4, Icons.Outlined.Devices, 0),
         // ADD_ITEMS_HERE
     )
 
