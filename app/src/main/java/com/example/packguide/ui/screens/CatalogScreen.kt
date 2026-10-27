@@ -59,8 +59,7 @@ fun CatalogScreen(
     modifier: Modifier = Modifier,    packing: PackingState,    onCreatePlan: () -> Unit) {
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("TODOS") }
-    val categories = listOf("ROPA", "CALZADO", "ASEO", "TECH", "TODOS")
-
+    val categories = listOf("TODOS", "ROPA", "CALZADO", "ASEO", "TECH")
     // Items list initialized with exact specification defaults
     val itemsList = packing.items
     val filteredItems = itemsList.filter { item ->
