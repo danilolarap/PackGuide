@@ -51,6 +51,7 @@ class PackingState {
         CatalogItemData("ITEM-12", "SHORTS", "ROPA", "28x20x4 cm", 1.0, Icons.Outlined.Checkroom, 0),
         CatalogItemData("ITEM-13", "SUÉTER", "ROPA", "35x28x7 cm", 2.3, Icons.Outlined.Checkroom, 0),
         CatalogItemData("ITEM-14", "CAMISA", "ROPA", "30x23x4 cm", 1.2, Icons.Outlined.Checkroom, 0),
+        CatalogItemData("ITEM-15", "TRAJE DE BAÑO", "ROPA", "20x15x2 cm", 0.3, Icons.Outlined.Checkroom, 0),
         // ADD_ITEMS_HERE
     )
 
