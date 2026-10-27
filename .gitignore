@@ -5,6 +5,9 @@
 /.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
+/.android/
+/.gradle-user-home/
+/.kotlin/
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .DS_Store

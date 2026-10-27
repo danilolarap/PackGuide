@@ -76,8 +76,7 @@ fun CatalogScreen(
             .fillMaxSize()
             .background(PackGuideColors.background)
     ) {
-        // --- 1. TOP BAR: NOTHING (R) // SYS CATÁLOGO DE ÍTEMS ---
-        HudHeader(
+        // Encabezado del catálogo        HudHeader(
             title = "CATÁLOGO DE ÍTEMS",
             sysCode = "",            statusText = "",            ledColor = AccentGreenLed
         )
@@ -207,22 +206,7 @@ fun CatalogScreen(
                                 Spacer(modifier = Modifier.width(10.dp))
 
                                 Column {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Text(
-                                            text = item.name,
-                                            style = Typography.titleMedium,
-                                            fontFamily = TechMonospaceFontFamily,
-                                            fontWeight = FontWeight.Bold,
-                                            color = PackGuideColors.primaryText
-                                        )
-                                        Spacer(modifier = Modifier.width(6.dp))
-                                        TechBadge(
-                                            text = item.category,
-                                            containerColor = PackGuideColors.surfaceVariant,
-                                            contentColor = PackGuideColors.primaryText
-                                        )
-                                    }
-
+                                    Text(                                        text = item.name,                                        style = Typography.titleMedium,                                        fontFamily = TechMonospaceFontFamily,                                        fontWeight = FontWeight.Bold,                                        color = PackGuideColors.primaryText,                                        maxLines = 2                                    )                                    TechBadge(                                        text = item.category,                                        containerColor = PackGuideColors.surfaceVariant,                                        contentColor = PackGuideColors.primaryText                                    )
                                     Spacer(modifier = Modifier.height(4.dp))
 
                                     Text(
@@ -325,12 +309,7 @@ fun CatalogScreen(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text("${packing.selectedUnits} unidades seleccionadas · ${packing.packedUnits} empacadas",                        style = Typography.labelMedium,                        color = PackGuideColors.primaryText)                    // Metric header & available badge
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {                        Text(
                             text = "VOLUMEN EST.: ${String.format(Locale.US, "%.1f", totalUsedVolumeL)}L / ${String.format(Locale.US, "%.1f", totalCapacityL)}L",                            style = Typography.titleMedium,
                             fontFamily = TechMonospaceFontFamily,
                             fontWeight = FontWeight.Bold,

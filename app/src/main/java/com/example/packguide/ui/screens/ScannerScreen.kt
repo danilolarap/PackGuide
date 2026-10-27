@@ -330,8 +330,7 @@ fun ScannerScreen(
             item {
                     TechCard(
                         headerTag = "AJUSTE MANUAL DE MEDIDAS",
-                        subTag = "[ CARRY-ON SPEC ]",
-                        borderColor = PackGuideColors.primaryText
+                        subTag = "[ ${packing.preset.value.label} ]",                        borderColor = PackGuideColors.primaryText
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             // Dimension Stepper for ALTO
