@@ -57,6 +57,7 @@ class PackingState {
         CatalogItemData("ITEM-18", "PANTUFLAS", "CALZADO", "28x18x7 cm", 2.1, Icons.AutoMirrored.Outlined.DirectionsWalk, 0),
         CatalogItemData("ITEM-19", "CEPILLO DE DIENTES", "ASEO", "20x3x3 cm", 0.1, Icons.Outlined.MedicalServices, 0),
         CatalogItemData("ITEM-20", "PASTA DENTAL", "ASEO", "16x5x4 cm", 0.2, Icons.Outlined.MedicalServices, 0),
+        CatalogItemData("ITEM-21", "DESODORANTE", "ASEO", "14x5x5 cm", 0.3, Icons.Outlined.MedicalServices, 0),
         // ADD_ITEMS_HERE
     )
 
