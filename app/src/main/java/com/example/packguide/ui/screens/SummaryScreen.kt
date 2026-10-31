@@ -43,19 +43,33 @@ fun SummaryScreen(
     val format: (Double) -> String = { String.format(Locale.US, "%.1f", it) }
 
     Column(modifier.fillMaxSize().background(PackGuideColors.background)) {
-        Text("RESUMEN DEL EQUIPAJE", style = Typography.headlineMedium,
-            color = PackGuideColors.primaryText, modifier = Modifier.padding(16.dp))
-        LazyColumn(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+        com.example.packguide.ui.components.HudHeader(title = "RESUMEN DEL EQUIPAJE", sysCode = "", statusText = "")
+        LazyColumn(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            item {
+                TechCard(headerTag = "TODAS LAS MALETAS") {
+                    packing.selectedLuggage.forEach { type ->
+                        val bag = packing.bag(type)
+                        Text(String.format(Locale.US, "%s · %.1f / %.1f L · %d/%d empacados",
+                            type.label, bag.usedL, bag.capacityL, bag.packedUnits, bag.selectedUnits),
+                            style = Typography.bodyMedium,
+                            color = if (bag.usedL > bag.capacityL) AccentRedLed else PackGuideColors.primaryText)
+                        Spacer(Modifier.height(6.dp))
+                    }
+                    Text("TOTAL: ${packing.totalSelectedUnits} unidades · ${packing.totalPackedUnits} empacadas",
+                        style = Typography.labelMedium, color = PackGuideColors.primaryText)
+                }
+            }
+            item { LuggageSelector(packing) }
             item {
                 TechCard(headerTag = "MALETA SELECCIONADA", borderColor = PackGuideColors.primaryText) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Outlined.Luggage, contentDescription = null, tint = AccentRedLed)
-                        Text("  ${packing.preset.value.label} · ${packing.heightCm.value}×${packing.widthCm.value}×${packing.depthCm.value} cm",
+                        Text("  ${packing.activeLuggage.label} · ${packing.heightCm.value}×${packing.widthCm.value}×${packing.depthCm.value} cm",
                             color = PackGuideColors.primaryText, style = Typography.titleMedium)
                     }
                     Spacer(Modifier.height(8.dp))
-                    Text("Volumen exterior estimado: ${format(packing.capacityL)} L. Las dimensiones y límites reales dependen de la aerolínea.",
+                    Text("Capacidad calculada con medidas interiores. Verifica las medidas exteriores y las normas de la aerolínea por separado.",
                         color = PackGuideColors.secondaryText, style = Typography.bodySmall)
                 }
             }
@@ -64,6 +78,14 @@ fun SummaryScreen(
                     Text("${format(packing.usedL)} / ${format(packing.capacityL)} L · $fill%",
                         color = PackGuideColors.primaryText, style = Typography.headlineMedium)
                     Spacer(Modifier.height(6.dp))
+                    androidx.compose.material3.LinearProgressIndicator(
+                        progress = { (packing.usedL / packing.capacityL).toFloat().coerceIn(0f, 1f) },
+                        modifier = Modifier.fillMaxWidth().height(4.dp),
+                        color = if (packing.usedL > packing.capacityL) AccentRedLed else PackGuideColors.primaryText,
+                        trackColor = PackGuideColors.surfaceVariant,
+                        drawStopIndicator = {}
+                    )
+                    Spacer(Modifier.height(10.dp))
                     Text(if (packing.usedL > packing.capacityL) "Exceso estimado: ${format(packing.usedL - packing.capacityL)} L"
                         else "Espacio libre estimado: ${format(freeL)} L",
                         color = if (packing.usedL > packing.capacityL) AccentRedLed else PackGuideColors.primaryText)
