@@ -137,10 +137,9 @@ fun AuthScreen(
         HudHeader(
             title = if (isRegistering) "CREAR CUENTA" else "INICIAR SESIÓN",
             sysCode = "",
-            statusText = ""
+            statusText = "", horizontalPadding = 0.dp
         )
         Spacer(Modifier.height(20.dp))
-        DashedDivider()
         Spacer(Modifier.height(22.dp))
 
         Column(
