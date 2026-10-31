@@ -239,7 +239,7 @@ private val englishTranslations = mapOf(
 fun localizedText(text: String, language: AppLanguage): String =
     if (language == AppLanguage.English) englishTranslations[text] ?: translateCommonTerms(text) else text
 
-private fun translateCommonTerms(text: String): String {
+private val commonTermTranslations = run {
     val words = mapOf(
         "Configuración" to "Settings", "ConfiguraciÃ³n" to "Settings",
         "Empacado" to "Packed", "Pendiente" to "Pending", "Faltante" to "Missing",
