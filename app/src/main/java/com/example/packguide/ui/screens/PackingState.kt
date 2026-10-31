@@ -75,12 +75,14 @@ private fun defaultCatalogItems() = listOf(
         CatalogItemData("ITEM-36", "RELOJ", "TECH", "10x8x5 cm", 0.4, Icons.Outlined.Devices, 0),
     )
 
-    var preset = mutableStateOf(LuggagePreset.Cabin)
-    var heightCm = mutableStateOf(preset.value.heightCm)
-    var widthCm = mutableStateOf(preset.value.widthCm)
-    var depthCm = mutableStateOf(preset.value.depthCm)
+class LuggagePacking(val type: LuggagePreset, initialItems: List<CatalogItemData>) {
+    val dimensionsConfirmed = mutableStateOf(false)
+    val heightCm = mutableStateOf(type.heightCm)
+    val widthCm = mutableStateOf(type.widthCm)
+    val depthCm = mutableStateOf(type.depthCm)
+    val items = mutableStateListOf<CatalogItemData>().apply { addAll(initialItems) }
 
-    val capacityL: Double get() = heightCm.value * widthCm.value * depthCm.value / 1000.0
+    val capacityL: Double get() = heightCm.value.toDouble() * widthCm.value * depthCm.value / 1000.0
     val usedL: Double get() = items.sumOf { it.quantity * it.unitVolumeL }
     val packedUnits: Int get() = items.sumOf { it.packedQuantity }
     val selectedUnits: Int get() = items.sumOf { it.quantity }
