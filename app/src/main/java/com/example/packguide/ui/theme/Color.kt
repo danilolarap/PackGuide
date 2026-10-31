@@ -5,14 +5,14 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 // Nothing OS / Tech ASCII Palette
-val PrimaryBlack = Color(0xFF0F0F11)
-val BackgroundLight = Color(0xFFF2F4F7)
-val CardSurfaceLight = Color(0xFFFFFFFF)
-val AccentRedLed = Color(0xFFFF2A2A)
-val AccentGreenLed = Color(0xFF00E676)
-val SecondarySlate = Color(0xFF8A8D93)
-val BorderSlate = Color(0xFFD1D5DB)
-val SurfaceVariantLight = Color(0xFFE5E8EC)
+val PrimaryBlack = Color(0xFF191919)
+val BackgroundLight = Color(0xFFF3F2EE)
+val CardSurfaceLight = Color(0xFFFFFEFA)
+val AccentRedLed = Color(0xFFD63830)
+val AccentGreenLed = Color(0xFF54816A)
+val SecondarySlate = Color(0xFF686862)
+val BorderSlate = Color(0xFFDEDED7)
+val SurfaceVariantLight = Color(0xFFEAE9E3)
 
 @Immutable
 data class TechExtendedColors(
