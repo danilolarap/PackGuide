@@ -1,39 +1,32 @@
-package com.example.packguide.ui.navigation
-
-import com.example.packguide.ui.theme.PackGuideColors
+package com.example.packguide.ui.navigation
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Iconsimport androidx.compose.material.icons.outlined.Settingsimport androidx.compose.material3.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
-import com.example.packguide.ui.localization.Text
-import com.example.packguide.ui.localization.LocalAppLanguageimport com.example.packguide.ui.localization.localizedTextimport androidx.compose.runtime.Composable
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.packguide.ui.components.DashedDivider
-import com.example.packguide.ui.components.LedIndicator
+import com.example.packguide.ui.localization.LocalAppLanguage
+import com.example.packguide.ui.localization.Text
+import com.example.packguide.ui.localization.localizedText
 import com.example.packguide.ui.theme.AccentRedLed
-import com.example.packguide.ui.theme.TechMonospaceFontFamily
+import com.example.packguide.ui.theme.PackGuideColors
 import com.example.packguide.ui.theme.Typography
 
 @Composable
@@ -42,88 +35,53 @@ fun TechBottomNavBar(
     onTabSelected: (NavTab) -> Unit,
     modifier: Modifier = Modifier,
     tabs: List<NavTab?> = NavTab.tabs,
-    currentDestination: NavTab? = selectedTab,    onSettingsClick: () -> Unit = {}) {
-    Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(width = 1.dp, color = PackGuideColors.border, shape = RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp)),        color = PackGuideColors.surface,        tonalElevation = 8.dp
-    ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            DashedDivider(color = AccentRedLed.copy(alpha = 0.6f))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 4.dp, vertical = 6.dp),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                tabs.filterNotNull().forEach { tab ->
-                    val route = tab?.route ?: return@forEach
-                    val currentRoute = currentDestination?.route ?: ""
-                    val isSelected = currentRoute == route
-
-                    val iconTint by animateColorAsState(
-                        targetValue = if (isSelected) Color.White else PackGuideColors.primaryText,                        animationSpec = tween(durationMillis = 200),
-                        label = "TabIconTint"
-                    )
-
-                    val textColor by animateColorAsState(
-                        targetValue = if (isSelected) Color.White else PackGuideColors.primaryText,                        animationSpec = tween(durationMillis = 200),
-                        label = "TabTextColor"
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(
-                                if (isSelected) AccentRedLed else Color.Transparent                            )
-                            .border(
-                                width = if (isSelected) 1.dp else 0.dp,
-                                color = if (isSelected) AccentRedLed else Color.Transparent,
-                                shape = RoundedCornerShape(4.dp)
-                            )
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null
-                            ) {
-                                onTabSelected(tab)
-                            }
-                            .padding(vertical = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            if (isSelected) {
-                                LedIndicator(
-                                    color = AccentRedLed,
-                                    size = 5.dp,
-                                    isPulsing = true
-                                )
-                                Spacer(modifier = Modifier.height(2.dp))
-                            }
-
-                            Icon(
-                                imageVector = tab.icon,
-                                contentDescription = localizedText(tab.title, LocalAppLanguage.current),                                tint = iconTint,
-                                modifier = Modifier.size(20.dp)
-                            )
-
-                            Spacer(modifier = Modifier.height(4.dp))
-
-                            Text(
-                                text = if (isSelected) tab.title else tab.title.replace("[", "").replace("]", ""),
-                                style = Typography.labelSmall.copy(fontSize = 10.sp),
-                                fontFamily = TechMonospaceFontFamily,
-                                color = textColor
-                            )
-                        }
-                    }
+    currentDestination: NavTab? = selectedTab,
+    onSettingsClick: () -> Unit = {}
+) {
+    val language = LocalAppLanguage.current
+    Surface(modifier = modifier.fillMaxWidth(), color = PackGuideColors.surface,
+        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp), shadowElevation = 2.dp) {
+        Row(
+            Modifier.fillMaxWidth().windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Bottom))
+                .padding(horizontal = 8.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            tabs.filterNotNull().forEach { tab ->
+                val selected = currentDestination?.route == tab.route
+                val tint by animateColorAsState(
+                    if (selected) PackGuideColors.primaryText else PackGuideColors.secondaryText,
+                    tween(180), label = "NavigationTint")
+                Column(
+                    Modifier.weight(1f).clip(RoundedCornerShape(18.dp))
+                        .background(if (selected) PackGuideColors.surfaceVariant else Color.Transparent)
+                        .selectable(selected = selected, role = Role.Tab, onClick = { onTabSelected(tab) })
+                        .padding(horizontal = 2.dp, vertical = 9.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(tab.icon, contentDescription = null, tint = tint, modifier = Modifier.size(21.dp))
+                    Text(localizedText(tab.title, language).trim('[', ']'),
+                        style = Typography.labelSmall.copy(fontSize = 9.sp, letterSpacing = 0.sp),
+                        color = tint, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Box(Modifier.size(3.dp).background(if (selected) AccentRedLed else Color.Transparent, CircleShape))
                 }
-                Box(                    modifier = Modifier.weight(0.8f).clip(RoundedCornerShape(4.dp))                        .clickable(                            interactionSource = remember { MutableInteractionSource() },                            indication = null,                            onClick = onSettingsClick                        )                        .padding(vertical = 8.dp),                    contentAlignment = Alignment.Center                ) {                    Column(horizontalAlignment = Alignment.CenterHorizontally) {                        Icon(                            imageVector = Icons.Outlined.Settings,                            contentDescription = localizedText("Configuración", LocalAppLanguage.current),                            tint = PackGuideColors.primaryText,                            modifier = Modifier.size(20.dp)                        )                        Spacer(Modifier.height(4.dp))                        Text(                            text = "[AJUSTES]",                            style = Typography.labelSmall.copy(fontSize = 9.sp),                            color = PackGuideColors.primaryText                        )                    }                }            }
+            }
+            Column(
+                Modifier.weight(1f).clip(RoundedCornerShape(18.dp))
+                    .clickable(role = Role.Button, onClick = onSettingsClick)
+                    .padding(horizontal = 2.dp, vertical = 9.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Icon(Icons.Outlined.Settings,
+                    contentDescription = localizedText("Configuración", language),
+                    tint = PackGuideColors.secondaryText, modifier = Modifier.size(21.dp))
+                Text(localizedText("[AJUSTES]", language).trim('[', ']'),
+                    style = Typography.labelSmall.copy(fontSize = 9.sp, letterSpacing = 0.sp),
+                    color = PackGuideColors.secondaryText, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Spacer(Modifier.size(3.dp))
+            }
         }
     }
 }
