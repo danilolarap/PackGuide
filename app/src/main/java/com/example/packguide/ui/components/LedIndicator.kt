@@ -1,4 +1,5 @@
-package com.example.packguide.ui.components
+package com.example.packguide.ui.components
+
 
 import com.example.packguide.ui.theme.PackGuideColors
 
@@ -31,7 +32,7 @@ fun LedIndicator(
     color: Color = AccentGreenLed,
     size: Dp = 8.dp,
     label: String? = null,
-    isPulsing: Boolean = true
+    isPulsing: Boolean = false
 ) {
     val alphaAnim by if (isPulsing) {
         val transition = rememberInfiniteTransition(label = "LedPulse")
@@ -39,7 +40,7 @@ fun LedIndicator(
             initialValue = 0.4f,
             targetValue = 1.0f,
             animationSpec = infiniteRepeatable(
-                animation = tween(durationMillis = 800, easing = FastOutSlowInEasing),
+                animation = tween(durationMillis = 1400, easing = FastOutSlowInEasing),
                 repeatMode = RepeatMode.Reverse
             ),
             label = "LedPulseAlpha"
@@ -58,8 +59,8 @@ fun LedIndicator(
 
             // Glow outer halo
             drawCircle(
-                color = color.copy(alpha = 0.3f * alphaAnim),
-                radius = radiusPx * 1.8f,
+                color = color.copy(alpha = 0.12f * alphaAnim),
+                radius = radiusPx * 1.4f,
                 center = centerPt
             )
             // Core LED circle
