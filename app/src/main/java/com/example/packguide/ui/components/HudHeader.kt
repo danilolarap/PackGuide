@@ -1,23 +1,15 @@
-package com.example.packguide.ui.components
+package com.example.packguide.ui.components
 
-import com.example.packguide.ui.theme.PackGuideColors
-
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import com.example.packguide.ui.localization.Text
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
+import com.example.packguide.ui.localization.Text
 import com.example.packguide.ui.theme.AccentGreenLed
-import com.example.packguide.ui.theme.TechMonospaceFontFamily
+import com.example.packguide.ui.theme.PackGuideColors
 import com.example.packguide.ui.theme.Typography
 
 @Composable
@@ -26,35 +18,24 @@ fun HudHeader(
     modifier: Modifier = Modifier,
     sysCode: String = "SYS // PACKING_OS",
     statusText: String = "[ ONLINE ]",
-    ledColor: Color = AccentGreenLed
+    ledColor: Color = AccentGreenLed,
+    horizontalPadding: Dp = 20.dp
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(PackGuideColors.background)
-            .padding(horizontal = 16.dp, vertical = 12.dp)
-    ) {
-        if (sysCode.isNotBlank() || statusText.isNotBlank()) Row(            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (sysCode.isNotBlank()) Text(                text = sysCode,                style = Typography.labelSmall,                fontFamily = TechMonospaceFontFamily,                color = PackGuideColors.secondaryText            )            Spacer(modifier = Modifier.weight(1f))
-            if (statusText.isNotBlank()) LedIndicator(                color = ledColor,
-                size = 7.dp,
-                label = statusText
-            )
+    Column(modifier.fillMaxWidth().padding(horizontal = horizontalPadding, vertical = 18.dp)) {
+        if (sysCode.isNotBlank() || statusText.isNotBlank()) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (sysCode.isNotBlank()) Text(sysCode, style = Typography.labelSmall,
+                    color = PackGuideColors.secondaryText, modifier = Modifier.weight(1f))
+                else Spacer(Modifier.weight(1f))
+                if (statusText.isNotBlank()) LedIndicator(color = ledColor, size = 5.dp,
+                    label = statusText, isPulsing = false)
+            }
+            Spacer(Modifier.height(10.dp))
         }
-
-        if (sysCode.isNotBlank() || statusText.isNotBlank()) Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = title,
-            style = Typography.headlineMedium,
-            fontFamily = TechMonospaceFontFamily,
-            fontWeight = FontWeight.Bold,
-            color = PackGuideColors.primaryText
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        DashedDivider()
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Text(title, style = Typography.headlineMedium, color = PackGuideColors.primaryText,
+                modifier = Modifier.weight(1f))
+            DotMatrixMark()
+        }
     }
 }
