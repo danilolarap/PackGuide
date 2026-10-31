@@ -95,22 +95,22 @@ fun GuideScreen(
                         Text("${item.packedQuantity}/${item.quantity}", color = PackGuideColors.primaryText)
                     }
                     Spacer(Modifier.height(10.dp))
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("ZONA: ${item.zone.label} ↻",
-                            modifier = Modifier.weight(1f)
-                                .border(1.dp, PackGuideColors.border)
-                                .clickable { packing.updateItem(item.id) { it.copy(zone = it.zone.next()) } }
-                                .padding(10.dp), color = PackGuideColors.primaryText)
-                        Text(if (item.packedQuantity == item.quantity) "DESMARCAR" else "MARCAR EMPACADO",
-                            modifier = Modifier
-                                .background(if (item.packedQuantity == item.quantity) PackGuideColors.surfaceVariant else PackGuideColors.primaryText)
-                                .clickable {
-                                    packing.updateItem(item.id) {
-                                        it.copy(packedQuantity = if (it.packedQuantity == it.quantity) 0 else it.packedQuantity + 1)
-                                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                        AsciiButton(
+                            text = "ZONA: ${item.zone.label} ↻",
+                            onClick = { packing.updateItem(item.id) { it.copy(zone = it.zone.next()) } },
+                            modifier = Modifier.weight(1f), isPrimary = false
+                        )
+                        AsciiButton(
+                            text = if (item.packedQuantity == item.quantity) "DESMARCAR" else "MARCAR EMPACADO",
+                            onClick = {
+                                packing.updateItem(item.id) {
+                                    it.copy(packedQuantity = if (it.packedQuantity == it.quantity) 0 else it.packedQuantity + 1)
                                 }
-                                .padding(10.dp),
-                            color = if (item.packedQuantity == item.quantity) PackGuideColors.primaryText else PackGuideColors.surface)
+                            },
+                            modifier = Modifier.weight(1f),
+                            isPrimary = item.packedQuantity != item.quantity
+                        )
                     }
                 }
             }
