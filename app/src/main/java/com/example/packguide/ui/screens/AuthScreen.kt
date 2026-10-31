@@ -293,7 +293,7 @@ private fun AuthField(
                 }
             }
         } else null,
-        shape = RoundedCornerShape(2.dp),
+        shape = RoundedCornerShape(14.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = PackGuideColors.primaryText,
             unfocusedBorderColor = PackGuideColors.border,
