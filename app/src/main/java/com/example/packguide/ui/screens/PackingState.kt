@@ -87,13 +87,6 @@ class LuggagePacking(val type: LuggagePreset, initialItems: List<CatalogItemData
     val packedUnits: Int get() = items.sumOf { it.packedQuantity }
     val selectedUnits: Int get() = items.sumOf { it.quantity }
 
-    fun selectPreset(value: LuggagePreset) {
-        preset.value = value
-        heightCm.value = value.heightCm
-        widthCm.value = value.widthCm
-        depthCm.value = value.depthCm
-    }
-
     fun updateItem(id: String, transform: (CatalogItemData) -> CatalogItemData) {
         val index = items.indexOfFirst { it.id == id }
         if (index >= 0) items[index] = transform(items[index])
