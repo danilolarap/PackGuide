@@ -92,3 +92,50 @@ class LuggagePacking(val type: LuggagePreset, initialItems: List<CatalogItemData
         if (index >= 0) items[index] = transform(items[index])
     }
 }
+
+class PackingState {
+    val catalogItems: List<CatalogItemData> = defaultCatalogItems()
+    private val luggage = mutableStateMapOf(
+        LuggagePreset.Cabin to LuggagePacking(LuggagePreset.Cabin, catalogItems)
+    )
+    private val activeType = mutableStateOf(LuggagePreset.Cabin)
+    val selectedLuggage: List<LuggagePreset> get() = LuggagePreset.entries.filter { it in luggage }
+    val activeLuggage: LuggagePreset get() = activeType.value
+    val activeBag: LuggagePacking get() = bag(activeLuggage)
+    fun bag(type: LuggagePreset): LuggagePacking = requireNotNull(luggage[type])
+
+    // Removing a bag removes its assignments; they are never silently moved to another bag.
+    fun toggleLuggage(type: LuggagePreset) {
+        if (type in luggage) {
+            if (luggage.size == 1) return
+            luggage.remove(type)
+            if (activeLuggage == type) activeType.value = selectedLuggage.first()
+        } else {
+            luggage[type] = LuggagePacking(type, catalogItems.map { it.copy(quantity = 0, packedQuantity = 0) })
+        }
+    }
+
+    fun selectLuggage(type: LuggagePreset) {
+        if (type in luggage) activeType.value = type
+    }
+
+    val allDimensionsConfirmed: Boolean get() = selectedLuggage.all { bag(it).dimensionsConfirmed.value }
+    val totalCapacityL: Double get() = selectedLuggage.sumOf { bag(it).capacityL }
+    val totalUsedL: Double get() = selectedLuggage.sumOf { bag(it).usedL }
+    val totalSelectedUnits: Int get() = selectedLuggage.sumOf { bag(it).selectedUnits }
+    val totalPackedUnits: Int get() = selectedLuggage.sumOf { bag(it).packedUnits }
+
+    val items get() = activeBag.items
+    val heightCm get() = activeBag.heightCm
+    val widthCm get() = activeBag.widthCm
+    val depthCm get() = activeBag.depthCm
+    val dimensionsConfirmed get() = activeBag.dimensionsConfirmed
+    val capacityL get() = activeBag.capacityL
+    val usedL get() = activeBag.usedL
+    val selectedUnits get() = activeBag.selectedUnits
+    val packedUnits get() = activeBag.packedUnits
+
+    fun updateItem(id: String, type: LuggagePreset = activeLuggage, transform: (CatalogItemData) -> CatalogItemData) {
+        luggage[type]?.updateItem(id, transform)
+    }
+}
