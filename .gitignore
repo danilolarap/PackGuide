@@ -10,6 +10,7 @@
 /.kotlin/
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.idea/
 .DS_Store
 /build
 /captures
