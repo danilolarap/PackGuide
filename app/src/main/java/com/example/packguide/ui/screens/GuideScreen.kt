@@ -54,6 +54,14 @@ fun GuideScreen(
                     Text("${packing.packedUnits} de ${packing.selectedUnits} unidades empacadas · $progress%",
                         style = Typography.titleMedium, color = PackGuideColors.primaryText)
                     Spacer(Modifier.height(8.dp))
+                    androidx.compose.material3.LinearProgressIndicator(
+                        progress = { progress / 100f },
+                        modifier = Modifier.fillMaxWidth().height(4.dp),
+                        color = PackGuideColors.primaryText,
+                        trackColor = PackGuideColors.surfaceVariant,
+                        drawStopIndicator = {}
+                    )
+                    Spacer(Modifier.height(12.dp))
                     Text("Marca cada objeto cuando esté dentro de la maleta. Toca la zona para cambiar su ubicación.",
                         style = Typography.bodySmall, color = PackGuideColors.secondaryText)
                 }
