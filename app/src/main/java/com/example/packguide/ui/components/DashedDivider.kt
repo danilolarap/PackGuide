@@ -1,4 +1,5 @@
-package com.example.packguide.ui.components
+package com.example.packguide.ui.components
+
 
 import com.example.packguide.ui.theme.PackGuideColors
 
@@ -15,11 +16,15 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun DashedDivider(
     modifier: Modifier = Modifier,
-    color: Color = Color.Unspecified,    strokeWidth: Dp = 1.dp,
-    dashLength: Dp = 6.dp,
-    gapLength: Dp = 4.dp
+    color: Color = Color.Unspecified,
+    strokeWidth: Dp = 1.dp,
+    dashLength: Dp = 1.dp,
+    gapLength: Dp = 5.dp
 ) {
-    val resolvedColor = if (color == Color.Unspecified) {        PackGuideColors.secondaryText.copy(alpha = 0.5f)    } else color    Canvas(
+    val resolvedColor = if (color == Color.Unspecified) {
+        PackGuideColors.border
+    } else color
+    Canvas(
         modifier = modifier
             .fillMaxWidth()
             .height(strokeWidth)
@@ -31,7 +36,8 @@ fun DashedDivider(
         val pathEffect = PathEffect.dashPathEffect(floatArrayOf(dashPx, gapPx), 0f)
 
         drawLine(
-            color = resolvedColor,            start = androidx.compose.ui.geometry.Offset(0f, strokePx / 2f),
+            color = resolvedColor,
+            start = androidx.compose.ui.geometry.Offset(0f, strokePx / 2f),
             end = androidx.compose.ui.geometry.Offset(size.width, strokePx / 2f),
             strokeWidth = strokePx,
             pathEffect = pathEffect
