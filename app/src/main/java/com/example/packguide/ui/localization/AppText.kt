@@ -284,8 +284,9 @@ fun Text(
     style: TextStyle = LocalTextStyle.current
 ) {
     val language = LocalAppLanguage.current
+    val translatedText = remember(text, language) { localizedText(text, language) }
     MaterialText(
-        text = localizedText(text, language), modifier = modifier, color = color,
+        text = translatedText, modifier = modifier, color = color,
         fontSize = fontSize, fontStyle = fontStyle, fontWeight = fontWeight,
         fontFamily = fontFamily, letterSpacing = letterSpacing, textDecoration = textDecoration,
         textAlign = textAlign, lineHeight = lineHeight, overflow = overflow, softWrap = softWrap,
