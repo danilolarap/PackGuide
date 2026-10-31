@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun PackGuideRoot(authRepository: AuthRepository, settingsRepository: SettingsRepository) {
     var isAuthenticated by remember { mutableStateOf(false) }
-    val settings by settingsRepository.settings.collectAsState(initial = AppSettings())
+    val settings by settingsRepository.settings.collectAsStateWithLifecycle(initialValue = AppSettings())
     val scope = rememberCoroutineScope()
 
     PackGuideTheme(darkTheme = settings.isDarkTheme) {
