@@ -45,8 +45,8 @@ fun SettingsDialog(
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Column(
-            modifier = Modifier.fillMaxWidth().background(PackGuideColors.surface, RoundedCornerShape(3.dp))
-                .border(1.dp, PackGuideColors.border, RoundedCornerShape(3.dp)).padding(20.dp),
+            modifier = Modifier.fillMaxWidth().background(PackGuideColors.surface, RoundedCornerShape(22.dp))
+                .border(1.dp, PackGuideColors.border, RoundedCornerShape(22.dp)).padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             LocalizedText("[ AJUSTES DE SISTEMA ]", style = Typography.titleMedium, color = PackGuideColors.primaryText)
