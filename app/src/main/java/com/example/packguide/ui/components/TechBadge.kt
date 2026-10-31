@@ -1,4 +1,5 @@
-package com.example.packguide.ui.components
+package com.example.packguide.ui.components
+
 
 import com.example.packguide.ui.theme.PackGuideColors
 
@@ -32,12 +33,12 @@ fun TechBadge(
 ) {
     val resolvedContainerColor = if (containerColor == Color.Unspecified) PackGuideColors.primaryText else containerColor
     val resolvedContentColor = if (contentColor == Color.Unspecified) PackGuideColors.surface else contentColor
-    val resolvedBorderColor = if (borderColor == Color.Unspecified) PackGuideColors.secondaryText.copy(alpha = 0.4f) else borderColor
+    val resolvedBorderColor = if (borderColor == Color.Unspecified) Color.Transparent else borderColor
     Box(
         modifier = modifier
-            .background(resolvedContainerColor, shape = RoundedCornerShape(2.dp))
-            .border(1.dp, resolvedBorderColor, shape = RoundedCornerShape(2.dp))
-            .padding(horizontal = 8.dp, vertical = 3.dp)
+            .background(resolvedContainerColor, shape = RoundedCornerShape(8.dp))
+            .border(1.dp, resolvedBorderColor, shape = RoundedCornerShape(8.dp))
+            .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (ledColor != null) {
