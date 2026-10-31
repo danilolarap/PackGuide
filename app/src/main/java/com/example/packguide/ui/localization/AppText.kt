@@ -258,6 +258,11 @@ private val commonTermTranslations = run {
     }
 }
 
+private fun translateCommonTerms(text: String): String =
+    commonTermTranslations.fold(text) { result, (pattern, translation) ->
+        pattern.replace(result, translation)
+    }
+
 @Composable
 fun Text(
     text: String,
