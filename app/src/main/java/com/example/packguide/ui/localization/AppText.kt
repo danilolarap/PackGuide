@@ -253,8 +253,8 @@ private val commonTermTranslations = run {
         "Viaje" to "Trip", "Ropa" to "Clothing", "Accesorios" to "Accessories",
         "Electrónica" to "Electronics", "Sí" to "Yes", "No" to "No"
     )
-    return words.entries.sortedByDescending { it.key.length }.fold(text) { result, entry ->
-        Regex(Regex.escape(entry.key), RegexOption.IGNORE_CASE).replace(result, entry.value)
+    words.entries.sortedByDescending { it.key.length }.map { entry ->
+        Regex(Regex.escape(entry.key), RegexOption.IGNORE_CASE) to entry.value
     }
 }
 
