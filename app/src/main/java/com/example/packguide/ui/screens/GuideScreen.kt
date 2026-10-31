@@ -42,12 +42,13 @@ fun GuideScreen(
     val progress = if (packing.selectedUnits == 0) 0 else packing.packedUnits * 100 / packing.selectedUnits
 
     Column(modifier.fillMaxSize().background(PackGuideColors.background)) {
-        Text("GUÍA DE EMPACADO", style = Typography.headlineMedium,
-            color = PackGuideColors.primaryText, modifier = Modifier.padding(16.dp))
+        com.example.packguide.ui.components.HudHeader(title = "GUÍA DE EMPACADO", sysCode = "", statusText = "")
         LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+            modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            item { LuggageSelector(packing) }
+            item { PackingSuggestionPanel(packing) }
             item {
                 TechCard(headerTag = "PROGRESO REAL", borderColor = PackGuideColors.primaryText) {
                     Text("${packing.packedUnits} de ${packing.selectedUnits} unidades empacadas · $progress%",
