@@ -208,7 +208,7 @@ fun AuthScreen(
                 },
                 onClick = submit,
                 modifier = Modifier.fillMaxWidth(),
-                isAccentRed = true,
+                isAccentRed = false,
                 enabled = !isLoading
             )
             if (isLoading) {
