@@ -1,4 +1,5 @@
-package com.example.packguide.ui.screens
+package com.example.packguide.ui.screens
+
 
 import com.example.packguide.ui.theme.PackGuideColors
 
@@ -27,10 +28,13 @@ fun MainScreen(
     settings: AppSettings,
     onThemeChange: (Boolean) -> Unit,
     onLanguageChange: (AppLanguage) -> Unit,
-    onLogout: () -> Unit) {
+    onLogout: () -> Unit
+) {
     var currentTab by remember { mutableStateOf<NavTab>(NavTab.Scanner) }
     var showSettings by remember { mutableStateOf(false) }
-    val packing = remember { PackingState() }
+    val scanner: com.example.packguide.scanning.ScannerViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val packing = remember { PackingState() }
+
     fun navigateTo(tab: NavTab) {
         currentTab = tab
     }
@@ -43,7 +47,9 @@ fun MainScreen(
                 selectedTab = currentTab,
                 onTabSelected = ::navigateTo,
                 tabs = listOf(NavTab.Scanner, NavTab.Catalog, NavTab.Guide, NavTab.Summary),
-                currentDestination = currentTab,                onSettingsClick = { showSettings = true }            )
+                currentDestination = currentTab,
+                onSettingsClick = { showSettings = true }
+            )
         }
     ) { innerPadding ->
         Box(
@@ -57,8 +63,14 @@ fun MainScreen(
                 label = "ScreenTransition"
             ) { tab ->
                 when (tab) {
-                    is NavTab.Scanner -> ScannerScreen(packing = packing, onOpenGuide = { navigateTo(NavTab.Guide) })                    is NavTab.Catalog -> CatalogScreen(packing = packing, onCreatePlan = { navigateTo(NavTab.Guide) })                    is NavTab.Guide -> GuideScreen(packing = packing, onNavigateToTab = ::navigateTo)                    is NavTab.Summary -> SummaryScreen(
-                        packing = packing,                        onNavigateToTab = ::navigateTo                    )
+                    is NavTab.Scanner -> ScannerScreen(packing = packing, scanner = scanner, onOpenCatalog = { navigateTo(NavTab.Catalog) })
+                    is NavTab.Catalog -> CatalogScreen(packing = packing, onCreatePlan = { navigateTo(NavTab.Guide) })
+                    is NavTab.Guide -> GuideScreen(packing = packing, onNavigateToTab = ::navigateTo)
+                    is NavTab.Summary -> SummaryScreen(
+
+                        packing = packing,
+                        onNavigateToTab = ::navigateTo
+                    )
                 }
             }
             if (showSettings) {
@@ -72,6 +84,7 @@ fun MainScreen(
                     },
                     onLogout = {
                         showSettings = false
+                        scanner.clearPhotos()
                         onLogout()
                     },
                     onDismiss = { showSettings = false }
