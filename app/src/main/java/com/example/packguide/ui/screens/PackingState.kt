@@ -36,8 +36,7 @@ enum class LuggagePreset(val label: String, val heightCm: Int, val widthCm: Int,
     val capacityL: Double get() = heightCm * widthCm * depthCm / 1000.0
 }
 
-class PackingState {
-    val items = mutableStateListOf(
+private fun defaultCatalogItems() = listOf(
         CatalogItemData("ITEM-01", "CAMISETAS", "ROPA", "28x20x4 cm", 1.2, Icons.Outlined.Checkroom, 3),
         CatalogItemData("ITEM-02", "PANTALONES", "ROPA", "38x26x6 cm", 2.8, Icons.Outlined.DryCleaning, 2),
         CatalogItemData("ITEM-03", "CALZADO", "CALZADO", "32x22x12 cm", 4.5, Icons.AutoMirrored.Outlined.DirectionsWalk, 1),
