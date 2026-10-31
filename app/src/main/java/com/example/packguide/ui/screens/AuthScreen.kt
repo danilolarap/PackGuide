@@ -143,8 +143,8 @@ fun AuthScreen(
         Spacer(Modifier.height(22.dp))
 
         Column(
-            modifier = Modifier.fillMaxWidth().background(PackGuideColors.surface, RoundedCornerShape(2.dp))
-                .border(1.dp, PackGuideColors.border, RoundedCornerShape(2.dp)).padding(20.dp)
+            modifier = Modifier.fillMaxWidth().background(PackGuideColors.surface, RoundedCornerShape(14.dp))
+                .border(1.dp, PackGuideColors.border, RoundedCornerShape(14.dp)).padding(20.dp)
         ) {
             Text("[ CREDENCIALES ]", style = Typography.labelMedium, color = PackGuideColors.primaryText)
             Spacer(Modifier.height(18.dp))
