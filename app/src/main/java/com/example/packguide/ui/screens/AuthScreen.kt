@@ -121,7 +121,7 @@ fun AuthScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            LedIndicator(color = AccentRedLed, isPulsing = true)
+            LedIndicator(color = AccentRedLed, isPulsing = false)
             Spacer(Modifier.width(10.dp))
             LocalizedText("PACKGUIDE // ACCESS", style = Typography.labelMedium, color = PackGuideColors.secondaryText)
             Spacer(Modifier.weight(1f))
