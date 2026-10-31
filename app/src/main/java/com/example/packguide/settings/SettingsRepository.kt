@@ -23,7 +23,7 @@ class SettingsRepository(context: Context) {
             isDarkTheme = preferences[DARK_THEME_KEY] ?: false,
             language = AppLanguage.fromStorage(preferences[LANGUAGE_KEY])
         )
-    }
+    }.distinctUntilChanged()
 
     suspend fun setDarkTheme(enabled: Boolean) {
         settingsStore.edit { it[DARK_THEME_KEY] = enabled }
