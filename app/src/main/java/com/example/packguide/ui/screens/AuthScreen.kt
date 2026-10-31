@@ -297,6 +297,7 @@ private fun AuthField(
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = PackGuideColors.primaryText,
             unfocusedBorderColor = PackGuideColors.border,
+            unfocusedContainerColor = PackGuideColors.surfaceVariant.copy(alpha = 0.35f),
             focusedLabelColor = PackGuideColors.primaryText,
             cursorColor = AccentRedLed
         )
