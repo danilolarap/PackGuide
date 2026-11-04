@@ -46,6 +46,8 @@ import com.example.packguide.ui.theme.AccentRedLed
 import com.example.packguide.ui.theme.TechMonospaceFontFamily
 import com.example.packguide.ui.theme.Typography
 import java.util.Locale
+import com.example.packguide.ui.localization.LocalAppLanguage
+import com.example.packguide.ui.localization.PackingText
 
 @Composable
 fun CatalogScreen(
@@ -67,10 +69,8 @@ fun CatalogScreen(
         matchesCategory && matchesQuery
     } }
 
-    // Dynamic Volume Calculations
-    val totalCapacityL = packing.totalCapacityL
-    val totalUsedVolumeL = packing.totalUsedL
-    val availableVolumeL = maxOf(0.0, totalCapacityL - totalUsedVolumeL)
+    val copy = PackingText(LocalAppLanguage.current)
+    val estimate = packing.activeBag.estimate
 
     Column(
         modifier = modifier
@@ -178,17 +178,20 @@ fun CatalogScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 item {
+                    LuggageSelector(packing)
                     Text("DESTINOS DEL VIAJE", style = Typography.labelMedium, color = PackGuideColors.primaryText)
                     Text("Reparte las cantidades de cada artículo entre las maletas elegidas en Escáner.",
                         style = Typography.bodySmall, color = PackGuideColors.secondaryText)
                     packing.selectedLuggage.forEach { type ->
                         val bag = packing.bag(type)
-                        val over = bag.usedL > bag.capacityL
-                        Text(String.format(Locale.US, "%s: %.1f / %.1f L%s", type.label, bag.usedL,
-                            bag.capacityL, if (over) " · EXCESO" else ""),
+                        val over = bag.estimate.exceedsCapacity
+                        Text("${type.label}: ${copy.volume(bag.estimate)} · ${copy.balance(bag.estimate)}",
                             style = Typography.bodySmall,
                             color = if (over) AccentRedLed else PackGuideColors.primaryText)
                     }
+                    Text("Volumen estimado / capacidad interior total", style = Typography.bodySmall, color = PackGuideColors.secondaryText)
+                    Text("Medidas de referencia; litros por unidad estimados de forma independiente. No hay un factor de compresión medido.",
+                        style = Typography.bodySmall, color = PackGuideColors.secondaryText)
                 }
                 if (filteredItems.isEmpty()) {
                     item {
@@ -217,13 +220,15 @@ fun CatalogScreen(
                     .padding(14.dp)
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("${packing.totalSelectedUnits} unidades seleccionadas · ${packing.totalPackedUnits} empacadas",
+                    Text(copy.selectedBag(packing.activeLuggage.label), style = Typography.labelMedium, color = PackGuideColors.primaryText)
+                    Text(copy.counts(packing.selectedUnits, packing.packedUnits),
                         style = Typography.labelMedium,
                         color = PackGuideColors.primaryText)
                     // Metric header & available badge
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text("Volumen estimado / capacidad interior total", style = Typography.bodySmall, color = PackGuideColors.secondaryText)
                         Text(
-                            text = "VOLUMEN EST.: ${String.format(Locale.US, "%.1f", totalUsedVolumeL)}L / ${String.format(Locale.US, "%.1f", totalCapacityL)}L",
+                            text = copy.volume(estimate),
                             style = Typography.titleMedium,
                             fontFamily = TechMonospaceFontFamily,
                             fontWeight = FontWeight.Bold,
@@ -231,15 +236,15 @@ fun CatalogScreen(
                         )
 
                         TechBadge(
-                            text = "ESPACIO EST.: ${String.format(Locale.US, "%.1f", availableVolumeL)}L",
+                            text = copy.balance(estimate),
                             containerColor = PackGuideColors.primaryText,
                             contentColor = PackGuideColors.surface,
-                            ledColor = AccentGreenLed
+                            ledColor = if (estimate.exceedsCapacity) AccentRedLed else AccentGreenLed
                         )
                     }
 
                     // Visual Segmented Progress Bar (10 block segments)
-                    val filledSegmentsCount = ((totalUsedVolumeL / totalCapacityL) * 10).toInt().coerceIn(0, 10)
+                    val filledSegmentsCount = (estimate.occupancy * 10).toInt().coerceIn(0, 10)
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
