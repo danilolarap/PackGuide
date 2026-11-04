@@ -21,11 +21,15 @@ import com.example.packguide.ui.localization.localizedText
 import com.example.packguide.ui.theme.PackGuideColors
 import com.example.packguide.ui.theme.Typography
 import java.util.Locale
+import com.example.packguide.ui.localization.PackingText
+import com.example.packguide.ui.localization.formatLiters
 
 @Composable
 fun CatalogInventoryCard(item: CatalogItemData, packing: PackingState) {
     val language = LocalAppLanguage.current
+    val copy = PackingText(language)
     val totalQuantity = packing.selectedLuggage.sumOf { type -> packing.bag(type).items.first { it.id == item.id }.quantity }
+    val totalVolume = packing.selectedLuggage.sumOf { type -> packing.bag(type).items.first { it.id == item.id }.totalVolumeL }
     TechCard {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Box(Modifier.size(44.dp).background(PackGuideColors.surfaceVariant, RoundedCornerShape(14.dp)),
@@ -34,10 +38,12 @@ fun CatalogInventoryCard(item: CatalogItemData, packing: PackingState) {
             }
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(item.name, style = Typography.titleMedium, color = PackGuideColors.primaryText)
-                Text("${item.dimensions} · ${item.unitVolumeL} L", style = Typography.bodySmall,
+                Text("${item.dimensions} · ${copy.itemEstimate(item.unitVolumeL)}", style = Typography.bodySmall,
                     color = PackGuideColors.secondaryText)
             }
         }
+        Text(copy.itemGeometry(item.dimensionsCm.rectangularVolumeL), style = Typography.bodySmall,
+            color = PackGuideColors.secondaryText)
         Spacer(Modifier.height(12.dp))
         TechBadge(item.category, containerColor = PackGuideColors.surfaceVariant, contentColor = PackGuideColors.secondaryText)
         Spacer(Modifier.height(12.dp))
@@ -50,7 +56,7 @@ fun CatalogInventoryCard(item: CatalogItemData, packing: PackingState) {
                 .padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(type.label, style = Typography.labelMedium, color = PackGuideColors.primaryText)
-                Text(String.format(Locale.US, "%.1f L", assigned.quantity * item.unitVolumeL),
+                Text("${formatLiters(assigned.totalVolumeL)} L",
                     style = Typography.titleLarge, color = PackGuideColors.primaryText)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -82,7 +88,7 @@ fun CatalogInventoryCard(item: CatalogItemData, packing: PackingState) {
             Spacer(Modifier.height(12.dp))
         }
         Spacer(Modifier.height(8.dp))
-        Text(String.format(Locale.US, "TOTAL: %d unidades · %.1f L", totalQuantity, totalQuantity * item.unitVolumeL),
+        Text(copy.itemTotal(totalQuantity, totalVolume),
             style = Typography.bodySmall, color = PackGuideColors.secondaryText)
     }
 }
