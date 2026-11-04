@@ -34,6 +34,9 @@ fun MainScreen(
     var showSettings by remember { mutableStateOf(false) }
     val scanner: com.example.packguide.scanning.ScannerViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     val packing = remember { PackingState() }
+    val preview: com.example.packguide.ai.PackingPreviewViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    androidx.compose.runtime.LaunchedEffect(packing.selectedLuggage) { preview.retain(packing.selectedLuggage) }
+    androidx.compose.runtime.DisposableEffect(preview) { onDispose { preview.clear() } }
 
     fun navigateTo(tab: NavTab) {
         currentTab = tab
@@ -65,10 +68,11 @@ fun MainScreen(
                 when (tab) {
                     is NavTab.Scanner -> ScannerScreen(packing = packing, scanner = scanner, onOpenCatalog = { navigateTo(NavTab.Catalog) })
                     is NavTab.Catalog -> CatalogScreen(packing = packing, onCreatePlan = { navigateTo(NavTab.Guide) })
-                    is NavTab.Guide -> GuideScreen(packing = packing, onNavigateToTab = ::navigateTo)
+                    is NavTab.Guide -> GuideScreen(packing = packing, scanner = scanner, preview = preview, onNavigateToTab = ::navigateTo)
                     is NavTab.Summary -> SummaryScreen(
 
                         packing = packing,
+                        preview = preview,
                         onNavigateToTab = ::navigateTo
                     )
                 }
@@ -85,6 +89,7 @@ fun MainScreen(
                     onLogout = {
                         showSettings = false
                         scanner.clearPhotos()
+                        preview.clear()
                         onLogout()
                     },
                     onDismiss = { showSettings = false }
