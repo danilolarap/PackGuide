@@ -73,7 +73,7 @@ fun ScannerScreen(
                             DimensionStepperRow("PROF.", bag.depthCm.value) {
                                 bag.depthCm.value = it; bag.dimensionsConfirmed.value = false
                             }
-                            Text(String.format(Locale.US, "CAPACIDAD ORIENTATIVA: %.1f L", bag.capacityL),
+                            Text("${com.example.packguide.ui.localization.localizedText("CAPACIDAD INTERIOR TOTAL", com.example.packguide.ui.localization.LocalAppLanguage.current)}: ${com.example.packguide.ui.localization.formatLiters(bag.capacityL)} L",
                                 style = Typography.titleMedium, color = PackGuideColors.primaryText)
                             Text("Una foto común no mide la maleta. Ajusta las medidas interiores útiles y confírmalas.",
                                 style = Typography.bodySmall, color = PackGuideColors.secondaryText)
