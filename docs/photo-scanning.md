@@ -16,16 +16,22 @@ La foto sirve como referencia visual. El cálculo de espacio sigue usando las
 medidas de la maleta y los volúmenes estándar de las prendas del catálogo
 existente. No se infieren dimensiones reales de una foto. Las medidas se
 seleccionan o ajustan y confirman en los controles existentes de Escáner.
-La guía compara el volumen seleccionado con la capacidad y una reserva del 20%.
+Catálogo, Guía y Resumen comparan el volumen seleccionado con la misma capacidad
+interior total, sin descontar una reserva adicional. Las dimensiones de artículos
+son referencias; sus litros por unidad siguen siendo estimaciones independientes.
+Consulta [la regla de cálculo y la auditoría del catálogo](volume-calculations.md).
 Es una sugerencia, no una simulación física ni una garantía de ajuste.
 
 El selector permite elegir una sola imagen sin permiso general de almacenamiento.
 La cámara del sistema devuelve una miniatura en memoria; PackGuide no crea un
 archivo de captura. El comportamiento de almacenamiento de la cámara externa
 pertenece a esa aplicación. La imagen elegida se reduce y se corrige con EXIF
-fuera del hilo principal. La vista previa vive en memoria, sin subida ni
-persistencia de la imagen o su URI. Cambiar de pestaña conserva la vista previa.
-No se necesitan API keys, Firebase ni modelos de ML Kit.
+fuera del hilo principal. La vista previa vive en memoria, sin persistencia de
+la imagen en disco; el URI se conserva en memoria con su foto. Cambiar de pestaña
+conserva la vista previa. Guía crea una composición local con esa foto y el
+inventario: no envía datos a servicios externos ni requiere credenciales. Resumen
+ofrece una referencia visual para comparar, sin calificar automáticamente fotos.
+Consulta [la vista organizada sin conexión](packing-ai.md).
 
 En Android Studio: sincronizar Gradle y ejecutar en Android >= 24.
 
