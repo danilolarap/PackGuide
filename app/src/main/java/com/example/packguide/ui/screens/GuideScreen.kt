@@ -36,10 +36,13 @@ import com.example.packguide.ui.theme.Typography
 fun GuideScreen(
     packing: PackingState,
     modifier: Modifier = Modifier,
-    onNavigateToTab: ((NavTab) -> Unit)? = null
+    onNavigateToTab: ((NavTab) -> Unit)? = null,
+    scanner: com.example.packguide.scanning.ScannerViewModel? = null,
+    preview: com.example.packguide.ai.PackingPreviewViewModel? = null
 ) {
     val selectedItems = packing.items.filter { it.quantity > 0 }
-    val progress = if (packing.selectedUnits == 0) 0 else packing.packedUnits * 100 / packing.selectedUnits
+    val progress = packing.activeBag.progressPercent
+    val copy = com.example.packguide.ui.localization.PackingText(com.example.packguide.ui.localization.LocalAppLanguage.current)
 
     Column(modifier.fillMaxSize().background(PackGuideColors.background)) {
         com.example.packguide.ui.components.HudHeader(title = "GUÍA DE EMPACADO", sysCode = "", statusText = "")
@@ -51,7 +54,7 @@ fun GuideScreen(
             item { PackingSuggestionPanel(packing) }
             item {
                 TechCard(headerTag = "PROGRESO REAL", borderColor = PackGuideColors.primaryText) {
-                    Text("${packing.packedUnits} de ${packing.selectedUnits} unidades empacadas · $progress%",
+                    Text(copy.progress(packing.packedUnits, packing.selectedUnits, progress),
                         style = Typography.titleMedium, color = PackGuideColors.primaryText)
                     Spacer(Modifier.height(8.dp))
                     androidx.compose.material3.LinearProgressIndicator(
@@ -65,6 +68,11 @@ fun GuideScreen(
                     Text("Marca cada objeto cuando esté dentro de la maleta. Toca la zona para cambiar su ubicación.",
                         style = Typography.bodySmall, color = PackGuideColors.secondaryText)
                 }
+            }
+            if (scanner != null && preview != null) item {
+                PackingGuidePreviewPanel(packing, scanner, preview,
+                    onOpenScanner = { onNavigateToTab?.invoke(NavTab.Scanner) },
+                    onOpenCatalog = { onNavigateToTab?.invoke(NavTab.Catalog) })
             }
             item {
                 TechCard(headerTag = "CONSEJO DE DISTRIBUCIÓN", borderColor = PackGuideColors.border) {
