@@ -10,6 +10,8 @@ Al implementar una función, primero revisa cómo funciona hoy y amplía el fluj
 
 ## Estado técnico conocido
 
+- La vista organizada funciona sin conexión mediante `PackingImageService`, `OfflinePackingImageService`, `PackingPreviewViewModel` y `PackingPreviewPanels.kt`. Guía compone la foto original de Escáner con un esquema del inventario por zonas; Resumen admite hasta cuatro fotos y crea una referencia para comparar. No hay backend, llamada a Gemini, formulario de claves ni calificación automática de fotos. Nunca presentes este resultado como IA o edición fotorealista. Una futura integración remota debe guardar sus credenciales en un servidor autenticado, fuera del cliente. Consulta `docs/packing-ai.md`. Las sugerencias de volumen siguen usando reglas locales.
+
 - Aplicación Android de un módulo (`app`), escrita en Kotlin.
 - `namespace` e `applicationId`: `com.example.packguide`.
 - `compileSdk` y `targetSdk`: 37; `minSdk`: 24.
