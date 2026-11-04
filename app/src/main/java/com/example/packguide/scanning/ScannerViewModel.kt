@@ -14,6 +14,7 @@ import com.example.packguide.ui.screens.LuggagePreset
 data class ScanState(
     val loading: Boolean = false,
     val photo: Bitmap? = null,
+    val photoUri: Uri? = null,
     val message: String? = null
 )
 
@@ -39,11 +40,18 @@ class ScannerViewModel(application: Application) : AndroidViewModel(application)
         jobs[type] = viewModelScope.launch {
             try {
                 val photo = scanner.decode(getApplication(), uri)
-                states[type] = ScanState(photo = photo)
+                states[type] = ScanState(photo = photo, photoUri = uri)
             } catch (cancelled: CancellationException) {
                 throw cancelled
-            } catch (_: Exception) {
-                states[type] = stateFor(type).copy(loading = false, message = "No se pudo abrir la foto. Elige otra imagen de la maleta.")
+            } catch (_: OutOfMemoryError) {
+                states[type] = stateFor(type).copy(loading = false, message = "La foto es demasiado grande. Elige una imagen más pequeña.")
+            } catch (error: Exception) {
+                val message = when ((error as? PhotoReadException)?.problem) {
+                    PhotoProblem.Unsupported -> "Ese archivo no es una foto compatible. Elige una imagen JPG, PNG o WebP."
+                    PhotoProblem.TooLarge -> "La foto es demasiado grande. Elige una imagen más pequeña."
+                    null -> "No se pudo abrir la foto. Elige otra imagen de la maleta."
+                }
+                states[type] = stateFor(type).copy(loading = false, message = message)
             } finally {
                 if (jobs[type] == coroutineContext[Job]) jobs.remove(type)
             }
