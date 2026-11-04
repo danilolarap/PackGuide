@@ -30,17 +30,20 @@ import com.example.packguide.ui.theme.AccentRedLed
 import com.example.packguide.ui.theme.PackGuideColors
 import com.example.packguide.ui.theme.Typography
 import java.util.Locale
+import com.example.packguide.ui.localization.LocalAppLanguage
+import com.example.packguide.ui.localization.PackingText
+import com.example.packguide.ui.localization.formatLiters
 
 @Composable
 fun SummaryScreen(
     packing: PackingState,
     modifier: Modifier = Modifier,
-    onNavigateToTab: ((NavTab) -> Unit)? = null
+    onNavigateToTab: ((NavTab) -> Unit)? = null,
+    preview: com.example.packguide.ai.PackingPreviewViewModel? = null
 ) {
     val selected = packing.items.filter { it.quantity > 0 }
-    val freeL = (packing.capacityL - packing.usedL).coerceAtLeast(0.0)
-    val fill = if (packing.capacityL == 0.0) 0 else (packing.usedL / packing.capacityL * 100).toInt()
-    val format: (Double) -> String = { String.format(Locale.US, "%.1f", it) }
+    val estimate = packing.activeBag.estimate
+    val copy = PackingText(LocalAppLanguage.current)
 
     Column(modifier.fillMaxSize().background(PackGuideColors.background)) {
         com.example.packguide.ui.components.HudHeader(title = "RESUMEN DEL EQUIPAJE", sysCode = "", statusText = "")
@@ -50,10 +53,9 @@ fun SummaryScreen(
                 TechCard(headerTag = "TODAS LAS MALETAS") {
                     packing.selectedLuggage.forEach { type ->
                         val bag = packing.bag(type)
-                        Text(String.format(Locale.US, "%s · %.1f / %.1f L · %d/%d empacados",
-                            type.label, bag.usedL, bag.capacityL, bag.packedUnits, bag.selectedUnits),
+                        Text(copy.bagSummary(type.label, bag.estimate, bag.packedUnits, bag.selectedUnits),
                             style = Typography.bodyMedium,
-                            color = if (bag.usedL > bag.capacityL) AccentRedLed else PackGuideColors.primaryText)
+                            color = if (bag.estimate.exceedsCapacity) AccentRedLed else PackGuideColors.primaryText)
                         Spacer(Modifier.height(6.dp))
                     }
                     Text("TOTAL: ${packing.totalSelectedUnits} unidades · ${packing.totalPackedUnits} empacadas",
@@ -61,6 +63,7 @@ fun SummaryScreen(
                 }
             }
             item { LuggageSelector(packing) }
+            if (preview != null) item { PackingReviewPreviewPanel(packing, preview) }
             item {
                 TechCard(headerTag = "MALETA SELECCIONADA", borderColor = PackGuideColors.primaryText) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -75,20 +78,20 @@ fun SummaryScreen(
             }
             item {
                 TechCard(headerTag = "CAPACIDAD ESTIMADA", borderColor = PackGuideColors.border) {
-                    Text("${format(packing.usedL)} / ${format(packing.capacityL)} L · $fill%",
+                    Text("Volumen estimado / capacidad interior total", color = PackGuideColors.secondaryText, style = Typography.bodySmall)
+                    Text(copy.volume(estimate),
                         color = PackGuideColors.primaryText, style = Typography.headlineMedium)
+                    Text(copy.occupancy(estimate.occupancyPercent), color = PackGuideColors.secondaryText, style = Typography.bodySmall)
                     Spacer(Modifier.height(6.dp))
                     androidx.compose.material3.LinearProgressIndicator(
-                        progress = { (packing.usedL / packing.capacityL).toFloat().coerceIn(0f, 1f) },
+                        progress = { estimate.occupancy.toFloat().coerceIn(0f, 1f) },
                         modifier = Modifier.fillMaxWidth().height(4.dp),
-                        color = if (packing.usedL > packing.capacityL) AccentRedLed else PackGuideColors.primaryText,
+                        color = if (estimate.exceedsCapacity) AccentRedLed else PackGuideColors.primaryText,
                         trackColor = PackGuideColors.surfaceVariant,
                         drawStopIndicator = {}
                     )
                     Spacer(Modifier.height(10.dp))
-                    Text(if (packing.usedL > packing.capacityL) "Exceso estimado: ${format(packing.usedL - packing.capacityL)} L"
-                        else "Espacio libre estimado: ${format(freeL)} L",
-                        color = if (packing.usedL > packing.capacityL) AccentRedLed else PackGuideColors.primaryText)
+                    Text(copy.balance(estimate), color = if (estimate.exceedsCapacity) AccentRedLed else PackGuideColors.primaryText)
                 }
             }
             item {
@@ -117,8 +120,8 @@ fun SummaryScreen(
                     PackingZone.entries.forEach { zone ->
                         val zoneItems = selected.filter { it.zone == zone }
                         val units = zoneItems.sumOf { it.quantity }
-                        val volume = zoneItems.sumOf { it.quantity * it.unitVolumeL }
-                        Text("${zone.label}: $units unidades · ${format(volume)} L",
+                        val volume = zoneItems.sumOf { it.totalVolumeL }
+                        Text(copy.zone(zone.label, units, volume),
                             color = PackGuideColors.primaryText, style = Typography.bodyMedium)
                         Spacer(Modifier.height(4.dp))
                     }
@@ -136,7 +139,7 @@ fun SummaryScreen(
                         Text("${item.packedQuantity}/${item.quantity}", color = PackGuideColors.primaryText)
                     }
                     Spacer(Modifier.height(4.dp))
-                    Text("${item.zone.label} · ${format(item.quantity * item.unitVolumeL)} L estimados",
+                    Text("${item.zone.label} · ${formatLiters(item.totalVolumeL)} L",
                         color = PackGuideColors.secondaryText, style = Typography.bodySmall)
                 }
             }
