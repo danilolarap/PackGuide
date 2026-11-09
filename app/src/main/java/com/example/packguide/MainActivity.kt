@@ -5,14 +5,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.platform.LocalContext
 import com.example.packguide.data.auth.AuthRepository
 import com.example.packguide.data.auth.PackGuideDatabase
 import com.example.packguide.settings.AppSettings
@@ -40,18 +36,18 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun PackGuideRoot(authRepository: AuthRepository, settingsRepository: SettingsRepository) {
-    var isAuthenticated by remember { mutableStateOf(false) }
+    val session: PackGuideSessionViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     val settings by settingsRepository.settings.collectAsStateWithLifecycle(initialValue = AppSettings())
     val scope = rememberCoroutineScope()
 
     PackGuideTheme(darkTheme = settings.isDarkTheme) {
         CompositionLocalProvider(LocalAppLanguage provides settings.language) {
-            if (isAuthenticated) {
+            if (session.isAuthenticated) {
                 MainScreen(
                     settings = settings,
                     onThemeChange = { enabled -> scope.launch { settingsRepository.setDarkTheme(enabled) } },
                     onLanguageChange = { language -> scope.launch { settingsRepository.setLanguage(language) } },
-                    onLogout = { isAuthenticated = false }
+                    onLogout = { session.logout() }
                 )
             } else {
                 AuthScreen(
@@ -59,7 +55,7 @@ private fun PackGuideRoot(authRepository: AuthRepository, settingsRepository: Se
                     settings = settings,
                     onThemeChange = { enabled -> scope.launch { settingsRepository.setDarkTheme(enabled) } },
                     onLanguageChange = { language -> scope.launch { settingsRepository.setLanguage(language) } },
-                    onAuthenticated = { isAuthenticated = true }
+                    onAuthenticated = { session.isAuthenticated = true }
                 )
             }
         }

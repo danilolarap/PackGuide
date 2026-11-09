@@ -7,14 +7,19 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.Box
+import com.example.packguide.PackGuideSessionViewModel
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.packguide.ui.navigation.NavTab
@@ -30,21 +35,24 @@ fun MainScreen(
     onLanguageChange: (AppLanguage) -> Unit,
     onLogout: () -> Unit
 ) {
-    var currentTab by remember { mutableStateOf<NavTab>(NavTab.Scanner) }
+    val session: PackGuideSessionViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val currentTab = session.currentTab
+    BackHandler(enabled = session.canGoBack) { session.goBack() }
     var showSettings by remember { mutableStateOf(false) }
     val scanner: com.example.packguide.scanning.ScannerViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-    val packing = remember { PackingState() }
+    val packing = session.packing
     val preview: com.example.packguide.ai.PackingPreviewViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     androidx.compose.runtime.LaunchedEffect(packing.selectedLuggage) { preview.retain(packing.selectedLuggage) }
-    androidx.compose.runtime.DisposableEffect(preview) { onDispose { preview.clear() } }
+    // ViewModels retain photos and previews across Activity recreation.
 
     fun navigateTo(tab: NavTab) {
-        currentTab = tab
+        session.navigateTo(tab)
     }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = PackGuideColors.background,
+        contentWindowInsets = WindowInsets.safeDrawing,
         bottomBar = {
             TechBottomNavBar(
                 selectedTab = currentTab,
@@ -59,6 +67,7 @@ fun MainScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .consumeWindowInsets(innerPadding)
         ) {
             AnimatedContent(
                 targetState = currentTab,

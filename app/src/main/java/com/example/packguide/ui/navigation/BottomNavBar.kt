@@ -42,7 +42,7 @@ fun TechBottomNavBar(
     Surface(modifier = modifier.fillMaxWidth(), color = PackGuideColors.surface,
         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp), shadowElevation = 2.dp) {
         Row(
-            Modifier.fillMaxWidth().windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Bottom))
+            Modifier.fillMaxWidth().windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom))
                 .padding(horizontal = 8.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(2.dp)
