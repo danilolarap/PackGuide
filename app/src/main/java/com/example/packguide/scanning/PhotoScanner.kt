@@ -7,6 +7,10 @@ import android.graphics.Matrix
 import android.net.Uri
 import androidx.exifinterface.media.ExifInterface
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import java.io.FilterInputStream
 import java.io.InputStream
@@ -15,7 +19,16 @@ enum class PhotoProblem { Unsupported, TooLarge }
 class PhotoReadException(val problem: PhotoProblem) : Exception()
 
 class PhotoScanner {
-    suspend fun decode(context: Context, uri: Uri): Bitmap {
+    companion object {
+        // Shared by Scanner and Review: only one full decode/EXIF rotation at a time.
+        private val decodeMutex = Mutex()
+    }
+
+    suspend fun decode(context: Context, uri: Uri): Bitmap = decodeMutex.withLock {
+        decodePhoto(context, uri)
+    }
+
+    private suspend fun decodePhoto(context: Context, uri: Uri): Bitmap {
         var decoded: Bitmap? = null
         try {
             return withContext(Dispatchers.IO) {
@@ -29,7 +42,11 @@ class PhotoScanner {
                 if (bounds.outWidth.toLong() * bounds.outHeight > 100_000_000L) throw PhotoReadException(PhotoProblem.TooLarge)
                 var sample = 1
                 while (maxOf(bounds.outWidth, bounds.outHeight) / sample > 1600) sample *= 2
-                val options = BitmapFactory.Options().apply { inSampleSize = sample }
+                val options = BitmapFactory.Options().apply {
+                    inSampleSize = sample
+                    inPreferredConfig = Bitmap.Config.ARGB_8888
+                }
+                currentCoroutineContext().ensureActive()
                 val bitmap = open().use { BitmapFactory.decodeStream(it, null, options) }
                     ?: error("Invalid image")
                 try {
@@ -41,6 +58,7 @@ class PhotoScanner {
                     val rotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
                     if (rotated !== bitmap) bitmap.recycle()
                     decoded = rotated
+                    currentCoroutineContext().ensureActive()
                     rotated
                 } catch (error: Throwable) {
                     bitmap.recycle()
