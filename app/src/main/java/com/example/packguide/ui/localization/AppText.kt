@@ -21,7 +21,73 @@ import com.example.packguide.settings.AppLanguage
 
 val LocalAppLanguage = compositionLocalOf { AppLanguage.Spanish }
 
-private val englishTranslations = mapOf(
+internal val englishTranslations = mapOf(
+    "INSPIRACIÓN PARA TU MALETA" to "AI PACKING INSPIRATION",
+    "VER VISTA PREVIA" to "OPEN PACKING PREVIEW",
+    "VER ORGANIZACIÓN" to "VIEW PACKING LAYOUT",
+    "VISTA PREVIA DE ORGANIZACIÓN" to "ORGANIZED PACKING PREVIEW",
+    "Composición local · foto original e inventario" to "Local composition · original photo + inventory",
+    "Sin foto de referencia" to "No reference photo",
+    "Sin artículos asignados" to "No assigned items",
+    "FOTO DE REFERENCIA" to "REFERENCE PHOTO",
+    "INVENTARIO SELECCIONADO" to "SELECTED INVENTORY",
+    "Estimación / capacidad interior" to "Estimate / interior capacity",
+    "PUNTUACIÓN DE LA IA" to "AI SCORE",
+    "La evaluación requiere una foto y un servicio de IA conectado." to "Assessment requires a photo and a connected AI service.",
+    "TÉCNICA PARA ORGANIZAR LA ROPA" to "CLOTHING PACKING TECHNIQUE",
+    "Enrolla las prendas ligeras y colócalas juntas. Dobla las prendas gruesas en capas planas y deja arriba lo que usarás primero." to "Roll lightweight clothes and group them together. Fold bulky clothes into flat layers and keep what you need first on top.",
+    "Distribución ilustrativa. El esquema no mide ni garantiza el ajuste físico." to "Illustrative layout. The preview does not measure or guarantee physical fit.",
+    "La evaluación está sin conexión. Puedes seguir consultando el esquema y la técnica de organización." to "Assessment is offline. You can still use the layout and packing tip.",
+    "La IA propondrá otra forma de organizar únicamente las unidades que marcaste como empacadas. Puedes añadir fotos para comparar tu organización dentro de la app." to "AI will suggest a different layout using only the units you marked as packed. You can add photos to compare your arrangement within the app.",
+    "INVENTARIO EMPACADO" to "PACKED INVENTORY",
+    "Marca al menos una unidad como empacada en Guía para generar una foto." to "Mark at least one unit as packed in Guide to generate a photo.",
+    "TU ORGANIZACIÓN" to "YOUR ARRANGEMENT",
+    "PROPUESTA DE LA IA" to "AI SUGGESTION",
+    "GENERAR FOTO CON IA" to "GENERATE AI PHOTO",
+    "Foto generada por IA con el inventario empacado" to "AI-generated photo of the packed inventory",
+    "Ampliar foto de IA" to "Enlarge AI photo",
+    "La IA está generando una propuesta…" to "AI is generating a suggestion…",
+    "No se pudo generar la foto con IA. Inténtalo de nuevo." to "Could not generate the AI photo. Try again.",
+    "El servidor de imágenes necesita una clave de OpenAI." to "The image server needs an OpenAI API key.",
+    "No se pudo conectar al servidor local de imágenes. Conecta el teléfono al PC y ejecuta server/start-android.ps1." to "Could not reach the local image server. Connect the phone to the PC and run server/start-android.ps1.",
+    "OpenAI rechazó el acceso. Revisa la clave y los permisos del modelo en el servidor." to "OpenAI denied access. Check the API key and model permissions on the server.",
+    "La cuenta de OpenAI del servidor no tiene cuota disponible para generar imágenes." to "The server's OpenAI account has no available quota for image generation.",
+    "La solicitud de imagen superó el tiempo de espera. Inténtalo de nuevo." to "The image request timed out. Try again.",
+    "La generación con IA todavía no está disponible." to "AI image generation is not available yet.",
+    "El servicio de IA está ocupado. Inténtalo de nuevo en un momento." to "The AI service is busy. Try again shortly.",
+    "Para generar la propuesta, la IA usa solo el inventario empacado y las medidas." to "The AI uses only the packed inventory and measurements to generate the suggestion.",
+    "Al evaluar, se enviará solo la foto que elijas al servicio de IA." to "Only the photo you choose for assessment is sent to the AI service.",
+    "EVALUAR FOTO CON IA" to "ASSESS PHOTO WITH AI",
+    "Organización visible" to "Visible organization",
+    "La IA está evaluando la foto…" to "The AI is assessing the photo…",
+    "No se pudo evaluar la foto con IA. Inténtalo de nuevo." to "Could not assess the photo with AI. Try again.",
+    "Úsala como inspiración: la IA puede representar cantidades de forma imprecisa y no garantiza que todo quepa." to "Use this as inspiration: AI may depict quantities inaccurately and does not guarantee that everything fits.",
+    "Cambió el inventario empacado o el idioma. Genera una nueva propuesta." to "The packed inventory or language changed. Generate a new suggestion.",
+    "MEDIDAS DEL EQUIPAJE" to "LUGGAGE DIMENSIONS",
+    "MEDIDAS" to "DIMENSIONS",
+    "[MEDIDAS]" to "[DIMENSIONS]",
+    "[ MEDIDAS ]" to "[ DIMENSIONS ]",
+    "Mide el interior de tu maleta, ajusta los valores y confírmalos para calcular su capacidad." to "Measure the inside of your bag, adjust the values and confirm them to calculate its capacity.",
+    "ESPACIO POR MALETA" to "SPACE PER BAG",
+    "LISTA PARA EMPACAR" to "READY TO PACK",
+    "CONFIRMACIÓN PENDIENTE" to "CONFIRMATION REQUIRED",
+    "CONFIRMAR MEDIDAS" to "CONFIRM DIMENSIONS",
+    "MEDIDAS CONFIRMADAS" to "DIMENSIONS CONFIRMED",
+    "Si cambias una medida, deberás confirmarla de nuevo." to "If you change a dimension, you will need to confirm it again.",
+    "Revisa las medidas y pulsa el botón para continuar al catálogo." to "Check the dimensions and press the button to continue to the catalog.",
+    "PAUSAR" to "PAUSE",
+    "CONTINUAR" to "RESUME",
+    "Mira el tutorial de cada maleta y marca las unidades que ya guardaste." to "Watch each bag's tutorial and check off the units you have packed.",
+    "Marca cada unidad cuando esté dentro de esta maleta. Puedes desmarcarla si la sacas." to "Check each unit once it is inside this bag. Uncheck it if you take it out.",
+    "TUTORIAL DE EMPACADO" to "PACKING TUTORIAL",
+    "EMPACADO" to "PACKED",
+    "PENDIENTE" to "PENDING",
+    "Cómo guardar y doblar la ropa" to "How to pack and fold clothes",
+    "REPRODUCIR TUTORIAL" to "PLAY TUTORIAL",
+    "REINTENTAR TUTORIAL" to "RETRY TUTORIAL",
+    "CERRAR VIDEO" to "CLOSE VIDEO",
+    "Requiere conexión a internet." to "Internet connection required.",
+    "No se pudo reproducir el tutorial. Revisa tu conexión o inténtalo de nuevo más tarde." to "The tutorial could not play. Check your connection or try again later.",
     "Ese archivo no es una foto compatible. Elige una imagen JPG, PNG o WebP." to "This file is not a supported photo. Choose a JPG, PNG or WebP image.",
     "La foto es demasiado grande. Elige una imagen más pequeña." to "The photo is too large. Choose a smaller image.",
     "ROPA INTERIOR" to "UNDERWEAR",
@@ -64,7 +130,7 @@ private val englishTranslations = mapOf(
     "DESTINO DEL ARTÍCULO" to "ITEM DESTINATION",
     "DESTINOS DEL VIAJE" to "TRIP BAGS",
     "TODAS LAS MALETAS" to "ALL BAGS",
-    "Reparte las cantidades de cada artículo entre las maletas elegidas en Escáner." to "Split item quantities between the bags selected in Scanner.",
+    "Reparte las cantidades de cada artículo entre las maletas elegidas en Medidas." to "Split item quantities between the bags selected in Dimensions.",
     "En Catálogo podrás repartir los artículos entre las maletas seleccionadas." to "In Catalog you can split items between the selected bags.",
     "CONTINUAR AL CATÁLOGO" to "CONTINUE TO CATALOG",
     "QUITAR MALETA" to "REMOVE BAG",
@@ -85,11 +151,9 @@ private val englishTranslations = mapOf(
     "No se pudo abrir la foto. Elige otra imagen de la maleta." to "Could not open the photo. Choose another picture of your suitcase.",
     "La foto es una referencia. El espacio se calcula con las medidas de la maleta y los volúmenes estándar del catálogo." to "The photo is a reference. Space is calculated from suitcase dimensions and standard catalog volumes.",
     "Capacidad calculada con medidas interiores. Verifica las medidas exteriores y las normas de la aerolínea por separado." to "Capacity calculated from interior dimensions. Check exterior dimensions and airline rules separately.",
-    "CAMISA" to "SHIRT",
     "PANTALONES" to "PANTS",
-    "VESTIDO" to "DRESS",
     "CHAQUETA" to "JACKET",
-    "CALZADO" to "SHOES",
+    "CALZADO" to "FOOTWEAR",
     "ALTO:" to "HEIGHT:",
     "ANCHO:" to "WIDTH:",
     "PROF:" to "DEPTH:",
@@ -107,7 +171,7 @@ private val englishTranslations = mapOf(
     "CONFIRMO LAS MEDIDAS" to "I CONFIRM THE DIMENSIONS",
     "Una foto común no mide la maleta. Ajusta las medidas interiores útiles y confírmalas." to "An ordinary photo does not measure a suitcase. Adjust and confirm usable interior dimensions.",
     "SUGERENCIA ORIENTATIVA" to "APPROXIMATE PACKING SUGGESTION",
-    "Confirma las medidas en Escáner antes de usar esta estimación." to "Confirm dimensions in Scanner before using this estimate.",
+    "Confirma las medidas en Medidas antes de usar esta estimación." to "Confirm your bag's dimensions in the Dimensions tab before using this estimate.",
     "Regla: alto × ancho × fondo / 1000; reserva del 20% para forro, curvas y huecos. Usa medidas interiores útiles." to "Rule: height × width × depth / 1000; reserve 20% for lining, curves and gaps. Use usable interior dimensions.",
     "Estimación de artículos / espacio orientativo:" to "Estimated items / approximate space:",
     "Reduce cantidades o usa una maleta mayor: el volumen estimado supera el espacio orientativo." to "Reduce quantities or use a larger suitcase: estimated volume exceeds the approximate space.",
@@ -134,13 +198,10 @@ private val englishTranslations = mapOf(
     "[ VALIDANDO... ]" to "[ CHECKING... ]",
     "[ CREANDO CUENTA... ]" to "[ CREATING ACCOUNT... ]",
     "INICIAR SESIÓN" to "SIGN IN",
-    "INICIAR SESIÃ“N" to "SIGN IN",
     "CREAR CUENTA" to "CREATE ACCOUNT",
     "USUARIO" to "USERNAME",
     "CONTRASEÑA" to "PASSWORD",
-    "CONTRASEÃ‘A" to "PASSWORD",
     "CONFIRMAR CONTRASEÑA" to "CONFIRM PASSWORD",
-    "CONFIRMAR CONTRASEÃ‘A" to "CONFIRM PASSWORD",
     "VER" to "SHOW",
     "OCULTAR" to "HIDE",
     "CUENTA ALMACENADA EN ESTE DISPOSITIVO" to "ACCOUNT STORED ON THIS DEVICE",
@@ -163,7 +224,6 @@ private val englishTranslations = mapOf(
     "PACKGUIDE // ACCESS" to "PACKGUIDE // ACCESS",
     "SYS // IDENTIDAD LOCAL" to "SYS // LOCAL IDENTITY",
     "[ SINCRONIZACIÓN OFF ]" to "[ SYNC OFF ]",
-    "[ SINCRONIZACIÃ“N OFF ]" to "[ SYNC OFF ]",
     "VERIFICANDO CREDENCIALES..." to "VERIFYING CREDENTIALS...",
     "SYS // PACKING_OS" to "SYS // PACKING_OS",
     "SYS // FINAL_DIAGNOSTIC" to "SYS // FINAL_DIAGNOSTIC",
@@ -171,43 +231,27 @@ private val englishTranslations = mapOf(
     "RESUMEN" to "SUMMARY",
     "[RESUMEN]" to "[SUMMARY]",
     "[ RESUMEN ]" to "[ SUMMARY ]",
-    "[ESCÃNER]" to "[SCANNER]",
-    "[ ESCÃNER ]" to "[ SCANNER ]",
-    "[CATÃLOGO]" to "[CATALOG]",
-    "[ CATÃLOGO ]" to "[ CATALOG ]",
-    "[GUÃA]" to "[GUIDE]",
-    "[ GUÃA ]" to "[ GUIDE ]",
-    "CATÃLOGO DE ÃTEMS" to "ITEM CATALOG",
     "BUSCAR ÍTEM... [ _ ]" to "SEARCH ITEM... [ _ ]",
-    "BUSCAR ÃTEM... [ _ ]" to "SEARCH ITEM... [ _ ]",
     "Buscar" to "Search",
     "TODOS" to "ALL",
     "ROPA" to "CLOTHING",
-    "CALZADO" to "FOOTWEAR",
     "ASEO" to "TOILETRIES",
     "NECESER" to "TOILETRY KIT",
     "CAMISETAS" to "T-SHIRTS",
-    "PANTALONES" to "TROUSERS",
-    "CHAQUETA" to "JACKET",
     "CARGADORES & TECH" to "CHARGERS & TECH",
     "CAPACIDAD" to "CAPACITY",
     "DISTRIBUCIÓN" to "DISTRIBUTION",
-    "DISTRIBUCIÃ“N" to "DISTRIBUTION",
     "EFICIENCIA & MÉTRICAS DE EQUIPAJE" to "LUGGAGE EFFICIENCY & METRICS",
-    "EFICIENCIA & MÃ‰TRICAS DE EQUIPAJE" to "LUGGAGE EFFICIENCY & METRICS",
     "EFICIENCIA DE VOLUMEN: 92%" to "VOLUME EFFICIENCY: 92%",
     "PESO TOTAL: 9.8 KG" to "TOTAL WEIGHT: 9.8 KG",
     "ESTADO: ÓPTIMO CABINA" to "STATUS: CABIN OPTIMAL",
-    "ESTADO: Ã“PTIMO CABINA" to "STATUS: CABIN OPTIMAL",
     "ESPACIO LIBRE: 8%" to "FREE SPACE: 8%",
     "+3.0L VOL RESIDUAL" to "+3.0L REMAINING VOLUME",
     "38L VOLUMEN INTERNO" to "38L INTERNAL VOLUME",
     "[• PESADOS]" to "[• HEAVY]",
     "[• ENROLLADOS]" to "[• ROLLED]",
     "[• ACCESO RÁPIDO]" to "[• QUICK ACCESS]",
-    "[â€¢ ACCESO RÃPIDO]" to "[â€¢ QUICK ACCESS]",
     "[ACCESO RÁPIDO]" to "[QUICK ACCESS]",
-    "[ACCESO RÃPIDO]" to "[QUICK ACCESS]",
     "[ENROLLADO]" to "[ROLLED]",
     "[PESADO]" to "[HEAVY]",
     "ENROLLADO Y BLOQUEO" to "ROLL AND LOCK",
@@ -227,23 +271,18 @@ private val englishTranslations = mapOf(
     "AUTO" to "AUTO",
     "MANUAL" to "MANUAL",
     "ÓPTIMA" to "OPTIMAL",
-    "Ã“PTIMA" to "OPTIMAL",
     "[AUTO]" to "[AUTO]",
     "[MANUAL]" to "[MANUAL]",
     "NOTHING // VALIJA AR - PASO 3: DOBLAR CAMISETAS" to "NOTHING // SUITCASE AR - STEP 3: FOLD T-SHIRTS",
     "ASIGNACIÓN EN VALIJA - GRID 2D // CARGA" to "SUITCASE ASSIGNMENT - 2D GRID // LOAD",
-    "ASIGNACIÃ“N EN VALIJA - GRID 2D // CARGA" to "SUITCASE ASSIGNMENT - 2D GRID // LOAD",
     "[ SYS ONLINE ]" to "[ SYS ONLINE ]",
     "PESADO" to "HEAVY",
     "[ VISTA LATERAL ]" to "[ SIDE VIEW ]",
     "[ VISTA SUPERIOR // CAPA B ]" to "[ TOP VIEW // LAYER B ]",
     "OPTIMIZAR - PULSA PARA GENERAR DISTRIBUCIÓN" to "OPTIMIZE - TAP TO GENERATE A LAYOUT",
-    "OPTIMIZAR - PULSA PARA GENERAR DISTRIBUCIÃ“N" to "OPTIMIZE - TAP TO GENERATE A LAYOUT",
     "[ REORGANIZAR EQUIPAJE ]" to "[ REORGANIZE LUGGAGE ]",
     "[ GUARDAR CONFIGURACIÓN VIAJE ]" to "[ SAVE TRIP SETTINGS ]",
-    "[ GUARDAR CONFIGURACIÃ“N VIAJE ]" to "[ SAVE TRIP SETTINGS ]",
     "CONFIGURACIÓN GUARDADA // TRIP-ID: #NT-38-04" to "SETTINGS SAVED // TRIP-ID: #NT-38-04",
-    "CONFIGURACIÃ“N GUARDADA // TRIP-ID: #NT-38-04" to "SETTINGS SAVED // TRIP-ID: #NT-38-04",
     "CREAR PLAN DE EMPACADO" to "CREATE PACKING PLAN",
     "CREAR PLAN DE EMPACADO ->" to "CREATE PACKING PLAN ->",
     "[ MARCAR EMPACADO (\$packedCount/6) ]" to "[ MARK PACKED (\$packedCount/6) ]",
@@ -258,7 +297,6 @@ private val englishTranslations = mapOf(
     "Dobla ambos laterales y mangas hacia el eje central." to "Fold both sides and sleeves toward the center line.",
     "Enrolla con tensión máxima desde el cuello." to "Roll tightly from the collar.",
     "MÉTODO: RANGER ROLL" to "METHOD: RANGER ROLL",
-    "MÃ‰TODO: RANGER ROLL" to "METHOD: RANGER ROLL",
     "ESTABILIDAD" to "STABILITY",
     "EXCEDE CABINA" to "EXCEEDS CABIN LIMIT",
     "CABINA IATA OK" to "IATA CABIN OK",
@@ -269,35 +307,97 @@ private val englishTranslations = mapOf(
     "ALTO: \$altoCm CM" to "HEIGHT: \$altoCm CM",
     "PROF: \$profCm CM" to "DEPTH: \$profCm CM",
     "Volver" to "Back",
-    "Cambiar Tema" to "Change theme"
+    "Cambiar Tema" to "Change Theme",
+    "Configuración" to "Settings",
+    "Medidas" to "Dimensions",
+    "Catálogo" to "Catalog",
+    "CATÁLOGO DE ÍTEMS" to "ITEM CATALOG",
+    "CATÁLOGO" to "CATALOG",
+    "[CATÁLOGO]" to "[CATALOG]",
+    "[ CATÁLOGO ]" to "[ CATALOG ]",
+    "GUÍA DE EMPACADO" to "PACKING GUIDE",
+    "GUÍA" to "GUIDE",
+    "[GUÍA]" to "[GUIDE]",
+    "[ GUÍA ]" to "[ GUIDE ]",
+    "RESUMEN DEL EQUIPAJE" to "LUGGAGE SUMMARY",
+    "PROGRESO REAL" to "PACKING PROGRESS",
+    "CAPACIDAD ESTIMADA" to "ESTIMATED CAPACITY",
+    "MALETA SELECCIONADA" to "SELECTED BAG",
+    "ESTADO DE EMPACADO" to "PACKING STATUS",
+    "DETALLE POR ARTÍCULO" to "ITEM DETAILS",
+    "DISTRIBUCIÓN POR ZONA" to "PACKING ZONES",
+    "IR AL CATÁLOGO" to "OPEN CATALOG",
+    "VER RESUMEN" to "VIEW SUMMARY",
+    "EDITAR CATÁLOGO" to "EDIT CATALOG",
+    "CONTINUAR EMPACANDO" to "CONTINUE PACKING",
+    "MANO" to "PERSONAL ITEM",
+    "CABINA" to "CARRY-ON",
+    "BODEGA" to "CHECKED BAG",
+    "BASE" to "BOTTOM",
+    "CENTRO" to "MIDDLE",
+    "ACCESO RÁPIDO" to "QUICK ACCESS",
+    "TECH" to "TECH",
+    "MALETA" to "BAG",
+    "ZONA" to "ZONE",
+    "Aún no hay artículos seleccionados. Añádelos en el catálogo." to "No items selected yet. Add them in the catalog.",
+    "No hay artículos para esta búsqueda." to "No items match your search.",
+    "No hay artículos seleccionados." to "No items selected.",
+    "REFERENCIA PARA REVISAR TU MALETA" to "PACKING REVIEW REFERENCE",
+    "AÑADIR FOTOS" to "ADD PHOTOS",
+    "QUITAR FOTO" to "REMOVE PHOTO",
+    "GENERAR REFERENCIA VISUAL" to "CREATE VISUAL REFERENCE",
+    "CERRAR" to "CLOSE",
+    "Ampliar vista organizada" to "Enlarge packing preview",
+    "Foto para comparar" to "Photo for comparison",
+    "Abriendo fotos…" to "Opening photos…",
+    "Creando vista organizada…" to "Creating packing preview…",
+    "Referencia de organización creada en el dispositivo" to "Packing reference created on this device",
+    "Cambió el plan o el idioma. Genera una nueva referencia." to "The packing plan or language changed. Create a new reference.",
+    "No se pudo abrir la foto o la cámara. Intenta elegir otra imagen." to "Could not open the photo or camera. Try choosing another image.",
+    "No se pudo crear la vista. Inténtalo de nuevo o elige otra foto." to "Could not create the preview. Try again or choose another photo.",
+    "El servicio no está disponible. Inténtalo de nuevo más tarde." to "The service is unavailable. Try again later.",
+    "Operación cancelada. Puedes volver a intentarlo." to "Operation canceled. You can try again.",
+    "Añade hasta 4 fotos para comparar tu maleta con el esquema del inventario. La vista usa la primera foto como referencia. Se procesa en el dispositivo y no califica automáticamente las fotos." to "Add up to 4 photos to compare your bag with the inventory layout. The preview uses the first photo as a reference. Photos are processed on this device and are not automatically rated."
 )
 
-fun localizedText(text: String, language: AppLanguage): String =
-    if (language == AppLanguage.English) englishTranslations[text] ?: translateCommonTerms(text) else text
+// Whole labels and sentences are translated together; never replace fragments inside words.
+private val englishPhraseLookup = englishTranslations.entries.associate {
+    it.key.uppercase(java.util.Locale.ROOT) to it.value
+}
 
-private val commonTermTranslations = run {
-    val words = mapOf(
-        "Configuración" to "Settings", "ConfiguraciÃ³n" to "Settings",
-        "Empacado" to "Packed", "Pendiente" to "Pending", "Faltante" to "Missing",
-        "Peso" to "Weight", "Volumen" to "Volume", "Disponible" to "Available",
-        "Empacar" to "Pack", "Artículo" to "Item", "Ítem" to "Item", "Item" to "Item",
-        "Categoría" to "Category", "Estado" to "Status", "Medidas" to "Dimensions",
-        "Continuar" to "Continue", "Cancelar" to "Cancel", "Guardar" to "Save",
-        "Eliminar" to "Delete", "Editar" to "Edit", "Añadir" to "Add",
-        "Buscar" to "Search", "Resumen" to "Summary", "Guía" to "Guide",
-        "Escáner" to "Scanner", "Catálogo" to "Catalog", "Equipaje" to "Luggage",
-        "Viaje" to "Trip", "Ropa" to "Clothing", "Accesorios" to "Accessories",
-        "Electrónica" to "Electronics", "Sí" to "Yes", "No" to "No"
-    )
-    words.entries.sortedByDescending { it.key.length }.map { entry ->
-        Regex(Regex.escape(entry.key), RegexOption.IGNORE_CASE) to entry.value
+private fun preserveCapitalization(source: String, translated: String): String {
+    val letters = source.filter { it.isLetter() }
+    return when {
+        letters.isEmpty() -> translated
+        letters.all { it.isUpperCase() } -> translated.uppercase(java.util.Locale.ROOT)
+        letters.all { it.isLowerCase() } -> translated.lowercase(java.util.Locale.ROOT)
+        else -> translated
     }
 }
 
-private fun translateCommonTerms(text: String): String =
-    commonTermTranslations.fold(text) { result, (pattern, translation) ->
-        pattern.replace(result, translation)
+private fun translateLabel(source: String): String? {
+    englishTranslations[source]?.let { return preserveCapitalization(source, it) }
+    // Brackets and a trailing colon decorate a whole label, without changing its spacing.
+    if (source.startsWith("[") && source.endsWith("]")) {
+        val inner = source.substring(1, source.lastIndex)
+        return translateWithSpacing(inner)?.let { "[$it]" }
     }
+    if (source.endsWith(":")) {
+        return translateLabel(source.dropLast(1))?.let { "$it:" }
+    }
+    val translated = englishPhraseLookup[source.uppercase(java.util.Locale.ROOT)] ?: return null
+    val sentence = translated.lowercase(java.util.Locale.ROOT).replaceFirstChar { it.titlecase(java.util.Locale.ROOT) }
+    return preserveCapitalization(source, sentence)
+}
+
+private fun translateWithSpacing(source: String): String? {
+    val trimmed = source.trim()
+    val translated = translateLabel(trimmed) ?: return null
+    return source.takeWhile { it.isWhitespace() } + translated + source.takeLastWhile { it.isWhitespace() }
+}
+
+fun localizedText(text: String, language: AppLanguage): String =
+    if (language == AppLanguage.English) translateWithSpacing(text) ?: text else text
 
 @Composable
 fun Text(
