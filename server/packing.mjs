@@ -65,7 +65,7 @@ export async function generatePackingImage(request, { apiKey, model, fetchImpl =
     packedItems: request.items.map(({ id, quantity }) => ({ id, packedQuantity: quantity })) };
 }
 
-function isJpeg(value, limit) {
+export function isJpeg(value, limit) {
   return typeof value === 'string' && value.length <= limit && value.length % 4 === 0 &&
     value.startsWith('/9j/') && /^[A-Za-z0-9+/]+={0,2}$/.test(value) && Buffer.from(value, 'base64').length >= 4;
 }
@@ -83,7 +83,7 @@ async function checkProviderResponse(response) {
   }
 }
 
-async function readProviderJson(response, limit) {
+export async function readProviderJson(response, limit) {
   const reader = response.body.getReader();
   const chunks = [];
   let size = 0;

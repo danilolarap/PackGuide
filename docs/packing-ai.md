@@ -1,5 +1,30 @@
 # Vista previa y evaluación en Resumen
 
+## Evaluación con el nivel gratuito de Gemini
+
+El proveedor predeterminado es Gemini 3.5 Flash-Lite. Recibe la foto de la maleta
+y devuelve una nota de 1 a 10 y una sugerencia de organización en el idioma de la
+app. La composición visual se crea localmente. Google ofrece un nivel gratuito
+sujeto a disponibilidad y cuotas de la cuenta. Usa un proyecto del nivel gratuito
+si quieres evitar consumo facturable. El código no cambia de proveedor al agotar
+la cuota. Según las condiciones de Google, el nivel gratuito puede usar el contenido
+enviado para mejorar sus productos.
+
+1. Crea una clave en [Google AI Studio](https://aistudio.google.com/apikey).
+2. En `server/.env` configura `PACKGUIDE_REVIEW_PROVIDER=gemini`,
+   `GEMINI_API_KEY=tu_clave` y `GEMINI_REVIEW_MODEL=gemini-3.5-flash-lite`.
+3. Ejecuta `powershell -ExecutionPolicy Bypass -File .\server\start-android.ps1`.
+4. En Android abre Resumen, selecciona la foto, pulsa Ver organización y luego
+   Evaluar foto con IA. La nota y el comentario aparecen dentro del modal.
+
+La clave se queda en el servidor. Para usar la evaluación desde cualquier teléfono
+sin el PC conectado, aún hace falta alojar este servicio en HTTPS y configurar
+`PACKGUIDE_AI_BASE_URL`. La instalación local usa ADB como se explica más abajo.
+No se ha probado una petición real sin una clave válida de Gemini.
+
+Referencias oficiales de [precios y nivel gratuito](https://aistudio.google.com/docs/pricing#gemini-3.5-flash-lite)
+y [capacidades del modelo](https://aistudio.google.com/docs/models/gemini-3.5-flash-lite).
+
 La vista previa compone localmente la foto original, el inventario seleccionado,
 las zonas y las estimaciones de capacidad. Se puede abrir sin conexión y sin
 foto. El servidor interviene únicamente cuando el usuario pulsa **Evaluar foto
@@ -46,7 +71,7 @@ añade `-Device` seguido del identificador que muestra `adb devices`.
 Para guardar la configuración localmente o iniciar el servidor de forma manual:
 
 1. Copia `server/.env.example` a `server/.env`.
-2. Edita ese archivo **localmente** e introduce tu `OPENAI_API_KEY`.
+2. Edita ese archivo **localmente** e introduce tu `GEMINI_API_KEY`.
    No la envíes por chat ni la incluyas en Gradle, Android o el repositorio.
 3. Desde la raíz ejecuta:
 
@@ -74,8 +99,9 @@ El tráfico HTTP se admite solo para esas direcciones locales en Debug.
 El backend llama a la API oficial de imágenes de OpenAI:
 [generación de imágenes](https://developers.openai.com/api/docs/guides/image-generation),
 mediante `/v1/images/generations`, sin fotos de entrada.
-La evaluación usa `/v1/responses` con un modelo con visión configurable mediante
-`OPENAI_REVIEW_MODEL` (`gpt-5-mini` por defecto).
+La evaluación usa Gemini `generateContent` por defecto. La integración anterior
+de OpenAI queda disponible únicamente al elegir `PACKGUIDE_REVIEW_PROVIDER=openai`,
+con `OPENAI_API_KEY` y `OPENAI_REVIEW_MODEL` configurados.
 El modelo se configura en el servidor mediante `OPENAI_IMAGE_MODEL`;
 el valor inicial es `gpt-image-2.5-sunburst`. La cuenta debe tener acceso y
 saldo para ese modelo. No se ejecutaron peticiones facturables sin credenciales.
@@ -90,6 +116,11 @@ La cuenta Room de la app es local y no autentica un servidor remoto.
 El cliente permite inyectar un proveedor de tokens de usuario para esa integración;
 no debe reemplazarse por una clave del proveedor incrustada en el APK.
 
+El servidor admite hasta 30 evaluaciones por minuto por conexión y hasta dos
+solicitudes simultáneas. Reutiliza durante cinco minutos las evaluaciones
+correctas de la misma foto y el mismo idioma, con un máximo de 32 resultados
+en memoria; conserva una huella de la solicitud y el texto, no la fotografía.
+El endpoint antiguo de generación mantiene su límite de cuatro intentos por minuto.
 El servidor limita tamaño, concurrencia y frecuencia. Acepta los hosts de
 desarrollo local y del emulador sin encabezado Origin. No registra fotos, inventarios
 ni claves. El cliente no sigue redirecciones y limita el tamaño de las imágenes.

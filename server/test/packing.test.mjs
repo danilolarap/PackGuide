@@ -104,7 +104,7 @@ test('HTTP service rejects invalid/empty inventories before calling the image pr
 });
 
 test('unconfigured local server reports unavailable rather than pretending generation succeeded', async t => {
-  const server = createPackingServer({ apiKey: '' });
+  const server = createPackingServer({ reviewProvider: 'openai', apiKey: '' });
   server.listen(0, '127.0.0.1'); await once(server, 'listening');
   t.after(() => new Promise(resolve => server.close(resolve)));
   const base = `http://127.0.0.1:${server.address().port}`;
@@ -115,7 +115,7 @@ test('unconfigured local server reports unavailable rather than pretending gener
 });
 
 test('photo assessment sends the selected JPEG to the vision model and returns its score and feedback', async t => {
-  const server = createPackingServer({ apiKey: 'test', reviewModel: 'test-vision', fetchImpl: async (url, options) => {
+  const server = createPackingServer({ reviewProvider: 'openai', apiKey: 'test', reviewModel: 'test-vision', fetchImpl: async (url, options) => {
     assert.equal(url, 'https://api.openai.com/v1/responses');
     const payload = JSON.parse(options.body);
     assert.equal(payload.model, 'test-vision');

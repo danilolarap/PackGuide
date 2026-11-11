@@ -30,7 +30,8 @@ e interfaz en español e inglés.
 - **Ajustes:** tema, idioma y cierre de sesión.
 
 El inventario, el seguimiento y el esquema funcionan sin conexión. La evaluación
-de la foto requiere conexión con el servidor y OpenAI. La clave se guarda en el
+de la foto usa Gemini 3.5 Flash-Lite mediante el servidor de evaluación, con
+nivel gratuito sujeto a las cuotas de Google. La clave se guarda en el
 servidor. El esquema es ilustrativo. El cálculo
 de volumen sigue usando las medidas manuales y los valores del catálogo.
 

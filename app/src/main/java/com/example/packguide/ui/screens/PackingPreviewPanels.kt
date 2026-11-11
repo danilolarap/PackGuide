@@ -46,10 +46,10 @@ internal fun PreviewStatus(state: PackingPreviewState, onCancel: () -> Unit, tex
             PreviewProblem.Generation -> previewText("No se pudo generar la foto con IA. Inténtalo de nuevo.")
             PreviewProblem.Assessment -> previewText("No se pudo evaluar la foto con IA. Inténtalo de nuevo.")
             PreviewProblem.Unavailable -> previewText("La generación con IA todavía no está disponible.")
-            PreviewProblem.NotConfigured -> previewText("El servidor de imágenes necesita una clave de OpenAI.")
+            PreviewProblem.NotConfigured -> previewText("El servicio de evaluación necesita una clave de API configurada.")
             PreviewProblem.LocalConnection -> previewText("La evaluación está sin conexión. Puedes seguir consultando el esquema y la técnica de organización.")
-            PreviewProblem.ProviderAccess -> previewText("OpenAI rechazó el acceso. Revisa la clave y los permisos del modelo en el servidor.")
-            PreviewProblem.ProviderQuota -> previewText("La cuenta de OpenAI del servidor no tiene cuota disponible para generar imágenes.")
+            PreviewProblem.ProviderAccess -> previewText("El proveedor de IA rechazó el acceso. Revisa la clave y los permisos del modelo en el servidor.")
+            PreviewProblem.ProviderQuota -> previewText("Se agotó la cuota de evaluación del proveedor de IA. Inténtalo más tarde.")
             PreviewProblem.Timeout -> previewText("La solicitud de imagen superó el tiempo de espera. Inténtalo de nuevo.")
             PreviewProblem.Busy -> previewText("El servicio de IA está ocupado. Inténtalo de nuevo en un momento.")
             PreviewProblem.Connection -> previewText("El servicio no está disponible. Inténtalo de nuevo más tarde.")
@@ -83,7 +83,7 @@ fun PackingReviewPreviewPanel(packing: PackingState, preview: PackingPreviewView
                             Image(photo.asImageBitmap(), contentDescription = previewText("Foto para comparar"),
                                 contentScale = ContentScale.Fit, modifier = Modifier.fillMaxWidth().height(150.dp))
                             TextButton(onClick = { reference = photo; showLayout = true }) {
-                                Text(previewText("VER ORGANIZACI?N"))
+                                Text(previewText("VER ORGANIZACIÓN"))
                             }
                             TextButton(onClick = { preview.removePhoto(type, index) }, enabled = state.work == null) { Text(previewText("QUITAR FOTO")) }
                         }

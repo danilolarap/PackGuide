@@ -9,6 +9,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -83,12 +85,20 @@ internal fun OrganizedPackingDialog(
                     Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
                         Text(assessment?.score?.let { "${t("PUNTUACIÓN DE LA IA")} · $it/10" }
                             ?: t("PUNTUACIÓN DE LA IA"), color = ink, fontSize = 13.sp)
-                        Text(assessment?.feedback ?: t("La evaluación requiere una foto y un servicio de IA conectado."),
+                        val assessmentMessage = when {
+                            photo == null -> "Añade una foto de tu maleta para recibir una puntuación y sugerencias."
+                            state.work == com.example.packguide.ai.PreviewWork.Assessment -> "La IA está evaluando la foto…"
+                            !canAssess -> "La evaluación no está configurada en esta versión de la aplicación."
+                            else -> "Foto lista para evaluar. Pulsa EVALUAR FOTO CON IA para obtener tu puntuación."
+                        }
+                        Text(assessment?.feedback ?: t(assessmentMessage),
                             color = mutedInk, fontSize = 13.sp)
-                        if (photo != null && assessment == null && canAssess) {
+                        if (photo != null && assessment == null) {
                             Text(t("Al evaluar, se enviará solo la foto que elijas al servicio de IA."), color = mutedInk, fontSize = 11.sp)
-                            TextButton(onClick = onAssess, enabled = state.work == null) {
-                                Text(t("EVALUAR FOTO CON IA"), color = ink)
+                            Button(onClick = onAssess, enabled = canAssess && state.work == null,
+                                modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = ink, contentColor = Color.White)) {
+                                Text(t("EVALUAR FOTO CON IA"))
                             }
                         }
                         Text(t("TÉCNICA PARA ORGANIZAR LA ROPA"), color = ink, fontSize = 12.sp)
