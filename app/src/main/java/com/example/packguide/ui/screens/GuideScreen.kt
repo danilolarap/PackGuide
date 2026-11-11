@@ -11,6 +11,11 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.outlined.SwapVert
+import androidx.compose.foundation.shape.RoundedCornerShape
+import com.example.packguide.ui.theme.AccentRedLed
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +31,7 @@ import com.example.packguide.ui.localization.PackingText
 import com.example.packguide.ui.localization.Text
 import com.example.packguide.ui.navigation.NavTab
 import com.example.packguide.ui.theme.PackGuideColors
+import com.example.packguide.ui.components.travelDotBackground
 import com.example.packguide.ui.theme.Typography
 import kotlinx.coroutines.flow.first
 
@@ -46,7 +52,7 @@ fun GuideScreen(
         playingTutorial = null
     }
 
-    Column(modifier.fillMaxSize().background(PackGuideColors.background)) {
+    Column(modifier.fillMaxSize().travelDotBackground(3)) {
         com.example.packguide.ui.components.HudHeader(title = "GUÍA DE EMPACADO", sysCode = "", statusText = "")
         LazyColumn(
             state = listState,
@@ -105,6 +111,8 @@ fun GuideScreen(
                 }
                 selectedItems.forEach { catalogItem ->
                     item(key = "${type.name}-${catalogItem.id}-heading") {
+                        Column(Modifier.padding(top = 16.dp, bottom = 12.dp)) {
+                        TechCard {
                         Row(verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             Icon(catalogItem.icon, contentDescription = null, tint = PackGuideColors.primaryText)
@@ -112,9 +120,24 @@ fun GuideScreen(
                                 color = PackGuideColors.primaryText)
                             Text("${catalogItem.packedQuantity}/${catalogItem.quantity}", color = PackGuideColors.secondaryText)
                         }
-                        AsciiButton(copy.zoneAction(catalogItem.zone.label), onClick = {
+                        Spacer(Modifier.height(16.dp))
+                        Button(onClick = {
                             packing.updateItem(catalogItem.id, type) { it.copy(zone = it.zone.next()) }
-                        }, isPrimary = false, modifier = Modifier.fillMaxWidth())
+                        }, modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = PackGuideColors.primaryText,
+                                contentColor = PackGuideColors.surface),
+                            contentPadding = PaddingValues(horizontal = 18.dp, vertical = 14.dp)
+                        ) {
+                            Icon(Icons.Outlined.SwapVert, contentDescription = null,
+                                tint = AccentRedLed, modifier = Modifier.size(24.dp))
+                            Spacer(Modifier.width(12.dp))
+                            Text(copy.zoneAction(catalogItem.zone.label),
+                                style = Typography.labelMedium, color = PackGuideColors.surface)
+                        }
+                        }
+                        }
                     }
                     items(count = catalogItem.quantity, key = { unit -> "${type.name}-${catalogItem.id}-$unit" }) { unit ->
                         val checked = bag.isUnitPacked(catalogItem.id, unit)
