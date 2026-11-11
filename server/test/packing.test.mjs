@@ -131,5 +131,8 @@ test('photo assessment sends the selected JPEG to the vision model and returns i
     body: JSON.stringify({ schemaVersion: 1, language: 'es', photoBase64: jpeg })
   });
   assert.equal(response.status, 200);
-  assert.deepEqual(await response.json(), { schemaVersion: 1, score: 8, feedback: 'Deja lo de uso frecuente arriba.' });
+  const review = await response.json();
+  assert.equal(review.schemaVersion, 1);
+  assert.equal(review.score, 8);
+  assert.ok(review.feedback.startsWith('Deja lo de uso frecuente arriba.\n\nConsejo de PackGuide (pregrabado) 1/10:'));
 });

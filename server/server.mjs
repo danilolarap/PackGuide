@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { pathToFileURL } from 'node:url';
 import { createHash } from 'node:crypto';
 import { assessWithGemini } from './gemini-review.mjs';
+import { createPackingTips } from './packing-tips.mjs';
 import { RequestError, validatePackingRequest, generatePackingImage, assessPackingPhoto } from './packing.mjs';
 
 function reply(response, status, body) {
@@ -21,6 +22,7 @@ export function createPackingServer({ apiKey = process.env.OPENAI_API_KEY,
   let active = 0;
   const requests = new Map();
   const reviews = new Map();
+  const packingTip = createPackingTips();
   return createServer(async (request, response) => {
     const abort = new AbortController();
     response.once('close', () => { if (!response.writableEnded) abort.abort(); });
@@ -64,6 +66,10 @@ export function createPackingServer({ apiKey = process.env.OPENAI_API_KEY,
         ? await assess(body, { apiKey: reviewKey, model: reviewProvider === 'gemini' ? geminiModel : reviewModel, fetchImpl, signal })
         : await generatePackingImage(validatePackingRequest(body), { apiKey, model, fetchImpl, signal });
       if (reviewId) {
+        if (result.score !== null) {
+          const tip = packingTip(body.photoBase64, body.language);
+          result.feedback = `${result.feedback.slice(0, 1200 - tip.length - 2)}\n\n${tip}`;
+        }
         if (reviews.size >= 32) reviews.delete(reviews.keys().next().value);
         reviews.set(reviewId, { time: Date.now(), result });
       }

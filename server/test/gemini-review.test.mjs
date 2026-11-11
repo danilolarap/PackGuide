@@ -26,7 +26,10 @@ test('Gemini receives only the chosen photo and returns score and advice through
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
   });
   assert.equal(response.status, 200);
-  assert.deepEqual(await response.json(), { schemaVersion: 1, score: 8, feedback: 'Enrolla las camisetas ligeras juntas.' });
+  const review = await response.json();
+  assert.equal(review.schemaVersion, 1);
+  assert.equal(review.score, 8);
+  assert.ok(review.feedback.startsWith('Enrolla las camisetas ligeras juntas.\n\nConsejo de PackGuide (pregrabado) 1/10:'));
 });
 
 test('unjudgeable photo can return null; fabricated or incomplete scores are rejected', async () => {
