@@ -4,6 +4,44 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class PackingStateTest {
+    @Test fun individualUnitsCanBePackedOutOfOrderAndUndoneInEachBag() {
+        val packing = PackingState()
+        packing.toggleLuggage(LuggagePreset.Personal)
+        packing.updateItem("ITEM-01", LuggagePreset.Personal) { it.copy(quantity = 3) }
+        val personal = packing.bag(LuggagePreset.Personal)
+        val cabin = packing.bag(LuggagePreset.Cabin)
+        personal.setUnitPacked("ITEM-01", 2, true)
+        personal.setUnitPacked("ITEM-01", 0, true)
+        personal.setUnitPacked("ITEM-01", 2, true)
+        assertTrue(personal.isUnitPacked("ITEM-01", 2))
+        assertFalse(personal.isUnitPacked("ITEM-01", 1))
+        assertEquals(2, personal.packedUnits)
+        assertEquals(0, cabin.packedUnits)
+        personal.setUnitPacked("ITEM-01", 0, false)
+        assertFalse(personal.isUnitPacked("ITEM-01", 0))
+        assertTrue(personal.isUnitPacked("ITEM-01", 2))
+        assertEquals(1, personal.packedUnits)
+        assertEquals(33, personal.progressPercent)
+        assertEquals(1, packing.totalPackedUnits)
+    }
+
+    @Test fun reducingCatalogQuantityDropsOnlyRemovedUnitsAndIncreasingAddsUncheckedUnits() {
+        val packing = PackingState()
+        val bag = packing.activeBag
+        bag.setUnitPacked("ITEM-01", 2, true)
+        bag.updateItem("ITEM-01") { it.copy(quantity = 2, packedQuantity = it.packedQuantity.coerceAtMost(2)) }
+        assertFalse(bag.isUnitPacked("ITEM-01", 0))
+        assertEquals(0, bag.packedUnits)
+        bag.updateItem("ITEM-01") { it.copy(quantity = 4) }
+        assertFalse(bag.isUnitPacked("ITEM-01", 2))
+        bag.setUnitPacked("ITEM-01", 1, true)
+        bag.updateItem("ITEM-01") { it.copy(zone = PackingZone.Top) }
+        assertTrue(bag.isUnitPacked("ITEM-01", 1))
+        assertEquals(1, bag.packedUnits)
+        bag.setUnitPacked("ITEM-01", 99, true)
+        assertEquals(1, bag.packedUnits)
+    }
+
     @Test fun everyNonEmptyLuggageCombinationIsAvailable() {
         for (mask in 1..7) {
             val packing = PackingState()

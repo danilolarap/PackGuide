@@ -1,131 +1,149 @@
 package com.example.packguide.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.Inventory2
-import androidx.compose.material.icons.outlined.RadioButtonUnchecked
+import androidx.compose.material.icons.outlined.Luggage
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import com.example.packguide.ui.components.AsciiButton
 import com.example.packguide.ui.components.TechCard
+import com.example.packguide.ui.localization.LocalAppLanguage
+import com.example.packguide.ui.localization.PackingText
 import com.example.packguide.ui.localization.Text
 import com.example.packguide.ui.navigation.NavTab
-import com.example.packguide.ui.theme.AccentGreenLed
-import com.example.packguide.ui.theme.AccentRedLed
 import com.example.packguide.ui.theme.PackGuideColors
 import com.example.packguide.ui.theme.Typography
+import kotlinx.coroutines.flow.first
 
 @Composable
 fun GuideScreen(
     packing: PackingState,
     modifier: Modifier = Modifier,
-    onNavigateToTab: ((NavTab) -> Unit)? = null,
-    scanner: com.example.packguide.scanning.ScannerViewModel? = null,
-    preview: com.example.packguide.ai.PackingPreviewViewModel? = null
+    onNavigateToTab: ((NavTab) -> Unit)? = null
 ) {
-    val selectedItems = packing.items.filter { it.quantity > 0 }
-    val progress = packing.activeBag.progressPercent
-    val copy = com.example.packguide.ui.localization.PackingText(com.example.packguide.ui.localization.LocalAppLanguage.current)
+    val copy = PackingText(LocalAppLanguage.current)
+    var playingTutorial by remember { mutableStateOf<LuggagePreset?>(null) }
+    val listState = rememberLazyListState()
+    LifecycleEventEffect(Lifecycle.Event.ON_STOP) { playingTutorial = null }
+    LaunchedEffect(playingTutorial) {
+        val type = playingTutorial ?: return@LaunchedEffect
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.any { it.key == "${type.name}-tutorial" } }
+            .first { !it }
+        playingTutorial = null
+    }
 
     Column(modifier.fillMaxSize().background(PackGuideColors.background)) {
         com.example.packguide.ui.components.HudHeader(title = "GUÍA DE EMPACADO", sysCode = "", statusText = "")
         LazyColumn(
+            state = listState,
             modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
+            contentPadding = PaddingValues(bottom = 20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            item { LuggageSelector(packing) }
-            item { PackingSuggestionPanel(packing) }
             item {
-                TechCard(headerTag = "PROGRESO REAL", borderColor = PackGuideColors.primaryText) {
-                    Text(copy.progress(packing.packedUnits, packing.selectedUnits, progress),
-                        style = Typography.titleMedium, color = PackGuideColors.primaryText)
-                    Spacer(Modifier.height(8.dp))
-                    androidx.compose.material3.LinearProgressIndicator(
-                        progress = { progress / 100f },
-                        modifier = Modifier.fillMaxWidth().height(4.dp),
-                        color = PackGuideColors.primaryText,
-                        trackColor = PackGuideColors.surfaceVariant,
-                        drawStopIndicator = {}
-                    )
-                    Spacer(Modifier.height(12.dp))
-                    Text("Marca cada objeto cuando esté dentro de la maleta. Toca la zona para cambiar su ubicación.",
-                        style = Typography.bodySmall, color = PackGuideColors.secondaryText)
-                }
+                Text("Mira el tutorial de cada maleta y marca las unidades que ya guardaste.",
+                    style = Typography.bodyMedium, color = PackGuideColors.secondaryText)
             }
-            if (scanner != null && preview != null) item {
-                PackingGuidePreviewPanel(packing, scanner, preview,
-                    onOpenScanner = { onNavigateToTab?.invoke(NavTab.Scanner) },
-                    onOpenCatalog = { onNavigateToTab?.invoke(NavTab.Catalog) })
-            }
-            item {
-                TechCard(headerTag = "CONSEJO DE DISTRIBUCIÓN", borderColor = PackGuideColors.border) {
-                    Text("Coloca el calzado y los objetos pesados en la base; la ropa en el centro y lo que necesitarás durante el viaje arriba.",
-                        style = Typography.bodyMedium, color = PackGuideColors.primaryText)
-                }
-            }
-            item {
-                Text("ASIGNACIÓN EN VALIJA", style = Typography.titleLarge,
-                    color = PackGuideColors.primaryText)
-                Text("Cada artículo tiene una zona editable y un contador de unidades empacadas.",
-                    style = Typography.bodySmall, color = PackGuideColors.secondaryText)
-            }
-            if (selectedItems.isEmpty()) {
-                item {
-                    Text("Aún no hay artículos seleccionados. Añádelos en el catálogo.",
-                        color = PackGuideColors.secondaryText)
-                    AsciiButton("IR AL CATÁLOGO", onClick = { onNavigateToTab?.invoke(NavTab.Catalog) },
-                        modifier = Modifier.fillMaxWidth())
-                }
-            }
-            items(selectedItems, key = { it.id }) { item ->
-                TechCard(borderColor = PackGuideColors.border) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(item.icon, contentDescription = null, tint = PackGuideColors.primaryText)
-                        Text("  ${item.name}", style = Typography.titleMedium,
-                            color = PackGuideColors.primaryText, modifier = Modifier.weight(1f))
-                        Text("${item.packedQuantity}/${item.quantity}", color = PackGuideColors.primaryText)
+            packing.selectedLuggage.forEach { type ->
+                val bag = packing.bag(type)
+                item(key = "${type.name}-heading") {
+                    Row(Modifier.padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Icon(Icons.Outlined.Luggage, contentDescription = null, tint = PackGuideColors.primaryText)
+                        Text(type.label, style = Typography.titleLarge, color = PackGuideColors.primaryText)
                     }
-                    Spacer(Modifier.height(10.dp))
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                        AsciiButton(
-                            text = "ZONA: ${item.zone.label} ↻",
-                            onClick = { packing.updateItem(item.id) { it.copy(zone = it.zone.next()) } },
-                            modifier = Modifier.weight(1f), isPrimary = false
+                }
+                item(key = "${type.name}-tutorial") {
+                    PackingTutorialPanel(type, playingTutorial == type,
+                        onPlay = { playingTutorial = type },
+                        onClose = { if (playingTutorial == type) playingTutorial = null })
+                }
+                item(key = "${type.name}-progress") {
+                    TechCard(headerTag = "PROGRESO REAL") {
+                        Text(copy.progress(bag.packedUnits, bag.selectedUnits, bag.progressPercent),
+                            style = Typography.titleMedium, color = PackGuideColors.primaryText)
+                        Spacer(Modifier.height(10.dp))
+                        LinearProgressIndicator(
+                            progress = { bag.progressPercent / 100f },
+                            modifier = Modifier.fillMaxWidth().height(6.dp),
+                            color = PackGuideColors.primaryText,
+                            trackColor = PackGuideColors.surfaceVariant,
+                            drawStopIndicator = {}
                         )
-                        AsciiButton(
-                            text = if (item.packedQuantity == item.quantity) "DESMARCAR" else "MARCAR EMPACADO",
-                            onClick = {
-                                packing.updateItem(item.id) {
-                                    it.copy(packedQuantity = if (it.packedQuantity == it.quantity) 0 else it.packedQuantity + 1)
-                                }
-                            },
-                            modifier = Modifier.weight(1f),
-                            isPrimary = item.packedQuantity != item.quantity
-                        )
+                        Spacer(Modifier.height(12.dp))
+                        Text("Marca cada unidad cuando esté dentro de esta maleta. Puedes desmarcarla si la sacas.",
+                            style = Typography.bodySmall, color = PackGuideColors.secondaryText)
+                    }
+                }
+                val selectedItems = bag.items.filter { it.quantity > 0 }
+                if (selectedItems.isEmpty()) {
+                    item(key = "${type.name}-empty") {
+                        TechCard {
+                            Text("Aún no hay artículos seleccionados. Añádelos en el catálogo.",
+                                color = PackGuideColors.secondaryText)
+                            Spacer(Modifier.height(12.dp))
+                            AsciiButton("IR AL CATÁLOGO", onClick = {
+                                packing.selectLuggage(type)
+                                onNavigateToTab?.invoke(NavTab.Catalog)
+                            }, modifier = Modifier.fillMaxWidth())
+                        }
+                    }
+                }
+                selectedItems.forEach { catalogItem ->
+                    item(key = "${type.name}-${catalogItem.id}-heading") {
+                        Row(verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Icon(catalogItem.icon, contentDescription = null, tint = PackGuideColors.primaryText)
+                            Text(catalogItem.name, modifier = Modifier.weight(1f), style = Typography.titleMedium,
+                                color = PackGuideColors.primaryText)
+                            Text("${catalogItem.packedQuantity}/${catalogItem.quantity}", color = PackGuideColors.secondaryText)
+                        }
+                        AsciiButton(copy.zoneAction(catalogItem.zone.label), onClick = {
+                            packing.updateItem(catalogItem.id, type) { it.copy(zone = it.zone.next()) }
+                        }, isPrimary = false, modifier = Modifier.fillMaxWidth())
+                    }
+                    items(count = catalogItem.quantity, key = { unit -> "${type.name}-${catalogItem.id}-$unit" }) { unit ->
+                        val checked = bag.isUnitPacked(catalogItem.id, unit)
+                        Row(
+                            modifier = Modifier.fillMaxWidth().toggleable(
+                                value = checked, role = Role.Checkbox,
+                                onValueChange = { bag.setUnitPacked(catalogItem.id, unit, it) }
+                            ).padding(horizontal = 8.dp, vertical = 4.dp).heightIn(min = 48.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Checkbox(checked = checked, onCheckedChange = null)
+                            Column(Modifier.weight(1f)) {
+                                Text(catalogItem.name, style = Typography.bodyMedium,
+                                    textDecoration = if (checked) TextDecoration.LineThrough else TextDecoration.None,
+                                    color = if (checked) PackGuideColors.secondaryText else PackGuideColors.primaryText)
+                                Text("${unit + 1} / ${catalogItem.quantity}", style = Typography.bodySmall,
+                                    color = PackGuideColors.secondaryText)
+                            }
+                            Text(if (checked) "EMPACADO" else "PENDIENTE", style = Typography.labelSmall,
+                                color = PackGuideColors.secondaryText)
+                        }
+                        HorizontalDivider(color = PackGuideColors.border)
                     }
                 }
             }
             item {
                 AsciiButton("VER RESUMEN", onClick = { onNavigateToTab?.invoke(NavTab.Summary) },
-                    modifier = Modifier.fillMaxWidth(), isPrimary = true)
-                Spacer(Modifier.height(16.dp))
+                    modifier = Modifier.fillMaxWidth())
             }
         }
     }

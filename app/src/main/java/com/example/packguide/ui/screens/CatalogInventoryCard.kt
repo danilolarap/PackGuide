@@ -70,7 +70,7 @@ fun CatalogInventoryCard(item: CatalogItemData, packing: PackingState) {
                     modifier = Modifier.size(48.dp)
                         .background(PackGuideColors.surface, RoundedCornerShape(12.dp))
                         .border(1.dp, PackGuideColors.border, RoundedCornerShape(12.dp))) {
-                    Icon(Icons.Outlined.Remove, "${localizedText("Disminuir cantidad", language)}: ${type.label}",
+                    Icon(Icons.Outlined.Remove, "${localizedText("Disminuir cantidad", language)}: ${localizedText(type.label, language)}",
                         tint = if (assigned.quantity > 0) PackGuideColors.primaryText else PackGuideColors.secondaryText.copy(alpha = 0.45f),
                         modifier = Modifier.size(18.dp))
                 }
@@ -80,7 +80,7 @@ fun CatalogInventoryCard(item: CatalogItemData, packing: PackingState) {
                     modifier = Modifier.size(48.dp)
                         .background(PackGuideColors.surface, RoundedCornerShape(12.dp))
                         .border(1.dp, PackGuideColors.border, RoundedCornerShape(12.dp))) {
-                    Icon(Icons.Outlined.Add, "${localizedText("Aumentar cantidad", language)}: ${type.label}",
+                    Icon(Icons.Outlined.Add, "${localizedText("Aumentar cantidad", language)}: ${localizedText(type.label, language)}",
                         tint = PackGuideColors.primaryText, modifier = Modifier.size(18.dp))
                 }
             }

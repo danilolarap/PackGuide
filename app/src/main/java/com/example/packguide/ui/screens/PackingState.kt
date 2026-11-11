@@ -99,6 +99,20 @@ class LuggagePacking(val type: LuggagePreset, initialItems: List<CatalogItemData
     val widthCm = mutableStateOf(type.widthCm)
     val depthCm = mutableStateOf(type.depthCm)
     val items = mutableStateListOf<CatalogItemData>().apply { addAll(initialItems) }
+    private val packedUnitSelections = mutableStateMapOf<String, Set<Int>>()
+
+    fun isUnitPacked(id: String, unit: Int): Boolean = unit in (packedUnitSelections[id]
+        ?: (0 until (items.firstOrNull { it.id == id }?.packedQuantity ?: 0)).toSet())
+
+    fun setUnitPacked(id: String, unit: Int, packed: Boolean) {
+        val index = items.indexOfFirst { it.id == id }
+        if (index < 0 || unit !in 0 until items[index].quantity) return
+        val item = items[index]
+        val selected = packedUnitSelections[id] ?: (0 until item.packedQuantity).toSet()
+        val updated = if (packed) selected + unit else selected - unit
+        packedUnitSelections[id] = updated
+        items[index] = item.copy(packedQuantity = updated.size)
+    }
 
     val estimate get() = PackingRules.estimate(heightCm.value, widthCm.value, depthCm.value,
         items.map { it.quantity to it.unitVolumeL })
@@ -111,8 +125,20 @@ class LuggagePacking(val type: LuggagePreset, initialItems: List<CatalogItemData
     fun updateItem(id: String, transform: (CatalogItemData) -> CatalogItemData) {
         val index = items.indexOfFirst { it.id == id }
         if (index >= 0) {
-            val updated = transform(items[index])
+            val previous = items[index]
+            var updated = transform(previous)
             require(updated.id == id) { "Updating an item must preserve its identity" }
+            // Keep the identity of each checked unit when catalog quantities change.
+            val selected = packedUnitSelections[id] ?: (0 until previous.packedQuantity).toSet()
+            val retained = selected.filter { it < updated.quantity }.toSet()
+            if (updated.packedQuantity == previous.packedQuantity ||
+                (updated.quantity != previous.quantity &&
+                    updated.packedQuantity == previous.packedQuantity.coerceAtMost(updated.quantity))) {
+                packedUnitSelections[id] = retained
+                updated = updated.copy(packedQuantity = retained.size)
+            } else {
+                packedUnitSelections[id] = (0 until updated.packedQuantity).toSet()
+            }
             items[index] = updated
         }
     }

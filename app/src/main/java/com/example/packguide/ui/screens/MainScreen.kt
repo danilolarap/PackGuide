@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.example.packguide.ui.navigation.NavTab
 import com.example.packguide.ui.navigation.TechBottomNavBar
 import com.example.packguide.settings.AppLanguage
@@ -39,11 +40,10 @@ fun MainScreen(
     val currentTab = session.currentTab
     BackHandler(enabled = session.canGoBack) { session.goBack() }
     var showSettings by remember { mutableStateOf(false) }
-    val scanner: com.example.packguide.scanning.ScannerViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     val packing = session.packing
     val preview: com.example.packguide.ai.PackingPreviewViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     androidx.compose.runtime.LaunchedEffect(packing.selectedLuggage) { preview.retain(packing.selectedLuggage) }
-    // ViewModels retain photos and previews across Activity recreation.
+    // Summary photos and previews survive Activity recreation.
 
     fun navigateTo(tab: NavTab) {
         session.navigateTo(tab)
@@ -54,13 +54,16 @@ fun MainScreen(
         containerColor = PackGuideColors.background,
         contentWindowInsets = WindowInsets.safeDrawing,
         bottomBar = {
-            TechBottomNavBar(
-                selectedTab = currentTab,
-                onTabSelected = ::navigateTo,
-                tabs = listOf(NavTab.Scanner, NavTab.Catalog, NavTab.Guide, NavTab.Summary),
-                currentDestination = currentTab,
-                onSettingsClick = { showSettings = true }
-            )
+            if (packing.allDimensionsConfirmed) {
+                TechBottomNavBar(
+                    modifier = Modifier.testTag("main-navigation"),
+                    selectedTab = currentTab,
+                    onTabSelected = ::navigateTo,
+                    tabs = NavTab.tabs,
+                    currentDestination = currentTab,
+                    onSettingsClick = { showSettings = true }
+                )
+            }
         }
     ) { innerPadding ->
         Box(
@@ -75,9 +78,9 @@ fun MainScreen(
                 label = "ScreenTransition"
             ) { tab ->
                 when (tab) {
-                    is NavTab.Scanner -> ScannerScreen(packing = packing, scanner = scanner, onOpenCatalog = { navigateTo(NavTab.Catalog) })
+                    is NavTab.Measurements -> MeasurementsScreen(packing = packing, onOpenCatalog = { navigateTo(NavTab.Catalog) })
                     is NavTab.Catalog -> CatalogScreen(packing = packing, onCreatePlan = { navigateTo(NavTab.Guide) })
-                    is NavTab.Guide -> GuideScreen(packing = packing, scanner = scanner, preview = preview, onNavigateToTab = ::navigateTo)
+                    is NavTab.Guide -> GuideScreen(packing = packing, onNavigateToTab = ::navigateTo)
                     is NavTab.Summary -> SummaryScreen(
 
                         packing = packing,
@@ -97,7 +100,6 @@ fun MainScreen(
                     },
                     onLogout = {
                         showSettings = false
-                        scanner.clearPhotos()
                         preview.clear()
                         onLogout()
                     },

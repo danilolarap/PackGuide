@@ -4,7 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.Inventory2
-import androidx.compose.material.icons.outlined.QrCodeScanner
+import androidx.compose.material.icons.outlined.Straighten
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class NavTab(
@@ -14,12 +14,12 @@ sealed class NavTab(
     val icon: ImageVector,
     val sysCode: String
 ) {
-    object Scanner : NavTab(
-        route = "scanner",
-        title = "[ESCÁNER]",
-        asciiLabel = "[ ESCÁNER ]",
-        icon = Icons.Outlined.QrCodeScanner,
-        sysCode = "SYS // CAM_MODULE"
+    object Measurements : NavTab(
+        route = "measurements",
+        title = "[MEDIDAS]",
+        asciiLabel = "[ MEDIDAS ]",
+        icon = Icons.Outlined.Straighten,
+        sysCode = "SYS // DIMENSIONS"
     )
 
     object Catalog : NavTab(
@@ -47,6 +47,7 @@ sealed class NavTab(
     )
 
     companion object {
-        val tabs = listOf(Scanner, Catalog, Guide, Summary)
+        // Defer the list until the first tab object has finished initializing.
+        val tabs: List<NavTab> by lazy { listOf(Measurements, Catalog, Guide, Summary) }
     }
 }

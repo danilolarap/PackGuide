@@ -6,7 +6,6 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.packguide.ai.PackingPreviewViewModel
-import com.example.packguide.scanning.ScannerViewModel
 import com.example.packguide.ui.navigation.NavTab
 import com.example.packguide.ui.screens.LuggagePreset
 import org.junit.Assert.*
@@ -21,8 +20,8 @@ class DeviceCompatibilityTest {
                 original = ViewModelProvider(activity)[PackGuideSessionViewModel::class.java]
                 original.isAuthenticated = true
                 original.packing.updateItem("ITEM-01") { it.copy(quantity = 7) }
+                original.packing.dimensionsConfirmed.value = true
                 original.navigateTo(NavTab.Catalog)
-                ViewModelProvider(activity)[ScannerViewModel::class.java].selectPhoto(photo, LuggagePreset.Cabin)
                 ViewModelProvider(activity)[PackingPreviewViewModel::class.java].addPhoto(LuggagePreset.Cabin, photo)
             }
             InstrumentationRegistry.getInstrumentation().waitForIdleSync()
@@ -34,14 +33,13 @@ class DeviceCompatibilityTest {
                 assertTrue(session.isAuthenticated)
                 assertEquals(7, session.packing.items.first { it.id == "ITEM-01" }.quantity)
                 assertEquals(NavTab.Catalog, session.currentTab)
-                assertSame(photo, ViewModelProvider(activity)[ScannerViewModel::class.java].stateFor(LuggagePreset.Cabin).photo)
                 assertSame(photo, ViewModelProvider(activity)[PackingPreviewViewModel::class.java].stateFor(LuggagePreset.Cabin).photos.single())
                 assertFalse(photo.isRecycled)
             }
             pressBack()
             InstrumentationRegistry.getInstrumentation().waitForIdleSync()
             scenario.onActivity { activity ->
-                assertEquals(NavTab.Scanner, ViewModelProvider(activity)[PackGuideSessionViewModel::class.java].currentTab)
+                assertEquals(NavTab.Measurements, ViewModelProvider(activity)[PackGuideSessionViewModel::class.java].currentTab)
                 assertFalse(activity.isFinishing)
             }
         }

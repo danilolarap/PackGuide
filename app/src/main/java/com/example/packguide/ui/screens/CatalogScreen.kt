@@ -23,7 +23,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import com.example.packguide.ui.localization.Text
@@ -34,20 +33,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import com.example.packguide.ui.localization.LocalAppLanguage
+import com.example.packguide.ui.localization.localizedText
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.packguide.ui.components.HudHeader
 import com.example.packguide.ui.components.LedIndicator
-import com.example.packguide.ui.components.TechBadge
 import com.example.packguide.ui.theme.AccentGreenLed
 import com.example.packguide.ui.theme.AccentRedLed
 import com.example.packguide.ui.theme.TechMonospaceFontFamily
 import com.example.packguide.ui.theme.Typography
-import java.util.Locale
-import com.example.packguide.ui.localization.LocalAppLanguage
-import com.example.packguide.ui.localization.PackingText
 
 @Composable
 fun CatalogScreen(
@@ -63,14 +60,13 @@ fun CatalogScreen(
     // Items list initialized with exact specification defaults
     val itemsList = packing.catalogItems
 
-    val filteredItems = remember(itemsList, selectedCategory, searchQuery) { itemsList.filter { item ->
+    val language = LocalAppLanguage.current
+    val filteredItems = remember(itemsList, selectedCategory, searchQuery, language) { itemsList.filter { item ->
         val matchesCategory = (selectedCategory == "TODOS") || (item.category == selectedCategory)
-        val matchesQuery = searchQuery.isEmpty() || item.name.contains(searchQuery, ignoreCase = true) || item.category.contains(searchQuery, ignoreCase = true)
+        val matchesQuery = searchQuery.isEmpty() || item.name.contains(searchQuery, ignoreCase = true) || item.category.contains(searchQuery, ignoreCase = true) || localizedText(item.name, language).contains(searchQuery, ignoreCase = true) || localizedText(item.category, language).contains(searchQuery, ignoreCase = true)
         matchesCategory && matchesQuery
     } }
 
-    val copy = PackingText(LocalAppLanguage.current)
-    val estimate = packing.activeBag.estimate
 
     Column(
         modifier = modifier
@@ -101,7 +97,7 @@ fun CatalogScreen(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Outlined.Search,
-                        contentDescription = "Buscar",
+                        contentDescription = localizedText("Buscar", language),
                         tint = PackGuideColors.primaryText,
                         modifier = Modifier.size(18.dp)
                     )
@@ -174,23 +170,11 @@ fun CatalogScreen(
 
             // --- 4. ITEM INVENTORY LIST ---
             LazyColumn(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f).testTag("catalog-inventory"),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 item {
-                    LuggageSelector(packing)
-                    Text("DESTINOS DEL VIAJE", style = Typography.labelMedium, color = PackGuideColors.primaryText)
-                    Text("Reparte las cantidades de cada artículo entre las maletas elegidas en Escáner.",
-                        style = Typography.bodySmall, color = PackGuideColors.secondaryText)
-                    packing.selectedLuggage.forEach { type ->
-                        val bag = packing.bag(type)
-                        val over = bag.estimate.exceedsCapacity
-                        Text("${type.label}: ${copy.volume(bag.estimate)} · ${copy.balance(bag.estimate)}",
-                            style = Typography.bodySmall,
-                            color = if (over) AccentRedLed else PackGuideColors.primaryText)
-                    }
-                    Text("Volumen estimado / capacidad interior total", style = Typography.bodySmall, color = PackGuideColors.secondaryText)
-                    Text("Medidas de referencia; litros por unidad estimados de forma independiente. No hay un factor de compresión medido.",
+                    Text("Reparte las cantidades de cada artículo entre las maletas elegidas en Medidas.",
                         style = Typography.bodySmall, color = PackGuideColors.secondaryText)
                 }
                 if (filteredItems.isEmpty()) {
@@ -209,74 +193,7 @@ fun CatalogScreen(
                 }
             }
 
-            // --- 5. BOTTOM CAPACITY TRACKER CARD ---
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-                    .shadow(0.dp, shape = RoundedCornerShape(20.dp))
-                    .background(PackGuideColors.surface, shape = RoundedCornerShape(20.dp))
-                    .border(1.dp, PackGuideColors.border, shape = RoundedCornerShape(20.dp))
-                    .padding(14.dp)
-            ) {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text(copy.selectedBag(packing.activeLuggage.label), style = Typography.labelMedium, color = PackGuideColors.primaryText)
-                    Text(copy.counts(packing.selectedUnits, packing.packedUnits),
-                        style = Typography.labelMedium,
-                        color = PackGuideColors.primaryText)
-                    // Metric header & available badge
-                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Text("Volumen estimado / capacidad interior total", style = Typography.bodySmall, color = PackGuideColors.secondaryText)
-                        Text(
-                            text = copy.volume(estimate),
-                            style = Typography.titleMedium,
-                            fontFamily = TechMonospaceFontFamily,
-                            fontWeight = FontWeight.Bold,
-                            color = PackGuideColors.primaryText
-                        )
-
-                        TechBadge(
-                            text = copy.balance(estimate),
-                            containerColor = PackGuideColors.primaryText,
-                            contentColor = PackGuideColors.surface,
-                            ledColor = if (estimate.exceedsCapacity) AccentRedLed else AccentGreenLed
-                        )
-                    }
-
-                    // Visual Segmented Progress Bar (10 block segments)
-                    val filledSegmentsCount = (estimate.occupancy * 10).toInt().coerceIn(0, 10)
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        for (i in 1..10) {
-                            val isFilled = i <= filledSegmentsCount
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .height(5.dp)
-                                    .background(
-                                        if (isFilled) PackGuideColors.primaryText else PackGuideColors.surfaceVariant,
-                                        shape = RoundedCornerShape(1.dp)
-                                    )
-                                    .border(
-                                        1.dp,
-                                        if (isFilled) PackGuideColors.primaryText else PackGuideColors.border,
-                                        shape = RoundedCornerShape(1.dp)
-                                    )
-                            )
-                        }
-                    }
-
-                    com.example.packguide.ui.components.AsciiButton(
-                        text = "CREAR PLAN DE EMPACADO",
-                        onClick = onCreatePlan,
-                        icon = Icons.AutoMirrored.Outlined.ArrowForward,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
+            CatalogCapacityOverview(packing = packing, onCreatePlan = onCreatePlan)
         }
     }
 }

@@ -20,7 +20,7 @@ class PhotoReadException(val problem: PhotoProblem) : Exception()
 
 class PhotoScanner {
     companion object {
-        // Shared by Scanner and Review: only one full decode/EXIF rotation at a time.
+        // Summary photos share a single full decode/EXIF rotation at a time.
         private val decodeMutex = Mutex()
     }
 

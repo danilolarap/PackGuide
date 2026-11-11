@@ -4,44 +4,46 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Checkbox
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Straighten
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.example.packguide.scanning.ScannerViewModel
 import com.example.packguide.ui.components.AsciiButton
 import com.example.packguide.ui.components.TechCard
 import com.example.packguide.ui.localization.Text
 import com.example.packguide.ui.theme.PackGuideColors
 import com.example.packguide.ui.theme.Typography
-import java.util.Locale
 
 @Composable
-fun ScannerScreen(
+fun MeasurementsScreen(
     modifier: Modifier = Modifier,
     packing: PackingState,
-    scanner: ScannerViewModel,
     onOpenCatalog: () -> Unit
 ) {
+    val copy = com.example.packguide.ui.localization.PackingText(com.example.packguide.ui.localization.LocalAppLanguage.current)
     var pendingRemoval by remember { mutableStateOf<LuggagePreset?>(null) }
     val remove = pendingRemoval
     if (remove != null) {
         AlertDialog(
             onDismissRequest = { pendingRemoval = null },
-            title = { Text("QUITAR MALETA: ${remove.label}") },
+            title = { Text(copy.removeBagTitle(remove.label)) },
             text = { Text("Se quitarán del plan los artículos asignados a esta maleta. Las demás maletas conservarán sus artículos.") },
             confirmButton = { TextButton(onClick = {
                 packing.toggleLuggage(remove)
-                scanner.clearPhoto(remove)
                 pendingRemoval = null
             }) { Text("QUITAR MALETA") } },
             dismissButton = { TextButton(onClick = { pendingRemoval = null }) { Text("CANCELAR") } }
         )
     }
     Column(modifier.fillMaxSize().background(PackGuideColors.background)) {
-        com.example.packguide.ui.components.HudHeader(title = "EQUIPAJE DEL VIAJE", statusText = "")
+        com.example.packguide.ui.components.HudHeader(title = "MEDIDAS DEL EQUIPAJE", sysCode = "", statusText = "")
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
@@ -52,16 +54,14 @@ fun ScannerScreen(
                         pendingRemoval = type
                     } else {
                         packing.toggleLuggage(type)
-                        if (type !in packing.selectedLuggage) scanner.clearPhoto(type)
                     }
                 }
             }
             packing.selectedLuggage.forEach { type ->
                 item(key = type.name) {
                     val bag = packing.bag(type)
-                    TechCard(headerTag = "MALETA: ${type.label}") {
+                    TechCard(headerTag = copy.bagTitle(type.label)) {
                         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                            PhotoScanPanel(scanner, type)
                             Text("MEDIDAS INTERIORES ÚTILES", style = Typography.labelMedium,
                                 color = PackGuideColors.primaryText)
                             DimensionStepperRow("ALTO", bag.heightCm.value) {
@@ -75,14 +75,13 @@ fun ScannerScreen(
                             }
                             Text("${com.example.packguide.ui.localization.localizedText("CAPACIDAD INTERIOR TOTAL", com.example.packguide.ui.localization.LocalAppLanguage.current)}: ${com.example.packguide.ui.localization.formatLiters(bag.capacityL)} L",
                                 style = Typography.titleMedium, color = PackGuideColors.primaryText)
-                            Text("Una foto común no mide la maleta. Ajusta las medidas interiores útiles y confírmalas.",
+                            Text("Mide el interior de tu maleta, ajusta los valores y confírmalos para calcular su capacidad.",
                                 style = Typography.bodySmall, color = PackGuideColors.secondaryText)
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Checkbox(checked = bag.dimensionsConfirmed.value,
-                                    onCheckedChange = { bag.dimensionsConfirmed.value = it })
-                                Text("CONFIRMO LAS MEDIDAS: ${type.label}", style = Typography.labelSmall,
-                                    color = PackGuideColors.primaryText)
-                            }
+                            DimensionConfirmation(
+                                modifier = Modifier.testTag("dimension-confirmation-${type.name}"),
+                                confirmed = bag.dimensionsConfirmed.value,
+                                onConfirm = { bag.dimensionsConfirmed.value = !bag.dimensionsConfirmed.value }
+                            )
                         }
                     }
                 }
@@ -96,6 +95,29 @@ fun ScannerScreen(
                 Spacer(Modifier.height(20.dp))
             }
         }
+    }
+}
+
+@Composable
+internal fun DimensionConfirmation(confirmed: Boolean, modifier: Modifier = Modifier, onConfirm: () -> Unit) {
+    Column(
+        modifier = modifier.fillMaxWidth()
+            .background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(18.dp))
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Text(if (confirmed) "LISTA PARA EMPACAR" else "CONFIRMACIÓN PENDIENTE",
+            style = Typography.titleMedium, color = MaterialTheme.colorScheme.onPrimaryContainer)
+        Text(if (confirmed) "Si cambias una medida, deberás confirmarla de nuevo."
+            else "Revisa las medidas y pulsa el botón para continuar al catálogo.",
+            style = Typography.bodyMedium, color = MaterialTheme.colorScheme.onPrimaryContainer)
+        AsciiButton(
+            text = if (confirmed) "MEDIDAS CONFIRMADAS" else "CONFIRMAR MEDIDAS",
+            icon = if (confirmed) Icons.Outlined.CheckCircle else Icons.Outlined.Straighten,
+            onClick = onConfirm,
+            isAccentRed = !confirmed,
+            modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp)
+        )
     }
 }
 
