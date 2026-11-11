@@ -72,6 +72,10 @@ powershell -ExecutionPolicy Bypass -File .\server\start-android.ps1
 ```
 
 El comando conecta el puerto del dispositivo y levanta el servidor. Si no
+se indica un dispositivo, selecciona el único teléfono conectado, incluso si hay
+un emulador abierto. Mientras el script está activo, un monitor restablece el
+túnel ADB cada cinco segundos si se pierde la conexión con ese dispositivo.
+Si no
 encuentra una clave, la pide con entrada oculta para esa sesión. Déjalo abierto
 mientras usas **Resumen → Ver vista previa → Evaluar foto con IA**. Si hay varios dispositivos,
 añade `-Device` seguido del identificador que muestra `adb devices`.
