@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.example.packguide.ui.components.AsciiButton
 import com.example.packguide.ui.components.TechCard
+import com.example.packguide.ui.components.travelDotBackground
 import com.example.packguide.ui.localization.Text
 import com.example.packguide.ui.theme.PackGuideColors
 import com.example.packguide.ui.theme.Typography
@@ -42,7 +43,7 @@ fun MeasurementsScreen(
             dismissButton = { TextButton(onClick = { pendingRemoval = null }) { Text("CANCELAR") } }
         )
     }
-    Column(modifier.fillMaxSize().background(PackGuideColors.background)) {
+    Column(modifier.fillMaxSize().travelDotBackground(1)) {
         com.example.packguide.ui.components.HudHeader(title = "MEDIDAS DEL EQUIPAJE", sysCode = "", statusText = "")
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),

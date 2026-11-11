@@ -35,7 +35,16 @@ fun HudHeader(
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(title, style = Typography.headlineMedium, color = PackGuideColors.primaryText,
                 modifier = Modifier.weight(1f))
-            DotMatrixMark()
+            TravelDotIcon(
+                glyph = when {
+                    title.contains("MEDIDAS") -> TravelGlyph.Cabin
+                    title.contains("CATÁLOGO") || title.contains("CATALOGO") -> TravelGlyph.Backpack
+                    title.contains("GUÍA") -> TravelGlyph.Passport
+                    title.contains("RESUMEN") -> TravelGlyph.Hold
+                    else -> TravelGlyph.Plane
+                },
+                modifier = Modifier.size(42.dp), accent = true
+            )
         }
     }
 }

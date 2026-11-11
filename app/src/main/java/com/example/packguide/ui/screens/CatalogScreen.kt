@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.packguide.ui.components.HudHeader
+import com.example.packguide.ui.components.travelDotBackground
 import com.example.packguide.ui.components.LedIndicator
 import com.example.packguide.ui.theme.AccentGreenLed
 import com.example.packguide.ui.theme.AccentRedLed
@@ -71,7 +72,7 @@ fun CatalogScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(PackGuideColors.background)
+            .travelDotBackground(2)
     ) {
         // Encabezado del catálogo
         HudHeader(

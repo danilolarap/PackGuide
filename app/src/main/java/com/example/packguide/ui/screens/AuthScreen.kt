@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -56,6 +57,9 @@ import com.example.packguide.settings.AppSettings
 import com.example.packguide.ui.components.AsciiButton
 import com.example.packguide.ui.components.DashedDivider
 import com.example.packguide.ui.components.HudHeader
+import com.example.packguide.ui.components.travelDotBackground
+import com.example.packguide.ui.components.TravelDotIcon
+import com.example.packguide.ui.components.TravelGlyph
 import com.example.packguide.ui.components.LedIndicator
 import com.example.packguide.ui.components.SettingsDialog
 import com.example.packguide.ui.localization.Text as LocalizedText
@@ -116,12 +120,12 @@ fun AuthScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().background(PackGuideColors.background).safeDrawingPadding().imePadding()
+        modifier = Modifier.fillMaxSize().travelDotBackground(0).safeDrawingPadding().imePadding()
             .verticalScroll(rememberScrollState()).padding(horizontal = 24.dp, vertical = 28.dp),
         verticalArrangement = Arrangement.Center
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            LedIndicator(color = AccentRedLed, isPulsing = false)
+            TravelDotIcon(TravelGlyph.Plane, Modifier.size(26.dp), accent = true)
             Spacer(Modifier.width(10.dp))
             LocalizedText("PACKGUIDE // ACCESS", style = Typography.labelMedium, color = PackGuideColors.secondaryText)
             Spacer(Modifier.weight(1f))
@@ -133,18 +137,29 @@ fun AuthScreen(
                 )
             }
         }
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(22.dp))
+        BoxWithConstraints(Modifier.fillMaxWidth()) {
+        val iconSize = ((maxWidth - 32.dp) / 5).coerceIn(20.dp, 42.dp)
+        Row(Modifier.fillMaxWidth().padding(vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically) {
+            TravelDotIcon(TravelGlyph.Backpack, Modifier.size(iconSize))
+            TravelDotIcon(TravelGlyph.Cabin, Modifier.size(iconSize))
+            TravelDotIcon(TravelGlyph.Plane, Modifier.size(iconSize + 12.dp), accent = true)
+            TravelDotIcon(TravelGlyph.Hold, Modifier.size(iconSize))
+            TravelDotIcon(TravelGlyph.Passport, Modifier.size(iconSize))
+        }
+        }
         HudHeader(
             title = if (isRegistering) "CREAR CUENTA" else "INICIAR SESIÓN",
             sysCode = "",
             statusText = "", horizontalPadding = 0.dp
         )
-        Spacer(Modifier.height(20.dp))
-        Spacer(Modifier.height(22.dp))
+        Spacer(Modifier.height(16.dp))
 
         Column(
-            modifier = Modifier.fillMaxWidth().background(PackGuideColors.surface, RoundedCornerShape(14.dp))
-                .border(1.dp, PackGuideColors.border, RoundedCornerShape(14.dp)).padding(20.dp)
+            modifier = Modifier.fillMaxWidth().background(PackGuideColors.surface, RoundedCornerShape(26.dp))
+                .border(1.dp, PackGuideColors.border, RoundedCornerShape(26.dp)).padding(22.dp)
         ) {
             Text("[ CREDENCIALES ]", style = Typography.labelMedium, color = PackGuideColors.primaryText)
             Spacer(Modifier.height(18.dp))
@@ -235,7 +250,7 @@ fun AuthScreen(
         }
         Spacer(Modifier.height(18.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
-            LedIndicator(color = AccentGreenLed, isPulsing = false)
+            LedIndicator(color = AccentRedLed, isPulsing = false)
             Spacer(Modifier.width(8.dp))
             Text("CUENTA ALMACENADA EN ESTE DISPOSITIVO", style = Typography.labelSmall, color = PackGuideColors.secondaryText)
         }

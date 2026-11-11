@@ -22,6 +22,9 @@ import com.example.packguide.settings.AppLanguage
 val LocalAppLanguage = compositionLocalOf { AppLanguage.Spanish }
 
 internal val englishTranslations = mapOf(
+    "Toca una maleta para ver su resumen y evaluar sus fotos." to "Tap a bag to view its summary and assess its photos.",
+    "INFORME DE EQUIPAJE" to "PACKING REPORT",
+    "DISTRIBUCIÓN POR ZONAS" to "LAYOUT BY ZONE",
     "INSPIRACIÓN PARA TU MALETA" to "AI PACKING INSPIRATION",
     "VER VISTA PREVIA" to "OPEN PACKING PREVIEW",
     "VER ORGANIZACIÓN" to "VIEW PACKING LAYOUT",

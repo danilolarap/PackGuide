@@ -29,6 +29,7 @@ import com.example.packguide.ui.navigation.NavTab
 import com.example.packguide.ui.theme.AccentGreenLed
 import com.example.packguide.ui.theme.AccentRedLed
 import com.example.packguide.ui.theme.PackGuideColors
+import com.example.packguide.ui.components.travelDotBackground
 import com.example.packguide.ui.theme.Typography
 import java.util.Locale
 import com.example.packguide.ui.localization.LocalAppLanguage
@@ -46,7 +47,7 @@ fun SummaryScreen(
     val estimate = packing.activeBag.estimate
     val copy = PackingText(LocalAppLanguage.current)
 
-    Column(modifier.fillMaxSize().background(PackGuideColors.background)) {
+    Column(modifier.fillMaxSize().travelDotBackground(4)) {
         com.example.packguide.ui.components.HudHeader(title = "RESUMEN DEL EQUIPAJE", sysCode = "", statusText = "")
         LazyColumn(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp).testTag("summary-content"),
             verticalArrangement = Arrangement.spacedBy(12.dp)) {
