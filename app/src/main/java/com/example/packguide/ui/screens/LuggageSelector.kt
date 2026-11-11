@@ -3,6 +3,7 @@ package com.example.packguide.ui.screens
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,25 +31,65 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.example.packguide.ui.localization.Text
 import com.example.packguide.ui.theme.PackGuideColors
 import com.example.packguide.ui.theme.Typography
+import com.example.packguide.ui.theme.AccentRedLed
+import com.example.packguide.ui.localization.LocalAppLanguage
+import com.example.packguide.ui.localization.PackingText
+import com.example.packguide.ui.components.TravelDotIcon
+import com.example.packguide.ui.components.TravelGlyph
 
 @Composable
 fun LuggageSelector(packing: PackingState) {
-    Column {
-        Text("MALETA A ORGANIZAR", style = Typography.labelMedium, color = PackGuideColors.secondaryText)
-        FlowRow(Modifier.fillMaxWidth().selectableGroup(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    val words = PackingText(LocalAppLanguage.current)
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text("MALETA A ORGANIZAR", style = Typography.titleMedium, color = PackGuideColors.primaryText)
+        Text("Toca una maleta para ver su resumen y evaluar sus fotos.",
+            style = Typography.bodySmall, color = PackGuideColors.secondaryText)
+        Column(Modifier.fillMaxWidth().selectableGroup(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             packing.selectedLuggage.forEach { type ->
-                FilterChip(
-                    selected = packing.activeLuggage == type,
-                    onClick = { packing.selectLuggage(type) },
-                    label = { Text(type.label, style = Typography.labelSmall) }
-                )
+                val selected = packing.activeLuggage == type
+                val bag = packing.bag(type)
+                val background by animateColorAsState(
+                    if (selected) PackGuideColors.primaryText else PackGuideColors.surface,
+                    label = "SummaryBagBackground")
+                val foreground = if (selected) PackGuideColors.surface else PackGuideColors.primaryText
+                Surface(
+                    modifier = Modifier.fillMaxWidth().testTag("summary-bag-${type.name}")
+                        .selectable(selected = selected, role = Role.RadioButton,
+                            onClick = { packing.selectLuggage(type) }),
+                    color = background, shape = RoundedCornerShape(22.dp),
+                    border = BorderStroke(if (selected) 2.dp else 1.dp,
+                        if (selected) AccentRedLed else PackGuideColors.border),
+                    shadowElevation = if (selected) 3.dp else 0.dp
+                ) {
+                    Row(Modifier.heightIn(min = 86.dp).padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+                        TravelDotIcon(when (type) {
+                            LuggagePreset.Personal -> TravelGlyph.Backpack
+                            LuggagePreset.Cabin -> TravelGlyph.Cabin
+                            LuggagePreset.Checked -> TravelGlyph.Hold
+                        }, modifier = Modifier.size(40.dp), accent = selected)
+                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                            Text(type.label, style = Typography.titleMedium, color = foreground)
+                            Text(words.progress(bag.packedUnits, bag.selectedUnits, bag.progressPercent),
+                                style = Typography.bodySmall, color = foreground)
+                        }
+                        Box(Modifier.size(28.dp)
+                            .background(if (selected) AccentRedLed else background, CircleShape)
+                            .border(1.dp, if (selected) AccentRedLed else PackGuideColors.border, CircleShape),
+                            contentAlignment = Alignment.Center) {
+                            if (selected) Icon(Icons.Outlined.Check, null,
+                                tint = androidx.compose.ui.graphics.Color.White, modifier = Modifier.size(18.dp))
+                        }
+                    }
+                }
             }
         }
     }
@@ -95,15 +137,14 @@ fun TripLuggageSelection(packing: PackingState, onToggle: (LuggagePreset) -> Uni
                             ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
-                                imageVector = when (type) {
-                                    LuggagePreset.Personal -> Icons.Outlined.Backpack
-                                    LuggagePreset.Cabin -> Icons.Outlined.WorkOutline
-                                    LuggagePreset.Checked -> Icons.Outlined.Luggage
+                            TravelDotIcon(
+                                glyph = when (type) {
+                                    LuggagePreset.Personal -> TravelGlyph.Backpack
+                                    LuggagePreset.Cabin -> TravelGlyph.Cabin
+                                    LuggagePreset.Checked -> TravelGlyph.Hold
                                 },
-                                contentDescription = null,
-                                tint = contentColor,
-                                modifier = Modifier.size(24.dp)
+                                accent = selected,
+                                modifier = Modifier.size(30.dp)
                             )
                         }
                         Text(type.label, modifier = Modifier.weight(1f),
