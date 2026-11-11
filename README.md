@@ -11,20 +11,28 @@ e interfaz en español e inglés.
 
 - **Acceso local:** registro e inicio de sesión con cuentas guardadas en Room.
   Las contraseñas se derivan con PBKDF2 y salt; no se almacenan en texto plano.
-- **Escáner:** selección de maletas, ajuste y confirmación de medidas, captura
-  de una miniatura mediante la cámara del sistema o selección de una foto.
+- **Medidas:** selección de maletas, ajuste manual de sus dimensiones interiores
+  y confirmación de medidas, sin cámara ni carga de fotos.
+  La confirmación destaca las medidas pendientes y cambia al confirmarlas.
+  El menú inferior se habilita al confirmar las medidas de todas las maletas
+  seleccionadas; cambiar las medidas vuelve a bloquear el acceso.
 - **Catálogo:** búsqueda, categorías y cantidades independientes para cada maleta,
-  con 36 artículos de referencia.
-- **Guía:** organización por zonas y seguimiento de las unidades empacadas.
-  Crea una vista organizada combinando la foto original con el inventario.
-- **Resumen:** totales de capacidad, volumen y progreso; admite hasta cuatro
-  fotos por maleta para crear una referencia visual de comparación.
+  con 36 artículos de referencia. Las barras de espacio de todas las maletas
+  seleccionadas permanecen visibles mientras se desplaza el inventario.
+- **Guía:** secciones por maleta con tutoriales de YouTube dentro de la app y
+  casillas independientes para cada unidad, debajo del video. Los tutoriales
+  requieren internet, empiezan al tocarlos y se detienen al salir de la guía.
+  Incluyen controles de pausa, continuación y cierre dentro de la pantalla.
+  Organización por zonas y seguimiento de las unidades empacadas.
+- **Resumen:** totales de capacidad, volumen y progreso. La vista previa local
+  reúne la foto original, las estimaciones de capacidad y las tarjetas por zona.
+  La evaluación opcional de la foto usa el [servidor de IA](docs/packing-ai.md).
 - **Ajustes:** tema, idioma y cierre de sesión.
 
-Las vistas se generan en el dispositivo y funcionan sin conexión, sin claves
-de servicios externos. Son composiciones orientativas: no reconocen objetos,
-no modifican la fotografía ni garantizan que el equipaje quepa físicamente.
-El volumen se estima con las medidas de la maleta y valores del catálogo.
+El inventario, el seguimiento y el esquema funcionan sin conexión. La evaluación
+de la foto requiere conexión con el servidor y OpenAI. La clave se guarda en el
+servidor. El esquema es ilustrativo. El cálculo
+de volumen sigue usando las medidas manuales y los valores del catálogo.
 
 ## Requisitos
 

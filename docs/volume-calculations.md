@@ -6,7 +6,7 @@ La capacidad de Cabina era 55 × 35 × 25 / 1000 = **48.125 L** (48.1 L en panta
 `PackingRules` descontaba 20 % únicamente en Guía: 38.5 L. Catálogo y Resumen
 comparaban los mismos artículos con 48.125 L. Se elimina esa reducción oculta:
 las tres pantallas ahora comparan con la capacidad interior total confirmada en
-Escáner. La foto no determina dimensiones. El catálogo permite seleccionar la
+Medidas. La foto no determina dimensiones. El catálogo permite seleccionar la
 misma maleta que Guía; su panel inferior indica explícitamente esa selección,
 y la lista de destinos conserva los valores de cada maleta por separado.
 
@@ -98,7 +98,7 @@ conexión; consulta `packing-ai.md` para su arquitectura y verificación posteri
 
 - Modelos y reglas: `PackingState.kt`, `scanning/PackingRules.kt`.
 - Pantallas: `CatalogScreen.kt`, `CatalogInventoryCard.kt`, `PackingSuggestionPanel.kt`,
-  `GuideScreen.kt`, `SummaryScreen.kt`, `ScannerScreen.kt`.
+  `GuideScreen.kt`, `SummaryScreen.kt`, `MeasurementsScreen.kt`.
 - Formato y traducciones: `ui/localization/PackingText.kt`, `AppText.kt`.
 - Inventario de referencia para IA: `ai/PackingPlan.kt`.
 - Pruebas: `PackingRulesTest.kt`, `PackingVolumeTest.kt`, `PackingTextTest.kt`,
