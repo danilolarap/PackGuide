@@ -50,6 +50,7 @@ internal fun OrganizedPackingDialog(
     val items = bag.items.filter { it.quantity > 0 }
     val estimate = bag.estimate
     val assessment = photo?.let { state.assessments[it to language] }
+    val feedbackParts = assessment?.feedback?.split("\n\n", limit = 2)
 
     Dialog(onDismissRequest = onClose, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         BoxWithConstraints(Modifier.fillMaxWidth().fillMaxHeight(0.94f).padding(horizontal = 10.dp).background(frame)) {
@@ -91,7 +92,7 @@ internal fun OrganizedPackingDialog(
                             !canAssess -> "La evaluación no está configurada en esta versión de la aplicación."
                             else -> "Foto lista para evaluar. Pulsa EVALUAR FOTO CON IA para obtener tu puntuación."
                         }
-                        Text(assessment?.feedback ?: t(assessmentMessage),
+                        Text(feedbackParts?.firstOrNull() ?: t(assessmentMessage),
                             color = mutedInk, fontSize = 13.sp)
                         if (photo != null && assessment == null) {
                             Text(t("Al evaluar, se enviará solo la foto que elijas al servicio de IA."), color = mutedInk, fontSize = 11.sp)
@@ -101,12 +102,12 @@ internal fun OrganizedPackingDialog(
                                 Text(t("EVALUAR FOTO CON IA"))
                             }
                         }
-                        Text(t("TÉCNICA PARA ORGANIZAR LA ROPA"), color = ink, fontSize = 12.sp)
-                        Text(t("Enrolla las prendas ligeras y colócalas juntas. Dobla las prendas gruesas en capas planas y deja arriba lo que usarás primero."),
-                            color = mutedInk, fontSize = 13.sp)
                     }
                     if (state.work != null || state.problem != null) {
                         PreviewStatus(state, onCancel, textColor = ink)
+                    }
+                    feedbackParts?.getOrNull(1)?.let { tips ->
+                        Text(tips, color = mutedInk, fontSize = 13.sp)
                     }
 
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {

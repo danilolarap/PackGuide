@@ -11,20 +11,33 @@ const tips = [
   ['Separa cargadores y cables en un estuche y recógelos individualmente para evitar enredos.', 'Separate chargers and cables in a case and coil each cable to prevent tangles.'],
   ['Usa organizadores de tela por conjuntos; comprime solo prendas que toleren las arrugas.', 'Use fabric packing cubes for outfits; compress only clothes that tolerate wrinkles.'],
   ['Reserva una bolsa para la ropa usada y así mantenla separada de las prendas limpias.', 'Reserve a bag for worn clothes to keep them separate from clean garments.'],
-  ['Reparte el peso entre ambos lados y deja documentos y objetos de uso frecuente en un bolsillo accesible.', 'Distribute weight between both sides and keep documents and frequently used items in an accessible pocket.']
+  ['Reparte el peso entre ambos lados y deja documentos y objetos de uso frecuente en un bolsillo accesible.', 'Distribute weight between both sides and keep documents and frequently used items in an accessible pocket.'],
+  ['Rellena los huecos pequeños con calcetines sin forzar los cierres.', 'Fill small gaps with socks without straining zippers.'],
+  ['Lleva las prendas delicadas dentro de una funda para reducir roces y enganches.', 'Place delicate clothes in a garment bag to reduce rubbing and snags.'],
+  ['Coloca los objetos pesados en la base y evita apoyarlos sobre prendas delicadas.', 'Place heavy objects at the bottom and keep them off delicate clothes.'],
+  ['Prepara conjuntos completos antes de empacar para reducir prendas que no vas a utilizar.', 'Plan complete outfits before packing to reduce clothes you will not use.'],
+  ['Guarda cinturones alrededor del perímetro interior para aprovechar los bordes.', 'Place belts around the inside perimeter to make use of the edges.'],
+  ['Deja una bolsa plegable vacía para artículos que necesites separar durante el viaje.', 'Pack an empty foldable bag for items you need to separate during the trip.'],
+  ['Protege los objetos frágiles con prendas suaves y evita que se muevan dentro de la maleta.', 'Cushion fragile items with soft clothes and prevent them from moving inside the suitcase.'],
+  ['Abrocha las correas interiores con suavidad para sujetar el contenido sin aplastarlo.', 'Fasten the interior straps gently to secure the contents without crushing them.'],
+  ['Comprueba el acceso a documentos, medicinas y artículos de la primera noche antes de cerrar.', 'Check access to documents, medicines and first-night items before closing.'],
+  ['Reserva algo de espacio para volver a empacar durante el viaje sin presionar la tapa.', 'Leave some space to repack during the trip without pressing down on the lid.']
 ];
 
 export function createPackingTips() {
   const assigned = new Map();
-  let next = 0;
   return (photoBase64, language) => {
     const id = createHash('sha256').update(Buffer.from(photoBase64, 'base64')).digest('hex');
     if (!assigned.has(id)) {
       if (assigned.size >= 1024) assigned.delete(assigned.keys().next().value);
-      assigned.set(id, next++ % tips.length);
+      const indices = Array.from({ length: tips.length }, (_, i) => i);
+      for (let i = 0; i < 2; i++) {
+        const j = i + Math.floor(Math.random() * (indices.length - i));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+      assigned.set(id, indices.slice(0, 2));
     }
-    const index = assigned.get(id);
-    const prefix = language === 'en' ? 'PackGuide tip (prewritten)' : 'Consejo de PackGuide (pregrabado)';
-    return `${prefix} ${index + 1}/10: ${tips[index][language === 'en' ? 1 : 0]}`;
+    const heading = language === 'en' ? 'PACKING TIPS' : 'CONSEJOS PARA ORGANIZAR TU MALETA';
+    return heading + '\n' + assigned.get(id).map((index, number) => `${number + 1}. ${tips[index][language === 'en' ? 1 : 0]}`).join('\n');
   };
 }

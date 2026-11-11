@@ -32,12 +32,12 @@ con IA**. La nota y la sugerencia de ese servicio aparecen en el mismo modal.
 
 ## Datos que se envían
 
-Cada evaluación válida incluye además un consejo editorial identificado como
-«Consejo de PackGuide (pregrabado)», separado del comentario real de la IA.
-Hay diez consejos en español e inglés. Cada foto nueva recibe el siguiente;
-tras el décimo se reinicia el ciclo. La misma foto conserva su consejo durante
+Cada evaluación válida incluye además dos consejos editoriales bajo
+«CONSEJOS PARA ORGANIZAR TU MALETA», separados del comentario real de la IA.
+Hay veinte consejos en español e inglés. Cada foto nueva recibe dos al azar,
+distintos entre sí. La misma foto conserva sus consejos durante
 la sesión del servidor (hasta 1024 asignaciones en memoria); cambiar el idioma
-traduce el consejo sin avanzar el ciclo. Reiniciar el servidor reinicia la rotación.
+traduce los consejos. Reiniciar el servidor reinicia las asignaciones.
 Los consejos no alteran la puntuación y no se agregan a fotos que la IA no pueda evaluar.
 
 - **Evaluar foto con IA** envía únicamente la foto elegida para evaluar el orden,

@@ -134,5 +134,5 @@ test('photo assessment sends the selected JPEG to the vision model and returns i
   const review = await response.json();
   assert.equal(review.schemaVersion, 1);
   assert.equal(review.score, 8);
-  assert.ok(review.feedback.startsWith('Deja lo de uso frecuente arriba.\n\nConsejo de PackGuide (pregrabado) 1/10:'));
+  assert.ok(review.feedback.startsWith('Deja lo de uso frecuente arriba.\n\nCONSEJOS PARA ORGANIZAR TU MALETA\n1. '));
 });
