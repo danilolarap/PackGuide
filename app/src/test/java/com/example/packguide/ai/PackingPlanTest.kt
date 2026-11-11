@@ -7,55 +7,61 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class PackingPlanTest {
-    @Test fun requestsIncludeOnlyTheSelectedBagsContents() {
+    @Test fun twelveSelectedButElevenPackedRequestsExactlyEleven() {
         val packing = PackingState()
-        packing.toggleLuggage(LuggagePreset.Personal)
-        packing.updateItem("ITEM-01", LuggagePreset.Personal) { it.copy(quantity = 2, zone = PackingZone.Top) }
-        val plan = PackingPlan.from(packing.bag(LuggagePreset.Personal))
-        assertEquals(listOf(45, 35, 20), plan.dimensions)
+        packing.updateItem("ITEM-01") { it.copy(quantity = 12, packedQuantity = 11) }
+        val plan = PackingPlan.from(packing.activeBag)
         assertEquals(1, plan.contents.size)
-        assertEquals(2, plan.contents.single().quantity)
-        assertEquals(PackingZone.Top.label, plan.contents.single().zone)
-        assertTrue(plan.description.contains("2 × CAMISETAS"))
-        assertFalse(plan.description.contains("CALZADO"))
+        assertEquals("ITEM-01", plan.contents.single().id)
+        assertEquals(11, plan.contents.single().quantity)
+        assertTrue(plan.description.contains("11 × CAMISETAS"))
+        assertFalse(plan.description.contains("12 ×"))
+        assertFalse(plan.description.contains("PANTALONES"))
     }
 
-    @Test fun snapshotsDetectLayoutChangesButIgnorePackingCheckmarks() {
+    @Test fun uncheckedTypesAreOmittedAndEachBagsPackedInventoryIsIndependent() {
         val packing = PackingState()
+        packing.toggleLuggage(LuggagePreset.Personal)
+        packing.updateItem("ITEM-01", LuggagePreset.Personal) { it.copy(quantity = 12, packedQuantity = 11) }
+        packing.updateItem("ITEM-02", LuggagePreset.Cabin) { it.copy(packedQuantity = 1) }
+        val personal = PackingPlan.from(packing.bag(LuggagePreset.Personal))
+        val cabin = PackingPlan.from(packing.bag(LuggagePreset.Cabin))
+        assertEquals(listOf(45, 35, 20), personal.dimensions)
+        assertEquals(listOf("ITEM-01"), personal.contents.map { it.id })
+        assertEquals(listOf("ITEM-02"), cabin.contents.map { it.id })
+        assertEquals(11, personal.contents.single().quantity)
+        assertEquals(1, cabin.contents.single().quantity)
+    }
+
+    @Test fun checkingOrUncheckingUnitsInvalidatesTheImageButUnpackedSelectionsDoNot() {
+        val packing = PackingState()
+        val bag = packing.activeBag
+        assertTrue(PackingPlan.from(bag).contents.isEmpty())
+        bag.setUnitPacked("ITEM-01", 2, true)
+        val first = PackingPlan.from(bag)
+        assertEquals(1, first.contents.single().quantity)
+        packing.updateItem("ITEM-01") { it.copy(quantity = 12) }
+        assertEquals(first, PackingPlan.from(bag))
+        bag.setUnitPacked("ITEM-01", 0, true)
+        val second = PackingPlan.from(bag)
+        assertNotEquals(first, second)
+        assertEquals(2, second.contents.single().quantity)
+        bag.setUnitPacked("ITEM-01", 2, false)
+        assertEquals(first, PackingPlan.from(bag))
+        bag.setUnitPacked("ITEM-01", 0, false)
+        assertTrue(PackingPlan.from(bag).contents.isEmpty())
+    }
+
+    @Test fun immutableSnapshotsRetainCountsAndDetectReferenceChanges() {
+        val packing = PackingState()
+        packing.updateItem("ITEM-01") { it.copy(packedQuantity = 2) }
         val before = PackingPlan.from(packing.activeBag)
-        packing.updateItem("ITEM-01") { it.copy(packedQuantity = 1) }
-        assertEquals(before, PackingPlan.from(packing.activeBag))
         packing.updateItem("ITEM-01") { it.copy(zone = PackingZone.Top) }
         assertNotEquals(before, PackingPlan.from(packing.activeBag))
-        packing.updateItem("ITEM-01") { it.copy(zone = PackingZone.Base, quantity = 4) }
-        assertNotEquals(before, PackingPlan.from(packing.activeBag))
-        packing.updateItem("ITEM-01") { it.copy(quantity = 3) }
         packing.heightCm.value += 1
         assertNotEquals(before, PackingPlan.from(packing.activeBag))
         assertEquals(55, before.dimensions.first())
-        assertEquals(3, before.contents.first().quantity)
-    }
-
-    @Test fun previewIncludesEverySelectedTypeOnceAndRespectsZones() {
-        val packing = PackingState()
-        packing.items.toList().forEach { item -> packing.updateItem(item.id) { it.copy(quantity = 2) } }
-        packing.updateItem("ITEM-01") { it.copy(zone = PackingZone.Top) }
-        val plan = PackingPlan.from(packing.activeBag)
-        val layout = PackingPreviewLayout.from(plan)
-        assertEquals(listOf("ACCESO RÁPIDO", "CENTRO", "BASE"), layout.zones.map { it.label })
-        assertEquals(36, layout.zones.sumOf { it.items.size })
-        assertEquals(72, layout.zones.flatMap { it.items }.sumOf { it.quantity })
-        assertEquals("CAMISETAS", layout.zones.first().items.single().name)
-        assertEquals("ROPA", layout.zones.first().items.single().category)
-        assertTrue(layout.height in 750..4096)
-    }
-
-    @Test fun unsupportedPreviewPlansAreRejectedInsteadOfReturningAnEmptySuccess() {
-        val plan = PackingPlan.from(PackingState().activeBag)
-        assertThrows(IllegalArgumentException::class.java) { PackingPreviewLayout.from(plan.copy(contents = emptyList())) }
-        assertThrows(IllegalArgumentException::class.java) { PackingPreviewLayout.from(plan.copy(dimensions = listOf(0, 20, 20))) }
-        assertThrows(IllegalArgumentException::class.java) {
-            PackingPreviewLayout.from(plan.copy(contents = listOf(plan.contents.first().copy(zone = "UNKNOWN"))))
-        }
+        assertEquals(2, before.contents.single().quantity)
+        assertEquals(PackingZone.Base.label, before.contents.single().zone)
     }
 }

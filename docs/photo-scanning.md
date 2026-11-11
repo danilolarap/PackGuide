@@ -1,43 +1,27 @@
 # Foto de la maleta
 
-Escáner permite combinar mano, cabina y bodega (al menos una). Cada maleta
-seleccionada tiene foto, medidas y confirmación independientes. Catálogo muestra
-un contador de destino por cada maleta elegida; las cantidades, el volumen y el
-progreso de empacado se mantienen separados. Guía y Resumen permiten cambiar
-entre las maletas activas y el resumen muestra además los totales del viaje.
-Quitar una maleta elimina sus asignaciones y su foto; si tiene artículos, pide
-confirmación antes de hacerlo. Las otras maletas conservan su contenido.
+**Medidas** permite elegir mano, cabina y bodega, conservando al menos una.
+Cada maleta tiene dimensiones interiores y confirmación independientes.
+Introduce las medidas manualmente; esta pantalla no toma ni carga fotos.
 
-El panel solicita solo una foto de la maleta, mediante **Tomar foto** o
-**Elegir foto**, y muestra una vista previa. No solicita fotos de prendas,
-no ofrece categorías ni cantidades en este panel y no ejecuta reconocimiento ML.
+Catálogo mantiene las cantidades por destino y las barras de espacio de todas
+las maletas seleccionadas. El volumen y el progreso se calculan por maleta.
+Quitar una maleta elimina sus asignaciones y pide confirmación si tiene artículos.
 
-La foto sirve como referencia visual. El cálculo de espacio sigue usando las
-medidas de la maleta y los volúmenes estándar de las prendas del catálogo
-existente. No se infieren dimensiones reales de una foto. Las medidas se
-seleccionan o ajustan y confirman en los controles existentes de Escáner.
-Catálogo, Guía y Resumen comparan el volumen seleccionado con la misma capacidad
-interior total, sin descontar una reserva adicional. Las dimensiones de artículos
-son referencias; sus litros por unidad siguen siendo estimaciones independientes.
-Consulta [la regla de cálculo y la auditoría del catálogo](volume-calculations.md).
-Es una sugerencia, no una simulación física ni una garantía de ajuste.
+Guía ofrece un tutorial de video por maleta y casillas para marcar cada unidad.
+No solicita fotos ni genera imágenes.
 
-El selector permite elegir una sola imagen sin permiso general de almacenamiento.
-La cámara del sistema devuelve una miniatura en memoria; PackGuide no crea un
-archivo de captura. El comportamiento de almacenamiento de la cámara externa
-pertenece a esa aplicación. La imagen elegida se reduce y se corrige con EXIF
-fuera del hilo principal. La vista previa vive en memoria, sin persistencia de
-la imagen en disco; el URI se conserva en memoria con su foto. Cambiar de pestaña
-conserva la vista previa. Guía crea una composición local con esa foto y el
-inventario: no envía datos a servicios externos ni requiere credenciales. Resumen
-ofrece una referencia visual para comparar, sin calificar automáticamente fotos.
-Consulta [la vista organizada sin conexión](packing-ai.md).
+Las fotos se añaden únicamente en **Resumen**, mediante **AÑADIR FOTOS** o
+**TOMAR FOTO**, hasta cuatro por maleta. **EVALUAR FOTO CON IA** envía la foto
+elegida para obtener una calificación del orden visible y sugerencias. La vista
+previa muestra el inventario seleccionado y sus zonas junto a la foto original,
+incluso cuando el servicio de evaluación está desconectado.
+Consulta [la referencia visual](packing-ai.md).
 
-En Android Studio: sincronizar Gradle y ejecutar en Android >= 24.
+El selector usa PickVisualMedia sin permiso general de almacenamiento.
+La cámara devuelve una miniatura. Las imágenes se reducen y se corrigen con
+EXIF fuera del hilo principal y permanecen en memoria durante la sesión.
 
-Verificación manual: tomar/elegir foto, reemplazar la foto, cancelar ambas
-opciones, comprobar cámara/selector ausentes, acceso denegado, imagen inválida,
-modo avión, español/inglés y pantallas pequeñas. Revisar que la foto no cambia
-las cantidades ni las medidas del inventario.
-
-Comprobaciones: `gradlew.bat :app:assembleDebug :app:testDebugUnitTest`.
+El espacio se estima usando las dimensiones confirmadas y los litros por
+unidad del catálogo. Es una referencia, no una garantía de ajuste.
+Consulta [la regla de cálculo](volume-calculations.md).

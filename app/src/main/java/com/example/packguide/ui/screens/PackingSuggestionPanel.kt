@@ -31,7 +31,7 @@ fun PackingSuggestionPanel(packing: PackingState) {
                 color = if (estimate.exceedsCapacity) AccentRedLed else PackGuideColors.primaryText,
                 style = Typography.displaySmall)
             if (!packing.dimensionsConfirmed.value) Text(
-                "Confirma las medidas en Escáner antes de usar esta estimación.",
+                "Confirma las medidas en Medidas antes de usar esta estimación.",
                 color = PackGuideColors.secondaryText, style = Typography.bodySmall)
             Text(copy.recommendation(estimate),
                 color = PackGuideColors.primaryText, style = Typography.bodySmall)

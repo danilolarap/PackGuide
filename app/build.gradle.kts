@@ -4,6 +4,12 @@ plugins {
     alias(libs.plugins.google.devtools.ksp)
 }
 
+// Public backend URL only. OPENAI_API_KEY must never be read by the Android build.
+val packingAiBaseUrl = providers.gradleProperty("PACKGUIDE_AI_BASE_URL")
+    .orElse(providers.environmentVariable("PACKGUIDE_AI_BASE_URL")).getOrElse("")
+fun buildConfigString(value: String) = "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"")
+    .replace("\n", "").replace("\r", "") + "\""
+
 android {
     namespace = "com.example.packguide"
     compileSdk {
@@ -11,6 +17,7 @@ android {
     }
 
     defaultConfig {
+        buildConfigField("String", "PACKING_AI_BASE_URL", buildConfigString(packingAiBaseUrl))
         applicationId = "com.example.packguide"
         minSdk = 24
         targetSdk = 37
@@ -21,6 +28,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "PACKING_AI_BASE_URL", buildConfigString(packingAiBaseUrl.ifBlank { "http://127.0.0.1:8787" }))
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -32,6 +42,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }

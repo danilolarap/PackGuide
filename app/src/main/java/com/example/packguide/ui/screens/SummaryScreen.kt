@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.example.packguide.ui.components.AsciiButton
 import com.example.packguide.ui.components.TechCard
@@ -47,7 +48,7 @@ fun SummaryScreen(
 
     Column(modifier.fillMaxSize().background(PackGuideColors.background)) {
         com.example.packguide.ui.components.HudHeader(title = "RESUMEN DEL EQUIPAJE", sysCode = "", statusText = "")
-        LazyColumn(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
+        LazyColumn(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp).testTag("summary-content"),
             verticalArrangement = Arrangement.spacedBy(12.dp)) {
             item {
                 TechCard(headerTag = "TODAS LAS MALETAS") {
@@ -58,7 +59,7 @@ fun SummaryScreen(
                             color = if (bag.estimate.exceedsCapacity) AccentRedLed else PackGuideColors.primaryText)
                         Spacer(Modifier.height(6.dp))
                     }
-                    Text("TOTAL: ${packing.totalSelectedUnits} unidades · ${packing.totalPackedUnits} empacadas",
+                    Text(copy.tripTotal(packing.totalSelectedUnits, packing.totalPackedUnits),
                         style = Typography.labelMedium, color = PackGuideColors.primaryText)
                 }
             }
@@ -68,7 +69,7 @@ fun SummaryScreen(
                 TechCard(headerTag = "MALETA SELECCIONADA", borderColor = PackGuideColors.primaryText) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Outlined.Luggage, contentDescription = null, tint = AccentRedLed)
-                        Text("  ${packing.activeLuggage.label} · ${packing.heightCm.value}×${packing.widthCm.value}×${packing.depthCm.value} cm",
+                        Text("  ${copy.bagDimensions(packing.activeLuggage.label, packing.heightCm.value, packing.widthCm.value, packing.depthCm.value)}",
                             color = PackGuideColors.primaryText, style = Typography.titleMedium)
                     }
                     Spacer(Modifier.height(8.dp))
@@ -98,16 +99,16 @@ fun SummaryScreen(
                 TechCard(headerTag = "ESTADO DE EMPACADO", borderColor = PackGuideColors.border) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Outlined.CheckCircle, contentDescription = null, tint = AccentGreenLed)
-                        Text("  ${packing.packedUnits} empacados", color = PackGuideColors.primaryText)
+                        Text("  ${copy.packedCount(packing.packedUnits)}", color = PackGuideColors.primaryText)
                     }
                     Spacer(Modifier.height(6.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Outlined.RadioButtonUnchecked, contentDescription = null,
                             tint = PackGuideColors.secondaryText)
-                        Text("  ${packing.selectedUnits - packing.packedUnits} pendientes", color = PackGuideColors.primaryText)
+                        Text("  ${copy.pendingCount(packing.selectedUnits - packing.packedUnits)}", color = PackGuideColors.primaryText)
                     }
                     Spacer(Modifier.height(6.dp))
-                    Text("${selected.size} tipos de artículos · ${packing.selectedUnits} unidades seleccionadas",
+                    Text(copy.itemKinds(selected.size, packing.selectedUnits),
                         color = PackGuideColors.secondaryText, style = Typography.bodySmall)
                 }
             }
@@ -139,7 +140,7 @@ fun SummaryScreen(
                         Text("${item.packedQuantity}/${item.quantity}", color = PackGuideColors.primaryText)
                     }
                     Spacer(Modifier.height(4.dp))
-                    Text("${item.zone.label} · ${formatLiters(item.totalVolumeL)} L",
+                    Text(copy.zoneVolume(item.zone.label, item.totalVolumeL),
                         color = PackGuideColors.secondaryText, style = Typography.bodySmall)
                 }
             }

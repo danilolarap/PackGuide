@@ -1,0 +1,182 @@
+[
+  {
+    "id": "ITEM-01",
+    "name": "CAMISETAS",
+    "category": "ROPA"
+  },
+  {
+    "id": "ITEM-02",
+    "name": "PANTALONES",
+    "category": "ROPA"
+  },
+  {
+    "id": "ITEM-03",
+    "name": "CALZADO",
+    "category": "CALZADO"
+  },
+  {
+    "id": "ITEM-04",
+    "name": "CHAQUETA",
+    "category": "ROPA"
+  },
+  {
+    "id": "ITEM-05",
+    "name": "NECESER",
+    "category": "ASEO"
+  },
+  {
+    "id": "ITEM-06",
+    "name": "CARGADORES & TECH",
+    "category": "TECH"
+  },
+  {
+    "id": "ITEM-07",
+    "name": "ROPA INTERIOR",
+    "category": "ROPA"
+  },
+  {
+    "id": "ITEM-08",
+    "name": "MEDIAS",
+    "category": "ROPA"
+  },
+  {
+    "id": "ITEM-09",
+    "name": "PIJAMA",
+    "category": "ROPA"
+  },
+  {
+    "id": "ITEM-10",
+    "name": "VESTIDO",
+    "category": "ROPA"
+  },
+  {
+    "id": "ITEM-11",
+    "name": "FALDA",
+    "category": "ROPA"
+  },
+  {
+    "id": "ITEM-12",
+    "name": "SHORTS",
+    "category": "ROPA"
+  },
+  {
+    "id": "ITEM-13",
+    "name": "SUÉTER",
+    "category": "ROPA"
+  },
+  {
+    "id": "ITEM-14",
+    "name": "CAMISA",
+    "category": "ROPA"
+  },
+  {
+    "id": "ITEM-15",
+    "name": "TRAJE DE BAÑO",
+    "category": "ROPA"
+  },
+  {
+    "id": "ITEM-16",
+    "name": "ZAPATOS FORMALES",
+    "category": "CALZADO"
+  },
+  {
+    "id": "ITEM-17",
+    "name": "SANDALIAS",
+    "category": "CALZADO"
+  },
+  {
+    "id": "ITEM-18",
+    "name": "PANTUFLAS",
+    "category": "CALZADO"
+  },
+  {
+    "id": "ITEM-19",
+    "name": "CEPILLO DE DIENTES",
+    "category": "ASEO"
+  },
+  {
+    "id": "ITEM-20",
+    "name": "PASTA DENTAL",
+    "category": "ASEO"
+  },
+  {
+    "id": "ITEM-21",
+    "name": "DESODORANTE",
+    "category": "ASEO"
+  },
+  {
+    "id": "ITEM-22",
+    "name": "CHAMPÚ",
+    "category": "ASEO"
+  },
+  {
+    "id": "ITEM-23",
+    "name": "JABÓN",
+    "category": "ASEO"
+  },
+  {
+    "id": "ITEM-24",
+    "name": "PROTECTOR SOLAR",
+    "category": "ASEO"
+  },
+  {
+    "id": "ITEM-25",
+    "name": "MEDICAMENTOS",
+    "category": "ASEO"
+  },
+  {
+    "id": "ITEM-26",
+    "name": "LENTES DE CONTACTO",
+    "category": "ASEO"
+  },
+  {
+    "id": "ITEM-27",
+    "name": "TELÉFONO",
+    "category": "TECH"
+  },
+  {
+    "id": "ITEM-28",
+    "name": "TABLETA",
+    "category": "TECH"
+  },
+  {
+    "id": "ITEM-29",
+    "name": "PORTÁTIL",
+    "category": "TECH"
+  },
+  {
+    "id": "ITEM-30",
+    "name": "AURICULARES",
+    "category": "TECH"
+  },
+  {
+    "id": "ITEM-31",
+    "name": "BATERÍA EXTERNA",
+    "category": "TECH"
+  },
+  {
+    "id": "ITEM-32",
+    "name": "ADAPTADOR DE ENCHUFE",
+    "category": "TECH"
+  },
+  {
+    "id": "ITEM-33",
+    "name": "CÁMARA",
+    "category": "TECH"
+  },
+  {
+    "id": "ITEM-34",
+    "name": "TARJETAS DE MEMORIA",
+    "category": "TECH"
+  },
+  {
+    "id": "ITEM-35",
+    "name": "CABLE USB",
+    "category": "TECH"
+  },
+  {
+    "id": "ITEM-36",
+    "name": "RELOJ",
+    "category": "TECH"
+  }
+]

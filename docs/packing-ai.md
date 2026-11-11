@@ -1,70 +1,112 @@
-﻿# Vista organizada de empaque sin conexión
+# Vista previa y evaluación en Resumen
 
-En Escáner, toma o elige una foto de la maleta abierta. Selecciona sus artículos
- en Catálogo y pulsa **GENERAR IMAGEN ORGANIZADA** en Guía. Sin foto, el panel
-ofrece **AÑADIR FOTO EN ESCÁNER**. Toca la vista o pulsa **Ampliar vista organizada**
-para abrir el visor. Resumen permite añadir hasta cuatro fotos y usar la primera
-como referencia visual para comparar con el esquema del inventario.
+La vista previa compone localmente la foto original, el inventario seleccionado,
+las zonas y las estimaciones de capacidad. Se puede abrir sin conexión y sin
+foto. El servidor interviene únicamente cuando el usuario pulsa **Evaluar foto
+con IA**. La nota y la sugerencia de ese servicio aparecen en el mismo modal.
 
-El resultado es una **composición local** de la foto original y tarjetas por
-zonas, con cantidades, medidas y métricas del inventario. No es IA, edición
-fotorealista, detección de objetos, evaluación automática ni simulación física.
-No se inventa una puntuación de organización. Las medidas no confirmadas siguen
-siendo orientativas.
+## Datos que se envían
 
-## Arquitectura
+- **Evaluar foto con IA** envía únicamente la foto elegida para evaluar el orden,
+  el uso aparente del espacio y el acceso a los artículos visibles. La evaluación
+  muestra una nota de 1 a 10 y una sugerencia. Si la foto no permite evaluar, se
+  indica cómo repetirla y se omite la nota.
+- La app actual usa el esquema local para la propuesta visual. El endpoint de
+  generación se conserva para clientes antiguos.
 
-La inspección encontró una llamada directa a Gemini, sin backend ni proxy.
-`local.properties` solo contenía la configuración del SDK; no había configuración
-de servidor ni variables de proveedor en el entorno consultado. La autenticación
-con Room es local y no autentica un servicio remoto.
+Para los clientes antiguos, el endpoint de generación resuelve los nombres desde
+su catálogo y solo acepta el campo
+`packedQuantity`. No usa `quantity` ni `selectedQuantity` como sustitutos.
+La respuesta incluye el manifiesto utilizado, que Android comprueba contra la
+solicitud antes de mostrar la imagen. Esto verifica los **datos**, no certifica
+el número de objetos representados visualmente por el modelo.
 
-Se retiraron el cliente remoto, el formulario de claves y su estado de sesión.
-No se añadieron secretos, dependencias, servicios de pago ni permisos. El permiso
-normal de Internet preexistente permanece, pero este flujo no lo usa ni sube fotos.
+La IA propone una distribución alternativa y puede apartarse de las zonas
+elegidas por el usuario. No se calculan puntuaciones ficticias ni se afirma que
+la distribución garantice el ajuste físico. La imagen puede representar
+cantidades de forma imprecisa; el inventario empacado visible es el dato exacto.
+Si cambia ese inventario o el idioma, se solicita una nueva propuesta.
 
-- `PackingImageService` recibe el plan, una foto y el idioma. Un futuro backend
-  autenticado puede implementarlo manteniendo sus credenciales en el servidor.
-- `OfflinePackingImageService` crea un Bitmap con Canvas fuera del hilo principal.
-  Conserva los artículos seleccionados, cantidades y zonas, sin duplicar unidades
-  empacadas. La foto de referencia permanece sin modificar.
-- `PackingPreviewViewModel` conserva resultados en memoria por maleta al navegar,
-  impide trabajos duplicados, permite cancelar y reintentar, e invalida resultados
-  al cambiar sus entradas. Retirar una maleta o cerrar sesión cancela su trabajo.
-- Se mantiene la persistencia de sesión existente. No se guardan fotos, URI ni
-  resultados en una base de datos ni se promete recuperación tras cerrar el proceso.
+## Servidor local: Node.js 22 o posterior
 
-## Imágenes y errores
+No necesita paquetes externos.
 
-El selector usa `PickVisualMedia`, sin permiso general de almacenamiento. Los URI
-se conservan en memoria y se leen con ContentResolver sin asumir rutas de archivo.
-La cámara sigue usando la miniatura del sistema. La foto se reduce a un lado máximo
-de 1600 px y se corrige con EXIF fuera del hilo principal. Se rechazan cabeceras
-superiores a 100 millones de píxeles y se acota cada stream a 50 MiB. La composición
-mide 1200 px de ancho y como máximo 4096 px de alto.
+En Windows, instala la variante Debug en el teléfono o emulador desde Android
+Studio, mantén el dispositivo conectado mediante ADB y ejecuta desde la raíz:
 
-Cancelar el selector conserva la foto anterior. Hay mensajes ES/EN para archivos
-incompatibles, tamaño excesivo, falta de acceso, cancelación y fallos de composición.
-Los fallos de un futuro servicio se traducen a un mensaje sencillo. La interfaz
-no muestra excepciones, trazas ni detalles de credenciales.
+```powershell
+powershell -ExecutionPolicy Bypass -File .\server\start-android.ps1
+```
 
-## Comprobaciones ejecutadas
+El comando conecta el puerto del dispositivo y levanta el servidor. Si no
+encuentra una clave, la pide con entrada oculta para esa sesión. Déjalo abierto
+mientras usas **Resumen → Ver vista previa → Evaluar foto con IA**. Si hay varios dispositivos,
+añade `-Device` seguido del identificador que muestra `adb devices`.
 
-- `assembleDebug testDebugUnitTest`: compilación correcta y **22 pruebas unitarias**
-  sin fallos, incluyendo cálculos, inventario, snapshots y disposición de los 36 tipos.
-- `PackingPreviewFlowTest`: **5 pruebas instrumentadas** correctas en el emulador
-  Medium_Phone_API_37.0. Se usó la copia aislada `.volumecheck`, conservando la app
-  instalada con otra firma. Se verificaron los XML de resultados.
-- Se verificaron el acceso a Escáner desde Guía, cancelación y retorno del selector
-  con un URI real de MediaStore, decodificación, generación sin credenciales, visor,
-  conservación al navegar, etiquetas en inglés y ausencia de configuración de claves.
-- Se probaron archivos inválidos y cabeceras sobredimensionadas, conservación de
-  píxeles de la foto, bloqueo de duplicados, cancelación y recuperación después de
-  un fallo de servicio simulado.
-- La búsqueda estática en el código principal confirmó que no quedan el cliente
-  Gemini, su endpoint directo, el formulario ni el estado de la clave.
+Para guardar la configuración localmente o iniciar el servidor de forma manual:
 
-El selector se sustituyó por ActivityResultRegistry en la prueba: se comprobó su
-contrato de retorno y la lectura real del URI, no la interfaz manual del selector
-ni una cámara física. No se generaron imágenes de IA en la nube: no existe una
-solicitud remota en este flujo.
+1. Copia `server/.env.example` a `server/.env`.
+2. Edita ese archivo **localmente** e introduce tu `OPENAI_API_KEY`.
+   No la envíes por chat ni la incluyas en Gradle, Android o el repositorio.
+3. Desde la raíz ejecuta:
+
+```powershell
+node --env-file=server/.env server/server.mjs
+```
+
+El servidor escucha exclusivamente en `127.0.0.1:8787`. Si falta la clave,
+`GET /health` devuelve `configured: false` y generar devuelve
+`503 NOT_CONFIGURED`; no se fabrica una imagen de reemplazo.
+
+Para un teléfono conectado mediante ADB:
+
+```powershell
+adb reverse tcp:8787 tcp:8787
+```
+
+El APK Debug usa `http://127.0.0.1:8787`. Para un emulador también puede
+compilarse con la propiedad pública
+`-PPACKGUIDE_AI_BASE_URL=http://10.0.2.2:8787`.
+El tráfico HTTP se admite solo para esas direcciones locales en Debug.
+
+## Generación real y despliegue
+
+El backend llama a la API oficial de imágenes de OpenAI:
+[generación de imágenes](https://developers.openai.com/api/docs/guides/image-generation),
+mediante `/v1/images/generations`, sin fotos de entrada.
+La evaluación usa `/v1/responses` con un modelo con visión configurable mediante
+`OPENAI_REVIEW_MODEL` (`gpt-5-mini` por defecto).
+El modelo se configura en el servidor mediante `OPENAI_IMAGE_MODEL`;
+el valor inicial es `gpt-image-2.5-sunburst`. La cuenta debe tener acceso y
+saldo para ese modelo. No se ejecutaron peticiones facturables sin credenciales.
+
+Esta entrega incluye un servidor de desarrollo local, **no un servicio público
+desplegado**. Para distribuir la app hay que alojarlo detrás de un gateway HTTPS
+con autenticación real de usuarios y configurar
+`PACKGUIDE_AI_BASE_URL=https://tu-servicio` al compilar.
+El gateway debe dirigir tanto `/v1/packing-image` como `/v1/packing-review` al
+servidor privado y usar `Host: localhost` en esa conexión.
+La cuenta Room de la app es local y no autentica un servidor remoto.
+El cliente permite inyectar un proveedor de tokens de usuario para esa integración;
+no debe reemplazarse por una clave del proveedor incrustada en el APK.
+
+El servidor limita tamaño, concurrencia y frecuencia. Acepta los hosts de
+desarrollo local y del emulador sin encabezado Origin. No registra fotos, inventarios
+ni claves. El cliente no sigue redirecciones y limita el tamaño de las imágenes.
+Cancelar desconecta la solicitud; el servidor cancela su llamada al proveedor
+si se desconecta el cliente. Una solicitud ya procesada por el proveedor puede
+haber consumido recursos aunque se cancele.
+
+## Verificación
+
+```powershell
+node --test server/test/packing.test.mjs
+.\gradlew.bat :app:testDebugUnitTest :app:assembleDebug :app:lintDebug
+```
+
+Las pruebas del servidor usan un proveedor simulado y comprueban el caso 12/11,
+la exclusión de artículos sin empacar, la solicitud sin fotos, el manifiesto y la
+ausencia de generación cuando falta configuración. Las pruebas Android del
+cliente comprueban la serialización y rechazan un manifiesto que responda 12
+cuando se pidieron 11. Las pruebas de UI usan imágenes de prueba identificadas
+como tales; no se presentan como una generación real validada.

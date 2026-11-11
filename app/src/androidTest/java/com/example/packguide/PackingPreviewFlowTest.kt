@@ -2,6 +2,9 @@ package com.example.packguide
 
 import android.app.Activity
 import android.app.Application
+import android.os.Build
+import android.view.WindowManager
+import androidx.activity.ComponentActivity
 import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
@@ -14,9 +17,12 @@ import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.activity.result.contract.ActivityResultContract
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.*
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.core.app.ActivityOptionsCompat
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -32,6 +38,7 @@ import com.example.packguide.ui.theme.PackGuideTheme
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -42,8 +49,18 @@ import java.util.zip.CRC32
 
 @RunWith(AndroidJUnit4::class)
 class PackingPreviewFlowTest {
-    @get:Rule val compose = createComposeRule()
+    @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
     private val context get() = InstrumentationRegistry.getInstrumentation().targetContext
+
+    @Before fun keepTestActivityVisible() {
+        compose.runOnUiThread {
+            compose.activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            if (Build.VERSION.SDK_INT >= 27) {
+                compose.activity.setShowWhenLocked(true)
+                compose.activity.setTurnScreenOn(true)
+            }
+        }
+    }
 
     private class PhotoRegistry : ActivityResultRegistry(), ActivityResultRegistryOwner {
         var nextPhoto: Uri? = null
@@ -86,40 +103,52 @@ class PackingPreviewFlowTest {
     }
 
     private fun scrollTo(label: String) {
-        compose.onNode(hasScrollAction()).performScrollToNode(hasText(label))
+        compose.onNodeWithTag("summary-content").performScrollToNode(hasText(label))
     }
 
-    @Test fun pickerCancellationPhotoGenerationViewerAndNavigationNeedNoCredentials() {
+    @Test fun photoPickerAndLocalPreviewShowAssessmentWithoutGeneratingAnImage() {
         val uri = addFixture(photoBytes())
+        val packing = PackingState()
+        packing.updateItem("ITEM-01") { it.copy(quantity = 12, packedQuantity = 11) }
+        val preview = PackingPreviewViewModel(context.applicationContext as Application, object : PackingImageService {
+            override suspend fun generate(plan: PackingPlan, language: AppLanguage): Bitmap = error("Preview must be local")
+            override suspend fun assess(photo: Bitmap, language: AppLanguage) =
+                PackingPhotoAssessment(8, "Agrupa las camisetas enrolladas.")
+        })
         try {
             val registry = PhotoRegistry()
             compose.setContent {
                 CompositionLocalProvider(LocalActivityResultRegistryOwner provides registry) {
-                    PackGuideTheme { MainScreen(AppSettings(), {}, {}, {}) }
+                    PackGuideTheme {
+                        LazyColumn(Modifier.testTag("summary-content")) {
+                            item { PackingReviewPreviewPanel(packing, preview) }
+                        }
+                    }
                 }
             }
-            compose.onNodeWithText("GUÍA").performClick()
-            scrollTo("AÑADIR FOTO EN ESCÁNER")
-            compose.onNodeWithText("AÑADIR FOTO EN ESCÁNER").performClick()
-            scrollTo("ELEGIR FOTO")
-            compose.onNodeWithText("ELEGIR FOTO").performClick() // Cancel first.
+            compose.waitUntil(10_000) {
+                compose.onAllNodesWithText("INSPIRACIÓN PARA TU MALETA")
+                    .fetchSemanticsNodes(atLeastOneRootRequired = false).isNotEmpty()
+            }
+            scrollTo("AÑADIR FOTOS")
+            compose.onNodeWithText("AÑADIR FOTOS").performClick()
             compose.runOnIdle { assertEquals(1, registry.launches); registry.nextPhoto = uri }
-            compose.onNodeWithText("ELEGIR FOTO").performClick()
-            compose.waitUntil(10_000) { compose.onAllNodesWithContentDescription("Foto de tu maleta").fetchSemanticsNodes().isNotEmpty() }
-            compose.onNodeWithText("GUÍA").performClick()
-            scrollTo("GENERAR IMAGEN ORGANIZADA")
-            compose.onNodeWithText("GENERAR IMAGEN ORGANIZADA").assertIsEnabled().performClick()
-            compose.waitUntil(10_000) { compose.onAllNodesWithText("Ampliar vista organizada").fetchSemanticsNodes().isNotEmpty() }
-            compose.onAllNodesWithText("CONEXIÓN CON GEMINI", substring = true).assertCountEquals(0)
-            compose.onAllNodesWithText("CONFIGURAR IA").assertCountEquals(0)
-            compose.onNodeWithText("Ampliar vista organizada").performScrollTo().performClick()
+            compose.onNodeWithText("AÑADIR FOTOS").performClick()
+            compose.waitUntil(10_000) {
+                compose.onAllNodesWithContentDescription("Foto para comparar").fetchSemanticsNodes().isNotEmpty()
+            }
+            scrollTo("VER VISTA PREVIA")
+            compose.onNodeWithText("VER VISTA PREVIA").assertIsEnabled().performClick()
+            compose.waitUntil(10_000) {
+                compose.onAllNodesWithText("VISTA PREVIA DE ORGANIZACIÓN").fetchSemanticsNodes().isNotEmpty()
+            }
+            compose.onNodeWithText("12 × CAMISETAS").assertExists()
+            compose.onNodeWithText("EVALUAR FOTO CON IA").performScrollTo().performClick()
+            compose.onNodeWithText("PUNTUACIÓN DE LA IA · 8/10").assertExists()
+            compose.onNodeWithText("Agrupa las camisetas enrolladas.").assertExists()
             compose.onNodeWithText("CERRAR").performClick()
-            compose.onNodeWithText("RESUMEN").performClick()
-            compose.onAllNodesWithText("CONFIGURAR IA").assertCountEquals(0)
-            compose.onNodeWithText("GUÍA").performClick()
-            scrollTo("Ampliar vista organizada")
-            compose.onNodeWithText("Ampliar vista organizada").assertExists()
-        } finally { context.contentResolver.delete(uri, null, null) }
+            compose.onNodeWithText("VISTA PREVIA DE ORGANIZACIÓN").assertDoesNotExist()
+        } finally { preview.clear(); context.contentResolver.delete(uri, null, null) }
     }
 
     @Test fun contentPhotosAreBoundedAndUnsupportedOrOversizedInputsAreRejected() = runBlocking {
@@ -143,75 +172,76 @@ class PackingPreviewFlowTest {
 
     @Test fun failuresDuplicateRequestsAndCancellationPreserveStateAndAllowRetry() {
         compose.setContent { PackGuideTheme { androidx.compose.material3.Text("Preview test") } }
-        val plan = PackingPlan.from(PackingState().activeBag)
+        val packing = PackingState()
+        packing.updateItem("ITEM-01") { it.copy(packedQuantity = 2) }
+        val plan = PackingPlan.from(packing.activeBag)
         val photo = Bitmap.createBitmap(32, 32, Bitmap.Config.ARGB_8888)
         val pending = CompletableDeferred<Bitmap>()
         var requests = 0
-        val generator = PackingImageService { _, _, _ -> requests++; pending.await() }
+        val generator = PackingImageService { _, _ -> requests++; pending.await() }
         val vm = PackingPreviewViewModel(context.applicationContext as Application, generator)
         val type = LuggagePreset.Cabin
         compose.runOnIdle {
-            vm.generate(type, plan, photo, AppLanguage.Spanish)
-            vm.generate(type, plan, photo, AppLanguage.Spanish)
+            vm.generate(type, plan, AppLanguage.Spanish)
+            vm.generate(type, plan, AppLanguage.Spanish)
             assertEquals(1, requests)
-            assertEquals(PreviewWork.Guide, vm.stateFor(type).work)
+            assertEquals(PreviewWork.Review, vm.stateFor(type).work)
             vm.cancel(type)
         }
         compose.runOnIdle {
             assertNull(vm.stateFor(type).work)
             assertEquals(PreviewProblem.Cancelled, vm.stateFor(type).problem)
-            assertNull(vm.stateFor(type).guide)
+            assertNull(vm.stateFor(type).review)
         }
         var shouldFail = true
-        val retry = PackingPreviewViewModel(context.applicationContext as Application, PackingImageService { _, _, _ ->
+        val retry = PackingPreviewViewModel(context.applicationContext as Application, PackingImageService { _, _ ->
             if (shouldFail) throw IOException("Test service unavailable") else photo
         })
-        compose.runOnIdle { retry.generate(type, plan, photo, AppLanguage.English) }
+        compose.runOnIdle { retry.generate(type, plan, AppLanguage.English) }
         compose.runOnIdle {
             assertNull(retry.stateFor(type).work)
             assertEquals(PreviewProblem.Connection, retry.stateFor(type).problem)
             shouldFail = false
-            retry.generate(type, plan, photo, AppLanguage.English)
+            retry.generate(type, plan, AppLanguage.English)
         }
         compose.runOnIdle {
-            assertSame(photo, retry.stateFor(type).guide)
+            assertSame(photo, retry.stateFor(type).review)
+            assertEquals(AppLanguage.English, retry.stateFor(type).reviewLanguage)
             assertNull(retry.stateFor(type).problem)
             retry.clear(); vm.clear()
         }
     }
 
-    @Test fun offlineRendererPreservesOriginalReferenceAndCreatesBoundedBitmap() = runBlocking {
-        val uri = addFixture(photoBytes())
-        try {
-            val source = PhotoScanner().decode(context, uri)
-            val before = source.getPixel(500, 350)
-            val plan = PackingPlan.from(PackingState().activeBag)
-            val result = OfflinePackingImageService().generate(plan, source, AppLanguage.Spanish)
-            assertEquals(1200, result.width)
-            assertEquals(PackingPreviewLayout.from(plan).height, result.height)
-            assertEquals(before, source.getPixel(500, 350))
-            assertEquals(before, result.getPixel(324, 305))
-            java.io.File(context.getExternalFilesDir(null), "packing-preview-example.png").outputStream().use {
-                result.compress(Bitmap.CompressFormat.PNG, 100, it)
-            }
-            result.recycle(); source.recycle()
-        } finally { context.contentResolver.delete(uri, null, null) }
+    @Test fun noPackedUnitsNeverCallsTheImageService() {
+        var requests = 0
+        val vm = PackingPreviewViewModel(context.applicationContext as Application,
+            PackingImageService { _, _ -> requests++; error("Must not be called") })
+        compose.runOnIdle {
+            vm.generate(LuggagePreset.Cabin, PackingPlan.from(PackingState().activeBag), AppLanguage.Spanish)
+            assertEquals(0, requests)
+            assertNull(vm.stateFor(LuggagePreset.Cabin).review)
+            assertNull(vm.stateFor(LuggagePreset.Cabin).work)
+            vm.clear()
+        }
     }
 
-    @Test fun englishGuideShowsOfflineLabelsAndDirectPhotoAction() {
+    @Test fun englishLocalPreviewOpensWithoutPhotoOrAiService() {
         val packing = PackingState()
-        val scanner = com.example.packguide.scanning.ScannerViewModel(context.applicationContext as Application)
-        val preview = PackingPreviewViewModel(context.applicationContext as Application)
+        val preview = PackingPreviewViewModel(context.applicationContext as Application, RemotePackingImageService(""))
         compose.setContent {
             CompositionLocalProvider(LocalAppLanguage provides AppLanguage.English) {
-                PackGuideTheme {
-                    PackingGuidePreviewPanel(packing, scanner, preview, {}, {})
-                }
+                PackGuideTheme { PackingReviewPreviewPanel(packing, preview) }
             }
         }
+        compose.waitUntil(10_000) {
+            compose.onAllNodesWithText("AI PACKING INSPIRATION")
+                .fetchSemanticsNodes(atLeastOneRootRequired = false).isNotEmpty()
+        }
+        compose.onNodeWithText("AI PACKING INSPIRATION").assertExists()
+        compose.onNodeWithText("ADD PHOTOS").assertExists()
+        compose.onNodeWithText("TAKE PHOTO").assertExists()
+        compose.onNodeWithText("OPEN PACKING PREVIEW").assertIsEnabled().performClick()
         compose.onNodeWithText("ORGANIZED PACKING PREVIEW").assertExists()
-        compose.onNodeWithText("ADD PHOTO IN SCANNER").assertExists()
-        compose.onNodeWithText("GENERATE PACKING IMAGE").assertIsNotEnabled()
-        compose.onAllNodesWithText("API", substring = true).assertCountEquals(0)
+        compose.onNodeWithText("No reference photo").assertExists()
     }
 }
