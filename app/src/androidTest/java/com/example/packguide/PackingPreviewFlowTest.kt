@@ -142,7 +142,8 @@ class PackingPreviewFlowTest {
             compose.waitUntil(10_000) {
                 compose.onAllNodesWithText("VISTA PREVIA DE ORGANIZACIÓN").fetchSemanticsNodes().isNotEmpty()
             }
-            compose.onNodeWithText("12 × CAMISETAS").assertExists()
+            compose.onNodeWithText("×12").assertExists()
+            compose.onNodeWithText("CAMISETAS").assertExists()
             compose.onNodeWithText("EVALUAR FOTO CON IA").performScrollTo().performClick()
             compose.onNodeWithText("PUNTUACIÓN DE LA IA · 8/10").assertExists()
             compose.onNodeWithText("Agrupa las camisetas enrolladas.").assertExists()

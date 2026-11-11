@@ -69,7 +69,8 @@ fun PackingReviewPreviewPanel(packing: PackingState, preview: PackingPreviewView
         var reference by remember { mutableStateOf<Bitmap?>(null) }
         if (showLayout) OrganizedPackingDialog(packing.activeBag, reference, state, preview.isAvailable,
             onAssess = { reference?.let { preview.assess(type, it, language) } },
-            onCancel = { preview.cancel(type) }, onClose = { showLayout = false })
+            onCancel = { preview.cancel(type) }, onClose = { showLayout = false },
+            selectedBags = packing.selectedLuggage.map { packing.bag(it) })
         val gallery = rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(4)) { uris -> preview.addPhotos(type, uris) }
         val camera = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { photo -> if (photo != null) preview.addPhoto(type, photo) }
         TechCard(headerTag = previewText("INSPIRACIÓN PARA TU MALETA")) {
